@@ -3,9 +3,10 @@ package com.teamsparta.buysell.domain.comment.service
 import com.teamsparta.buysell.domain.comment.dto.request.CreateRequest
 import com.teamsparta.buysell.domain.comment.dto.request.UpdateRequest
 import com.teamsparta.buysell.domain.comment.dto.response.CommentResponse
+import com.teamsparta.buysell.infra.security.UserPrincipal
 
 interface CommentService {
-    fun addService(postId: Int, request: CreateRequest): CommentResponse
+    fun addComment(postId: Int, request: CreateRequest, principal: UserPrincipal): CommentResponse
 
-    fun editService(postId: Int, request: UpdateRequest): CommentResponse
+    fun editComment(postId: Int, commentId: Int, request: UpdateRequest, principal: UserPrincipal): CommentResponse
 }

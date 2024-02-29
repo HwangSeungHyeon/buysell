@@ -102,4 +102,12 @@ class GlobalExceptionHandler {
             .status(HttpStatus.UNAUTHORIZED)
             .body(ErrorResponse("JWT 구조가 다릅니다."))
     }
+
+    //403 에러를 처리할 때 사용
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleForbiddenException(e: ForbiddenException): ResponseEntity<ErrorResponse>{
+        return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .body(ErrorResponse(e.message))
+    }
 }
