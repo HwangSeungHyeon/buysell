@@ -4,11 +4,11 @@ import com.teamsparta.buysell.domain.exception.ForbiddenException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.auditing.BaseEntity
+import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
-import org.hibernate.annotations.SoftDelete
 
-@SoftDelete(columnName = "is_deleted") //soft delete
+//@SoftDelete(columnName = "is_deleted") //soft delete
 @Entity
 @Table(name = "post")
 class Post(
@@ -27,6 +27,9 @@ class Post(
     @Column(name = "is_soldout")
     var isSoldOut: Boolean = false,
 
+//    @Column(name = "is_deleted")
+//    var isDeleted: Boolean = false,
+
     @Column(name = "view")
     var view: Int = 0,
 
@@ -43,7 +46,7 @@ class Post(
 //    @Enumerated(EnumType.STRING)
 //    @Column(name = "category")
 //    var category: Category
-): BaseEntity() {
+): SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -54,6 +57,10 @@ class Post(
         if(member.id != principal.id)
             throw ForbiddenException("권한이 없습니다.")
     }
+
+//    fun softDelete(){
+//        this.isDeleted = true
+//    }
 }
 
 fun Post.toResponse(): PostResponse {

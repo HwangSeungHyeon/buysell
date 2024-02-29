@@ -75,7 +75,8 @@ class PostServiceImpl(
 
         post.checkPermission(principal)
 
-        postRepository.delete(post)
+//        postRepository.delete(post)
+        post.softDelete()
     }
 
     private fun getMember(principal: UserPrincipal): Member {
