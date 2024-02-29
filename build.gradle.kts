@@ -52,6 +52,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis") //redis
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE") //s3
     implementation("org.springframework.boot:spring-boot-starter-aop") //aop
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     //jwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
