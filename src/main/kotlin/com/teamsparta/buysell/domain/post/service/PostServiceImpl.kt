@@ -5,12 +5,15 @@ import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
+import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.post.model.toResponse
 import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -78,5 +81,13 @@ class PostServiceImpl(
     private fun getMember(principal: UserPrincipal): Member {
         return memberRepository.findByIdOrNull(principal.id)
             ?: throw ModelNotFoundException("Model", principal.id)
+    }
+
+    override fun searchByKeyword(
+        keyword: String,
+        pageable: Pageable
+    ): Page<PostListResponse> {
+        return postRepository
+            .searchByKeyword(keyword, pageable)
     }
 }
