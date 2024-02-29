@@ -1,6 +1,7 @@
 package com.teamsparta.buysell.infra.security.jwt
 
 import com.teamsparta.buysell.infra.security.UserPrincipal
+import jakarta.security.auth.message.AuthException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -45,9 +46,10 @@ class JwtAuthenticationFilter(
                     SecurityContextHolder.getContext().authentication = authentication
                 }
                 .onFailure {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid token")
-                    return
+                    e -> request.setAttribute("exception", e)
                 }
+        } else{ //추가된 부분
+            request.setAttribute("exception", AuthException("로그인이 필요한 서비스입니다."))
         }
 
         filterChain.doFilter(request,response)
