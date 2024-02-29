@@ -62,7 +62,6 @@ class CommentServiceImpl(
     override fun deleteComment(
         postId: Int,
         commentId: Int,
-        request: UpdateRequest,
         principal: UserPrincipal
     ): CommentResponse {
         val comment = commentRepository
