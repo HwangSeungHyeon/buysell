@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.post.controller
 
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
@@ -35,6 +36,7 @@ class PostController(
             .body(postService.createPost(createPostRequest, principal))
     }
 
+    @PreAuthorize("hasRole('MEMBER')")
     @PutMapping("/{postId}")
     fun updatePost(
         @PathVariable postId: Int,
@@ -72,6 +74,7 @@ class PostController(
             .body(postService.getPostById(postId))
     }
 
+    @PreAuthorize("hasRole('MEMBER')")
     @DeleteMapping("/{postId}")
     fun deletePost(
         @PathVariable postId: Int,
@@ -81,5 +84,27 @@ class PostController(
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .build()
+    }
+
+    @PreAuthorize("hasRole('MEMBER')")
+    @PostMapping("/{postId}/likes")
+    fun addLikes(
+        @PathVariable postId: Int,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ) : ResponseEntity<MessageResponse>{
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(postService.addLikes(postId, userPrincipal))
+    }
+
+    @PreAuthorize("hasRole('MEMBER')")
+    @DeleteMapping("/{postId}/likes")
+    fun cancelLikes(
+        @PathVariable postId: Int,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ) : ResponseEntity<MessageResponse>{
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(postService.cancelLikes(postId, userPrincipal))
     }
 }
