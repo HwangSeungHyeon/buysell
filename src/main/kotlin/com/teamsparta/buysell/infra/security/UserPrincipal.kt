@@ -3,7 +3,7 @@ package com.teamsparta.buysell.infra.security
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
-class UserPrincipal(
+data class UserPrincipal(
     val id: Int,
     val email: String,
     val authorities : Collection<GrantedAuthority>,

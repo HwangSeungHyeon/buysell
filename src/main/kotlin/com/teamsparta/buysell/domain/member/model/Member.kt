@@ -3,7 +3,8 @@ package com.teamsparta.buysell.domain.member.model
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import jakarta.persistence.*
 
-@Entity(name = "MEMBER")
+@Table(name = "member")
+@Entity
 class Member(
     @Column(name = "email")
     val email : String,

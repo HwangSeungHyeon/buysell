@@ -65,7 +65,8 @@ dependencies {
     kapt("jakarta.annotation:jakarta.annotation-api")
     kapt("jakarta.persistence:jakarta.persistence-api")
 
-    runtimeOnly("com.mysql:mysql-connector-j")
+//    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("org.postgresql:postgresql")
 
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
