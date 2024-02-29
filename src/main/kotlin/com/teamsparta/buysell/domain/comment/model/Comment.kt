@@ -18,6 +18,9 @@ class Comment private constructor(
     @Column(name = "created_name")
     var createdName: String,
 
+    @Column(name = "is_deleted")
+    var isDeleted: Boolean,
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     var member: Member,
@@ -37,6 +40,17 @@ class Comment private constructor(
         this.content = request.content
     }
 
+    fun checkPermission(
+        principal: UserPrincipal
+    ){
+        if(member.id != principal.id)
+            throw ForbiddenException("수정 권한이 없습니다.")
+    }
+
+    fun deleteComment(){
+        this.isDeleted = true
+    }
+
     companion object{
         fun makeEntity(
             request: CreateRequest,
@@ -46,17 +60,10 @@ class Comment private constructor(
             return Comment(
                 content = request.content,
                 createdName = post.createdName,
+                isDeleted = false,
                 member = member,
                 post = post
             )
-        }
-
-        fun checkPermission(
-            comment: Comment,
-            principal: UserPrincipal
-        ){
-            if(comment.member.id != principal.id)
-                throw ForbiddenException("수정 권한이 없습니다.")
         }
     }
 }

@@ -43,5 +43,16 @@ class CommentController(
             .body(commentService.editComment(postId, commentId, request, principal))
     }
 
-    
+    @PreAuthorize("hasRole('MEMBER')")
+    @DeleteMapping("/{commentId}")
+    fun deleteComment(
+        @PathVariable postId: Int,
+        @PathVariable commentId: Int,
+        @RequestBody request: UpdateRequest,
+        @AuthenticationPrincipal principal: UserPrincipal
+    ) : ResponseEntity<CommentResponse>{
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(commentService.deleteComment(postId, commentId, request, principal))
+    }
 }
