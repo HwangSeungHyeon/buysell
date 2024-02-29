@@ -7,7 +7,7 @@ class UserPrincipal(
     val id: Int,
     val email: String,
     val authorities : Collection<GrantedAuthority>,
-    val platform: String,
+    val platform: String
 ) {
     constructor(id: Int, email: String, role: Set<String>, platform: String): this(
         id,

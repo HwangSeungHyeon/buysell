@@ -14,7 +14,7 @@ class Post(
     var content: String,
 
     @Column(name = "created_name")
-    val createdName: String?,
+    val createdName: String,
 
     @Column(name = "price")
     var price: Int,
@@ -33,8 +33,6 @@ class Post(
 
     @Column(name = "updated_at")
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-
-
 
 //    @ManyToOne
 //    @JoinColumn(name = "member_id", nullabe = false)
