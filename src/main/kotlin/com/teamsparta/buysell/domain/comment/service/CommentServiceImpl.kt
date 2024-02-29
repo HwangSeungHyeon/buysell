@@ -51,10 +51,27 @@ class CommentServiceImpl(
         val comment = commentRepository
             .findByPostIdAndId(postId, commentId)
 
-        Comment.checkPermission(comment, principal)
+        comment.checkPermission(principal)
 
         comment.edit(request)
 
         return CommentResponse("댓글이 수정되었습니다.")
+    }
+
+    @Transactional
+    override fun deleteComment(
+        postId: Int,
+        commentId: Int,
+        request: UpdateRequest,
+        principal: UserPrincipal
+    ): CommentResponse {
+        val comment = commentRepository
+            .findByPostIdAndId(postId, commentId)
+
+        comment.checkPermission(principal)
+
+        comment.deleteComment()
+
+        return CommentResponse("댓글이 삭제되었습니다.")
     }
 }
