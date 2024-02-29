@@ -59,7 +59,7 @@ class Comment private constructor(
         ) : Comment {
             return Comment(
                 content = request.content,
-                createdName = post.createdName,
+                createdName = member.nickname,
                 isDeleted = false,
                 member = member,
                 post = post

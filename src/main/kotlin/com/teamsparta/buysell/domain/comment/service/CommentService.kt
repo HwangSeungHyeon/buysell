@@ -10,5 +10,5 @@ interface CommentService {
 
     fun editComment(postId: Int, commentId: Int, request: UpdateRequest, principal: UserPrincipal): CommentResponse
 
-    fun deleteComment(postId: Int, commentId: Int, request: UpdateRequest, principal: UserPrincipal): CommentResponse
+    fun deleteComment(postId: Int, commentId: Int, principal: UserPrincipal): CommentResponse
 }
