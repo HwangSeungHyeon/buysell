@@ -24,6 +24,7 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
     ) : Page<PostListResponse> {
         val booleanBuilder = BooleanBuilder()
         booleanBuilder.and(post.title.contains(keyword))
+        booleanBuilder.and(post.isDeleted.isFalse)
 
         val totalCount = queryFactory
             .select(post.count())
