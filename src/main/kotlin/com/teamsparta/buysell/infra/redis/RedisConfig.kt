@@ -44,20 +44,4 @@
 //
 //        return template
 //    }
-//
-////    @Bean
-////    fun cacheManager(
-////        redisConnectionFactory: RedisConnectionFactory
-////    ): RedisCacheManager{
-////        val defaults: RedisCacheConfiguration = RedisCacheConfiguration
-////            .defaultCacheConfig()
-////            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-////            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-////            .entryTtl(Duration.ofMinutes(30)) //캐시 유효기간을 30분으로 설정
-////
-////        return RedisCacheManager
-////            .RedisCacheManagerBuilder
-////            .fromConnectionFactory(redisConnectionFactory)
-////            .cacheDefaults(defaults).build()
-////    }
 //}
