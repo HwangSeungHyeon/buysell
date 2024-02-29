@@ -64,3 +64,8 @@ oauth2:
     client_id: ${oauth2.client_id}
     redirect_url: ${oauth2.redirect_url}
 
+auth:
+  jwt:
+    issuer: team.sparta.com
+    secret: ${jwt.secret}
+    accessTokenExpirationHour: 1680
