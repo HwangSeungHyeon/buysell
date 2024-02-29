@@ -4,6 +4,7 @@ import com.teamsparta.buysell.domain.exception.ForbiddenException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.review.dto.request.CreateReviewRequest
+import com.teamsparta.buysell.domain.review.dto.request.UpdateReviewRequest
 import com.teamsparta.buysell.infra.auditing.BaseEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
@@ -21,7 +22,7 @@ class Review private constructor(
     @Column(name = "created_name")
     var createdName: String,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     val post: Post,
 
@@ -35,12 +36,18 @@ class Review private constructor(
 
     fun checkPermission(
         principal: UserPrincipal
-    ){
-        if(member.id != principal.id)
+    ) {
+        if (member.id != principal.id)
             throw ForbiddenException("수정 권한이 없습니다.")
     }
 
-    companion object{
+    fun edit(
+        request: UpdateReviewRequest
+    ) {
+        this.content = request.content
+    }
+
+    companion object {
         fun makeEntity(
             request: CreateReviewRequest,
             member: Member,
