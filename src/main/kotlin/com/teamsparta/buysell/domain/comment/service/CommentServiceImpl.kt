@@ -69,7 +69,7 @@ class CommentServiceImpl(
 
         comment.checkPermission(principal)
 
-        comment.deleteComment()
+        comment.softDelete()
 
         return CommentResponse("댓글이 삭제되었습니다.")
     }

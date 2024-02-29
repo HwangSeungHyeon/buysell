@@ -6,6 +6,7 @@ import com.teamsparta.buysell.domain.exception.ForbiddenException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.infra.auditing.BaseEntity
+import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 
@@ -18,8 +19,8 @@ class Comment private constructor(
     @Column(name = "created_name")
     var createdName: String,
 
-    @Column(name = "is_deleted")
-    var isDeleted: Boolean,
+//    @Column(name = "is_deleted")
+//    var isDeleted: Boolean,
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -29,7 +30,7 @@ class Comment private constructor(
     @JoinColumn(name = "post_id")
     var post: Post
 
-) : BaseEntity() {
+) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -47,9 +48,9 @@ class Comment private constructor(
             throw ForbiddenException("수정 권한이 없습니다.")
     }
 
-    fun deleteComment(){
-        this.isDeleted = true
-    }
+//    fun deleteComment(){
+//        this.isDeleted = true
+//    }
 
     companion object{
         fun makeEntity(
@@ -60,7 +61,6 @@ class Comment private constructor(
             return Comment(
                 content = request.content,
                 createdName = member.nickname,
-                isDeleted = false,
                 member = member,
                 post = post
             )
