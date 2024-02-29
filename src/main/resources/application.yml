@@ -1,0 +1,66 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: false
+        highlight_sql: true
+  security:
+    user:
+      password: 1
+  data:
+    redis:
+      host: ${redis.host}
+      port: ${redis.port}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${smtp.name}
+    password: ${smtp.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+
+logging:
+  level:
+    org:
+      hibernate:
+        sql: debug
+        orm:
+          jdbc:
+            bind: trace
+
+cloud:
+  aws:
+    s3:
+      bucket: ${aws.bucket}
+    credentials:
+      access-key: ${aws.accessKey}
+      secret-key: ${aws.secretKey}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+oauth2:
+  kakao:
+    client_id: ${oauth2.client_id}
+    redirect_url: ${oauth2.redirect_url}
+  google:
+    client_id: ${oauth2.client_id}
+    redirect_url: ${oauth2.redirect_url}
+  naver:
+    client_id: ${oauth2.client_id}
+    redirect_url: ${oauth2.redirect_url}
+
