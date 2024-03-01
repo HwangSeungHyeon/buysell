@@ -5,7 +5,7 @@ import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.review.dto.request.CreateReviewRequest
 import com.teamsparta.buysell.domain.review.dto.request.UpdateReviewRequest
-import com.teamsparta.buysell.infra.auditing.BaseEntity
+import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 
@@ -28,8 +28,9 @@ class Review private constructor(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    val member: Member
-) : BaseEntity() {
+    val member: Member,
+
+) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
