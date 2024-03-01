@@ -1,7 +1,9 @@
 package com.teamsparta.buysell.infra.security
 
+import com.teamsparta.buysell.domain.member.service.CustomUserDetailService
 import com.teamsparta.buysell.infra.security.jwt.CustomAccessDeniedHandler
 import com.teamsparta.buysell.infra.security.jwt.JwtAuthenticationFilter
+import com.teamsparta.buysell.infra.social.jwt.SocialJwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -19,9 +21,11 @@ class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: CustomAccessDeniedHandler,
+    private val customUserDetailService: CustomUserDetailService,
+    private val socialJwtAuthenticationFilter: SocialJwtAuthenticationFilter,
 ) {
     private val allowedUrls = arrayOf(
-        "/", "/swagger-ui/**", "/v3/**",
+        "/", "/swagger-ui/**", "/v3/**","/members/**"
     )
 
     private val anonymousUrls = arrayOf(
@@ -37,11 +41,17 @@ class SecurityConfig(
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.NEVER)
             }
+            .oauth2Login {
+                it.userInfoEndpoint { u -> u.userService(customUserDetailService) }
+                it.defaultSuccessUrl("/members/google/callback") // 로그인 성공 시 리다이렉트할 URL
+                it.failureUrl("/loginFailure") // 로그인 실패 시 리다이렉트할 URL
+            }
             .authorizeHttpRequests {
                 it.requestMatchers(*allowedUrls).permitAll()
                     .requestMatchers(*anonymousUrls).anonymous() //익명 사용자만 접근 가능
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(socialJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
                 it.authenticationEntryPoint(authenticationEntryPoint)
                 it.accessDeniedHandler(accessDeniedHandler)
