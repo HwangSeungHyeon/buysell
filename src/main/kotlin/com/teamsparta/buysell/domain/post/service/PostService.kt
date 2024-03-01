@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.post.service
 
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
@@ -21,4 +22,8 @@ interface PostService {
     fun getPostById(postId: Int): PostResponse
 
     fun deletePost(postId: Int, principal: UserPrincipal)
+
+    fun addLikes(postId: Int, userPrincipal: UserPrincipal): MessageResponse
+
+    fun cancelLikes(postId: Int, userPrincipal: UserPrincipal): MessageResponse
 }

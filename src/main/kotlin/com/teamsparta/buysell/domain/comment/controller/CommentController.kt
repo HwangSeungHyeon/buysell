@@ -2,8 +2,8 @@ package com.teamsparta.buysell.domain.comment.controller
 
 import com.teamsparta.buysell.domain.comment.dto.request.CreateRequest
 import com.teamsparta.buysell.domain.comment.dto.request.UpdateRequest
-import com.teamsparta.buysell.domain.comment.dto.response.CommentResponse
 import com.teamsparta.buysell.domain.comment.service.CommentService
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -26,7 +26,7 @@ class CommentController(
         @PathVariable postId: Int,
         @RequestBody request: CreateRequest,
         @AuthenticationPrincipal principal: UserPrincipal
-    ) : ResponseEntity<CommentResponse>{
+    ) : ResponseEntity<MessageResponse>{
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(commentService.addComment(postId, request, principal))
@@ -40,7 +40,7 @@ class CommentController(
         @PathVariable commentId: Int,
         @RequestBody request: UpdateRequest,
         @AuthenticationPrincipal principal: UserPrincipal
-    ) : ResponseEntity<CommentResponse>{
+    ) : ResponseEntity<MessageResponse>{
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(commentService.editComment(postId, commentId, request, principal))
@@ -53,7 +53,7 @@ class CommentController(
         @PathVariable postId: Int,
         @PathVariable commentId: Int,
         @AuthenticationPrincipal principal: UserPrincipal
-    ) : ResponseEntity<CommentResponse>{
+    ) : ResponseEntity<MessageResponse>{
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(commentService.deleteComment(postId, commentId, principal))
