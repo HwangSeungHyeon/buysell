@@ -50,10 +50,6 @@ class PostController(
 
     @GetMapping
     fun getPosts(
-        @Valid @NotBlank
-        @Size(min = 1, max = 15, message = "1자 이상 15자 이하여야 합니다.")
-        @RequestParam keyword: String,
-
         @PageableDefault(
             page = 0,
             size = 10,
@@ -62,7 +58,7 @@ class PostController(
     ): ResponseEntity<Page<PostListResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.searchByKeyword(keyword, pageable))
+            .body(postService.getPostsWithPagination(pageable))
     }
 
     @GetMapping("/{postId}")

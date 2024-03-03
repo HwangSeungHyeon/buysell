@@ -88,12 +88,11 @@ class PostServiceImpl(
             ?: throw ModelNotFoundException("Model", principal.id)
     }
 
-    override fun searchByKeyword(
-        keyword: String,
+    override fun getPostsWithPagination(
         pageable: Pageable
     ): Page<PostListResponse> {
         return postRepository
-            .searchByKeyword(keyword, pageable)
+            .searchByKeyword(pageable)
     }
 
     override fun addLikes(
