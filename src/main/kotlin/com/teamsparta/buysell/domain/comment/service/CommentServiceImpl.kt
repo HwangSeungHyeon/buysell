@@ -2,9 +2,9 @@ package com.teamsparta.buysell.domain.comment.service
 
 import com.teamsparta.buysell.domain.comment.dto.request.CreateRequest
 import com.teamsparta.buysell.domain.comment.dto.request.UpdateRequest
-import com.teamsparta.buysell.domain.comment.dto.response.CommentResponse
 import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.comment.repository.CommentRepository
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ForbiddenException
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
@@ -24,7 +24,7 @@ class CommentServiceImpl(
         postId: Int,
         request: CreateRequest,
         principal: UserPrincipal
-    ) : CommentResponse {
+    ) : MessageResponse {
 
         val member = memberRepository.findByIdOrNull(principal.id)
             ?:throw ModelNotFoundException("Member", principal.id)
@@ -38,7 +38,7 @@ class CommentServiceImpl(
             post = post
         ).let { commentRepository.save(it) }
 
-        return CommentResponse("댓글이 작성되었습니다.")
+        return MessageResponse("댓글이 작성되었습니다.")
     }
 
     @Transactional
@@ -47,7 +47,7 @@ class CommentServiceImpl(
         commentId: Int,
         request: UpdateRequest,
         principal: UserPrincipal
-    ): CommentResponse {
+    ): MessageResponse {
         val comment = commentRepository
             .findByPostIdAndId(postId, commentId)
 
@@ -55,7 +55,7 @@ class CommentServiceImpl(
 
         comment.edit(request)
 
-        return CommentResponse("댓글이 수정되었습니다.")
+        return MessageResponse("댓글이 수정되었습니다.")
     }
 
     @Transactional
@@ -63,14 +63,14 @@ class CommentServiceImpl(
         postId: Int,
         commentId: Int,
         principal: UserPrincipal
-    ): CommentResponse {
+    ): MessageResponse {
         val comment = commentRepository
             .findByPostIdAndId(postId, commentId)
 
         comment.checkPermission(principal)
 
-        comment.deleteComment()
+        comment.softDelete()
 
-        return CommentResponse("댓글이 삭제되었습니다.")
+        return MessageResponse("댓글이 삭제되었습니다.")
     }
 }

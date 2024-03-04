@@ -1,5 +1,12 @@
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${postgresql.url}
+    username: test
+    password: ${postgresql.password}
   jpa:
+    hibernate:
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
