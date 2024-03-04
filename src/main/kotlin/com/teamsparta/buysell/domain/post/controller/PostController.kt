@@ -5,8 +5,10 @@ import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
+import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.service.PostService
 import com.teamsparta.buysell.infra.security.UserPrincipal
+import io.swagger.v3.oas.annotations.Operation
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -102,5 +104,12 @@ class PostController(
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(postService.cancelLikes(postId, userPrincipal))
+    }
+
+    @GetMapping("/categories")
+    fun getCategoryList(): ResponseEntity<List<String>>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(Category.entries.map { it.label })
     }
 }

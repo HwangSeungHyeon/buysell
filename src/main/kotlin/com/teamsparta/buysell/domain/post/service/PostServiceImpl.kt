@@ -37,8 +37,8 @@ class PostServiceImpl(
                 createdName = member.nickname,
                 view = 0,
                 price = request.price,
-                member = member
-//                category = request.category
+                member = member,
+                category = request.category
             )
         ).toResponse()
     }

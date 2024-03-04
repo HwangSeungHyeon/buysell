@@ -3,7 +3,6 @@ package com.teamsparta.buysell.domain.post.model
 import com.teamsparta.buysell.domain.exception.ForbiddenException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
-import com.teamsparta.buysell.infra.auditing.BaseEntity
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
@@ -39,13 +38,14 @@ class Post(
 //    @Column(name = "updated_at")
 //    val updatedAt: LocalDateTime = LocalDateTime.now(),
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     var member: Member,
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "category")
-//    var category: Category
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category")
+    var category: Category
+
 ): SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
