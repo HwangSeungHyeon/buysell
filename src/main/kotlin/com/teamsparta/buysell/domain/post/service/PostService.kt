@@ -17,7 +17,7 @@ interface PostService {
 
     fun getPosts(): List<PostResponse>
 
-    fun searchByKeyword(keyword: String, pageable: Pageable): Page<PostListResponse>
+    fun getPostsWithPagination(pageable: Pageable): Page<PostListResponse>
 
     fun getPostById(postId: Int): PostResponse
 

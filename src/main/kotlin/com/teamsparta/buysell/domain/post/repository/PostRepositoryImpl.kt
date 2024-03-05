@@ -19,11 +19,9 @@ import org.springframework.stereotype.Repository
 class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
     private val post = QPost.post
     override fun searchByKeyword(
-        keyword: String,
         pageable: Pageable
     ) : Page<PostListResponse> {
         val booleanBuilder = BooleanBuilder()
-        booleanBuilder.and(post.title.contains(keyword))
         booleanBuilder.and(post.isDeleted.isFalse)
 
         val totalCount = queryFactory

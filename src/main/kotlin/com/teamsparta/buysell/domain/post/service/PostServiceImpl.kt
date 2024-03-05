@@ -83,25 +83,18 @@ class PostServiceImpl(
         post.softDelete()
     }
 
-    private fun getMember(principal: UserPrincipal): Member {
-        return memberRepository.findByIdOrNull(principal.id)
-            ?: throw ModelNotFoundException("Model", principal.id)
-    }
-
-    override fun searchByKeyword(
-        keyword: String,
+    override fun getPostsWithPagination(
         pageable: Pageable
     ): Page<PostListResponse> {
         return postRepository
-            .searchByKeyword(keyword, pageable)
+            .searchByKeyword(pageable)
     }
 
     override fun addLikes(
         postId: Int,
         userPrincipal: UserPrincipal
     ) : MessageResponse {
-        val post = postRepository.findByIdOrNull(postId)
-            ?: throw ModelNotFoundException("post", postId)
+        val post = getPost(postId)
 
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
         Like.checkPermission(post, userPrincipal)
@@ -109,8 +102,7 @@ class PostServiceImpl(
         likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
             .let { if(it) throw IllegalStateException("이미 찜을 등록하셨습니다.") }
 
-        val member = memberRepository.findByIdOrNull(userPrincipal.id)
-            ?: throw ModelNotFoundException("model", userPrincipal.id)
+        val member = getMember(userPrincipal)
 
         Like.makeEntity(post = post, member = member)
             .let { likeRepository.save(it) }
@@ -128,14 +120,24 @@ class PostServiceImpl(
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
         Like.checkPermission(post, userPrincipal)
 
-//        likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
-//            .let { if(it) likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id) }
+        likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
+            .let { if(it) likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id) }
 
-        val likeEntity = likeRepository.findByPostIdAndMemberId(postId, userPrincipal.id)
-            ?: throw ModelNotFoundException("like", null)
-
-        likeRepository.delete(likeEntity)
+//        val likeEntity = likeRepository.findByPostIdAndMemberId(postId, userPrincipal.id)
+//            ?: throw ModelNotFoundException("like", null)
+//
+//        likeRepository.delete(likeEntity)
 
         return MessageResponse("찜이 취소되었습니다.")
+    }
+
+    private fun getPost(postId: Int): Post{
+        return postRepository.findByIdOrNull(postId)
+            ?: throw ModelNotFoundException("post", postId)
+    }
+
+    private fun getMember(userPrincipal: UserPrincipal): Member{
+        return memberRepository.findByIdOrNull(userPrincipal.id)
+            ?: throw ModelNotFoundException("model", userPrincipal.id)
     }
 }

@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface CustomPostRepository {
-    fun searchByKeyword(keyword: String, pageable: Pageable): Page<PostListResponse>
+    fun searchByKeyword(pageable: Pageable): Page<PostListResponse>
 }
