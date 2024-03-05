@@ -17,10 +17,10 @@ class Review private constructor(
     var content: String,
 
     @Column(name = "rating")
-    var rating: Float,
+    var rating: Int,
 
     @Column(name = "created_name")
-    var createdName: String,
+    var createdName: String?,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")

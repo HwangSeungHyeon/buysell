@@ -5,6 +5,7 @@ import com.teamsparta.buysell.domain.review.dto.request.CreateReviewRequest
 import com.teamsparta.buysell.domain.review.dto.request.UpdateReviewRequest
 import com.teamsparta.buysell.domain.review.service.ReviewService
 import com.teamsparta.buysell.infra.security.UserPrincipal
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -18,7 +19,7 @@ class ReviewController(
     @PostMapping
     fun createReview(
         @PathVariable postId: Int,
-        @RequestBody request: CreateReviewRequest,
+        @Valid @RequestBody request: CreateReviewRequest,
         @AuthenticationPrincipal principal: UserPrincipal
     ): ResponseEntity<MessageResponse> {
         return ResponseEntity
