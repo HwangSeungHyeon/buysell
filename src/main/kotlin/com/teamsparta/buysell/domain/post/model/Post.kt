@@ -1,5 +1,7 @@
 package com.teamsparta.buysell.domain.post.model
 
+import com.teamsparta.buysell.domain.comment.dto.response.CommentResponse
+import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.exception.ForbiddenException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
@@ -7,7 +9,6 @@ import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 
-//@SoftDelete(columnName = "is_deleted") //soft delete
 @Entity
 @Table(name = "post")
 class Post(
@@ -26,6 +27,12 @@ class Post(
     @Column(name = "is_soldout")
     var isSoldOut: Boolean = false,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    val member: Member,
+
+    @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    val comment: MutableList<Comment> = mutableListOf(),
 //    @Column(name = "is_deleted")
 //    var isDeleted: Boolean = false,
 
@@ -37,10 +44,6 @@ class Post(
 //
 //    @Column(name = "updated_at")
 //    val updatedAt: LocalDateTime = LocalDateTime.now(),
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    var member: Member,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
@@ -70,7 +73,10 @@ fun Post.toResponse(): PostResponse {
         content = content,
         createdName = createdName, // member name 으로 수정
         price = price,
-        isSoldout = isSoldOut
+        isSoldout = isSoldOut,
+        comment = comment
+            .filter { !it.isDeleted }
+            .map { CommentResponse.toResponse(it) }
 //        category = category
     )
 }
