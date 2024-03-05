@@ -77,5 +77,3 @@ auth:
     issuer: team.sparta.com
     secret: ${jwt.secret}
     accessTokenExpirationHour: 1680
-server:
-  port: 8081
