@@ -17,7 +17,7 @@ class Comment private constructor(
     var content: String,
 
     @Column(name = "created_name")
-    var createdName: String,
+    var createdName: String?,
 
 //    @Column(name = "is_deleted")
 //    var isDeleted: Boolean,

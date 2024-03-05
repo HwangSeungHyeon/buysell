@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -6,7 +7,7 @@ spring:
     password: ${postgresql.password}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate # 이거 조금 더 찾아보기
     properties:
       hibernate:
         show_sql: true
@@ -76,3 +77,5 @@ auth:
     issuer: team.sparta.com
     secret: ${jwt.secret}
     accessTokenExpirationHour: 1680
+server:
+  port: 8081

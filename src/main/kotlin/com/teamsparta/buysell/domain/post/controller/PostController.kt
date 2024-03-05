@@ -52,6 +52,7 @@ class PostController(
 
     @GetMapping
     fun getPosts(
+        @RequestParam category: Category?,
         @PageableDefault(
             page = 0,
             size = 10,
@@ -60,7 +61,7 @@ class PostController(
     ): ResponseEntity<Page<PostListResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.getPostsWithPagination(pageable))
+            .body(postService.getPostsWithPagination(category, pageable))
     }
 
     @GetMapping("/{postId}")
@@ -104,12 +105,5 @@ class PostController(
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(postService.cancelLikes(postId, userPrincipal))
-    }
-
-    @GetMapping("/categories")
-    fun getCategoryList(): ResponseEntity<List<String>>{
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(Category.entries.map { it.label })
     }
 }

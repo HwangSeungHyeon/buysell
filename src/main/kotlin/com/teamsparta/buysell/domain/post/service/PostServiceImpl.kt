@@ -9,6 +9,7 @@ import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
+import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.model.Like
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.post.model.toResponse
@@ -84,10 +85,11 @@ class PostServiceImpl(
     }
 
     override fun getPostsWithPagination(
+        category: Category?,
         pageable: Pageable
     ): Page<PostListResponse> {
         return postRepository
-            .searchByKeyword(pageable)
+            .getPostsWithPagination(category, pageable)
     }
 
     override fun addLikes(

@@ -18,7 +18,7 @@ class Post(
     var content: String,
 
     @Column(name = "created_name")
-    val createdName: String,
+    val createdName: String?,
 
     @Column(name = "price")
     var price: Int,
