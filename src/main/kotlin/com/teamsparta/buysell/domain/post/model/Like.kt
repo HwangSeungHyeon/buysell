@@ -12,12 +12,12 @@ import org.hibernate.annotations.OnDeleteAction
 class Like private constructor(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     var post: Post,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     var member: Member,
 ) {
     @Id
@@ -39,7 +39,7 @@ class Like private constructor(
             post: Post,
             userPrincipal: UserPrincipal
         ){
-            if(post.id == userPrincipal.id)
+            if(post.member.id == userPrincipal.id)
                 throw ForbiddenException("자신이 작성한 게시글에는 찜을 할 수 없습니다.")
         }
     }

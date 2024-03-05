@@ -22,11 +22,11 @@ class Comment private constructor(
 //    @Column(name = "is_deleted")
 //    var isDeleted: Boolean,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     var member: Member,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     var post: Post
 

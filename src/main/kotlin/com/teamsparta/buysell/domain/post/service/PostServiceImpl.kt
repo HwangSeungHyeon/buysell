@@ -124,6 +124,7 @@ class PostServiceImpl(
         return MessageResponse("찜 목록에 등록하였습니다.")
     }
 
+    @Transactional
     override fun cancelLikes(
         postId: Int,
         userPrincipal: UserPrincipal
