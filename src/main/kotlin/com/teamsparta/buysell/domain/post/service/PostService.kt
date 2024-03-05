@@ -5,6 +5,7 @@ import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
+import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -17,7 +18,7 @@ interface PostService {
 
     fun getPosts(): List<PostResponse>
 
-    fun getPostsWithPagination(pageable: Pageable): Page<PostListResponse>
+    fun getPostsWithPagination(category: Category?, pageable: Pageable): Page<PostListResponse>
 
     fun getPostById(postId: Int): PostResponse
 

@@ -5,8 +5,10 @@ import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
+import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.service.PostService
 import com.teamsparta.buysell.infra.security.UserPrincipal
+import io.swagger.v3.oas.annotations.Operation
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -50,6 +52,7 @@ class PostController(
 
     @GetMapping
     fun getPosts(
+        @RequestParam category: Category?,
         @PageableDefault(
             page = 0,
             size = 10,
@@ -58,7 +61,7 @@ class PostController(
     ): ResponseEntity<Page<PostListResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.getPostsWithPagination(pageable))
+            .body(postService.getPostsWithPagination(category, pageable))
     }
 
     @GetMapping("/{postId}")

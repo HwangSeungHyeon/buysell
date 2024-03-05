@@ -10,16 +10,16 @@ class Member(
     val email : String,
 
     @Column(name = "password")
-    val password : String,
+    val password : String?,
 
     @Column(name = "nickname")
-    val nickname : String,
+    val nickname : String?,
 
     @Column(name = "gender")
-    val gender : String,
+    val gender : String?,
 
     @Column(name = "birthday")
-    val birthday : String,
+    val birthday : String?,
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
