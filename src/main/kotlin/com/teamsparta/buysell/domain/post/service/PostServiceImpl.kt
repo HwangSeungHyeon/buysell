@@ -84,12 +84,24 @@ class PostServiceImpl(
         post.softDelete()
     }
 
+    //게시글을 조회할 때 Pagination을 적용한 메서드
+    //카테고리가 없을 경우 기존과 동일하게 동작
+    //카테고리가 있을 경우 해당 카테고리 관련 게시글만 조회
     override fun getPostsWithPagination(
         category: Category?,
         pageable: Pageable
     ): Page<PostListResponse> {
         return postRepository
             .getPostsWithPagination(category, pageable)
+    }
+
+    //키워드 검색 메서드
+    override fun searchByKeyword(
+        keyword: String,
+        pageable: Pageable
+    ): Page<PostListResponse> {
+        return postRepository
+            .searchByKeyword(keyword, pageable)
     }
 
     override fun addLikes(
