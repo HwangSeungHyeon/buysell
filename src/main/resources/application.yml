@@ -1,5 +1,13 @@
+
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${postgresql.url}
+    username: test
+    password: ${postgresql.password}
   jpa:
+    hibernate:
+      ddl-auto: validate # 이거 조금 더 찾아보기
     properties:
       hibernate:
         show_sql: true
@@ -64,3 +72,8 @@ oauth2:
     client_id: ${oauth2.client_id}
     redirect_url: ${oauth2.redirect_url}
 
+auth:
+  jwt:
+    issuer: team.sparta.com
+    secret: ${jwt.secret}
+    accessTokenExpirationHour: 1680
