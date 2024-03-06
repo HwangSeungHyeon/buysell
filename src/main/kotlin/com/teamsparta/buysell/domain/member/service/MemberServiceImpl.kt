@@ -80,7 +80,7 @@ class MemberServiceImpl(
             ?: throw ModelNotFoundException("member", userPrincipal.id)
         val post = postRepository.findAllByMember(member)
         return post.map { it.toResponse() }
-    }
+    }//내가 쓴 글 전체 조회
 
     override fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>? {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
@@ -88,5 +88,5 @@ class MemberServiceImpl(
         val like = likeRepository.findByMember(member)
         val post = like.map { it.post }
         return post.map { it.toResponse() }
-    }
+    }//내가 찜 한 글 전체 조회
 }
