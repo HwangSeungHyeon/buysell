@@ -1,6 +1,5 @@
 package com.teamsparta.buysell.domain.post.service
 
-import com.teamsparta.buysell.domain.post.repository.LikeRepository
 import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Member
@@ -13,6 +12,7 @@ import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.model.Like
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.post.model.toResponse
+import com.teamsparta.buysell.domain.post.repository.LikeRepository
 import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.transaction.Transactional
@@ -95,14 +95,14 @@ class PostServiceImpl(
     override fun addLikes(
         postId: Int,
         userPrincipal: UserPrincipal
-    ) : MessageResponse {
+    ): MessageResponse {
         val post = getPost(postId)
 
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
         Like.checkPermission(post, userPrincipal)
 
-        likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
-            .let { if(it) throw IllegalStateException("이미 찜을 등록하셨습니다.") }
+        likeRepository.existsByPostIdAndMemberId(postId, userPrincipal.id)
+            .let { if (it) throw IllegalStateException("이미 찜을 등록하셨습니다.") }
 
         val member = getMember(userPrincipal)
 
@@ -112,6 +112,7 @@ class PostServiceImpl(
         return MessageResponse("찜 목록에 등록하였습니다.")
     }
 
+    @Transactional
     override fun cancelLikes(
         postId: Int,
         userPrincipal: UserPrincipal
@@ -122,23 +123,20 @@ class PostServiceImpl(
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
         Like.checkPermission(post, userPrincipal)
 
-        likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
-            .let { if(it) likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id) }
-
-//        val likeEntity = likeRepository.findByPostIdAndMemberId(postId, userPrincipal.id)
-//            ?: throw ModelNotFoundException("like", null)
-//
-//        likeRepository.delete(likeEntity)
-
-        return MessageResponse("찜이 취소되었습니다.")
+        if (likeRepository.existsByPostIdAndMemberId(postId, userPrincipal.id)) {
+            likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id)
+            return MessageResponse("찜이 취소되었습니다.")
+        } else {
+            return MessageResponse("잘못된 동작입니다.")
+        }
     }
 
-    private fun getPost(postId: Int): Post{
+    private fun getPost(postId: Int): Post {
         return postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
     }
 
-    private fun getMember(userPrincipal: UserPrincipal): Member{
+    private fun getMember(userPrincipal: UserPrincipal): Member {
         return memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("model", userPrincipal.id)
     }

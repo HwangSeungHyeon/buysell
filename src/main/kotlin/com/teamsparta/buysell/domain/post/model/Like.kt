@@ -39,7 +39,7 @@ class Like private constructor(
             post: Post,
             userPrincipal: UserPrincipal
         ){
-            if(post.id == userPrincipal.id)
+            if(post.member.id == userPrincipal.id)
                 throw ForbiddenException("자신이 작성한 게시글에는 찜을 할 수 없습니다.")
         }
     }

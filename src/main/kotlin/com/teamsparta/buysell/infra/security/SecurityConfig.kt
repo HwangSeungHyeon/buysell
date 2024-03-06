@@ -21,7 +21,10 @@ class SecurityConfig(
     private val accessDeniedHandler: CustomAccessDeniedHandler,
 ) {
     private val allowedUrls = arrayOf(
-        "/", "/swagger-ui/**", "/v3/**",
+        "/",
+        "/swagger-ui/**",
+        "/v3/**",
+        "/members/**",
         "/posts/**"
     )
 
@@ -40,7 +43,7 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it.requestMatchers(*allowedUrls).permitAll()
-                    .requestMatchers(*anonymousUrls).anonymous() //익명 사용자만 접근 가능
+                    .requestMatchers(*anonymousUrls).anonymous()//익명 사용자만 접근 가능
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
