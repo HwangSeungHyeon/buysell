@@ -135,15 +135,20 @@ class PostServiceImpl(
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
         Like.checkPermission(post, userPrincipal)
 
-        likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
-            .let { if(it) likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id) }
+        if (likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)) {
+            likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id)
+            return MessageResponse("찜이 취소되었습니다.")
+        }
+        else{
+            return MessageResponse("잘못된 동작입니다.")
+        }
 
 //        val likeEntity = likeRepository.findByPostIdAndMemberId(postId, userPrincipal.id)
 //            ?: throw ModelNotFoundException("like", null)
 //
 //        likeRepository.delete(likeEntity)
 
-        return MessageResponse("찜이 취소되었습니다.")
+
     }
 
     private fun getPost(postId: Int): Post{
