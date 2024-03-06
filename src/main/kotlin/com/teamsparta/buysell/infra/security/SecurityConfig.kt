@@ -24,12 +24,15 @@ class SecurityConfig(
         "/",
         "/swagger-ui/**",
         "/v3/**",
-        "/members/**",
-        "/posts/**"
+        "/posts/**",
+        "/members/**"
     )
 
     private val anonymousUrls = arrayOf(
-        "/signup", "/login", "**",
+        "/signup",
+        "/login",
+        "**",
+
     )
 
     @Bean
