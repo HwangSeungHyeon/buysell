@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*
 class MemberController(
     private val memberService: MemberService,
     private val googleService: GoogleService,
+    //private val socialMemberService: SocialMemberService,
+
 ) {
     //로컬 회원가입
     @PostMapping("/signup")
@@ -49,5 +51,29 @@ class MemberController(
         }
         return ResponseEntity.ok(googleService.googleLogin(oAuth2User))
     }
+    @GetMapping("/kakao/page")
+    fun getKakaoLoginPage(): ResponseEntity<Any?> {
+        return ResponseEntity<Any?>(googleService.getKakaoLoginPage(), HttpStatus.OK)
+    }
 
+    //카카오 로그인 엑세스토큰 발급
+    @GetMapping("/kakao/callback")
+    fun kakaoLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
+        if (oAuth2User == null) {
+            throw BadCredentialsException("인증된 사용자가 없습니다")
+        }
+        return ResponseEntity.ok(googleService.kakaoLogin(oAuth2User))
+    }
+//    @GetMapping("/naver/page")
+//    fun getNaverLoginPage(): ResponseEntity<Any?> {
+//        return ResponseEntity<Any?>(googleService.getGoogleLoginPage(), HttpStatus.OK)
+//    }
+//    //네이버 로그인 엑세스토큰 발급
+//    @GetMapping("/naver/callback")
+//    fun naverLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
+//        if (oAuth2User == null) {
+//            throw BadCredentialsException("인증된 사용자가 없습니다")
+//        }
+//        return ResponseEntity.ok(googleService.googleLogin(oAuth2User))
+//    }
 }

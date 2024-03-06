@@ -1,13 +1,12 @@
 package com.teamsparta.buysell.domain.member.model
 
-import com.teamsparta.buysell.domain.member.dto.response.SocialResponse
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "member")
 class Social(
     @Column(name = "email")
-    val email : String,
+    val email : String?,
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     val role : Role?,
@@ -18,13 +17,4 @@ class Social(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null
-
-    fun toResponse(): SocialResponse {
-        return SocialResponse(
-            id = id!!,
-            email = email,
-            role = role,
-            platform = platform,
-        )
-    }
 }
