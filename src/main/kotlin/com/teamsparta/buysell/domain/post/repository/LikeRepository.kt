@@ -13,5 +13,4 @@ interface LikeRepository: JpaRepository<Like, Int> {
     fun deleteByPostIdAndMemberId(postId: Int, memberId: Int)
 
     fun findByMember(member: Member): List<Like>
-
 }

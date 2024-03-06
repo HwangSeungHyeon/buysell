@@ -13,13 +13,13 @@ class Member(
     val password : String?,
 
     @Column(name = "nickname")
-    val nickname : String?,
+    var nickname : String?,
 
     @Column(name = "gender")
-    val gender : String?,
+    var gender : String?,
 
     @Column(name = "birthday")
-    val birthday : String?,
+    var birthday : String?,
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)

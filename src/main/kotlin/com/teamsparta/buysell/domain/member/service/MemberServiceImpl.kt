@@ -69,19 +69,17 @@ class MemberServiceImpl(
     override fun updateMember(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("Member", userPrincipal.id)
-
-        // 현재 로그인 된 사용자 비밀번호 재확인
-
-        return memberRepository.save(member).toResponse()
-
+        member.nickname = request.nickname
+        member.gender = request.gender
+        member.birthday = request.birthday
+       return memberRepository.save(member).toResponse()
     } // 멤버 아이디 기준 정보 수정
-
 
     override fun getAllPostByUserPrincipal(userPrincipal: UserPrincipal): List<PostResponse>? {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("member", userPrincipal.id)
         val post = postRepository.findAllByMember(member)
-        return post.map { it.toResponse()}
+        return post.map { it.toResponse() }
     }
 
     override fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>? {

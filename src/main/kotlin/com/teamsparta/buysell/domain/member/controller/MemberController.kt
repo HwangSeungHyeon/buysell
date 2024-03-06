@@ -28,7 +28,7 @@ class MemberController(
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<String> {
         val token = memberService.login(request)
         return ResponseEntity.ok()
@@ -37,21 +37,23 @@ class MemberController(
     }
 
 
-    @PutMapping("/")
+    @PutMapping
     @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
     fun updateProfile(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @RequestBody request: MemberProfileUpdateRequest
-    ): MemberResponse {
-        return memberService.updateMember(userPrincipal, request)
+    ): ResponseEntity<MemberResponse> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(memberService.updateMember(userPrincipal, request))
     }
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "프로필 조회", description = "프로필을 조회합니다.")
     fun getProfile(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
     ): ResponseEntity<MemberResponse> {
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMember(userPrincipal))
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(memberService.getMember(userPrincipal))
     }
 
     @GetMapping("/posts")
@@ -60,7 +62,8 @@ class MemberController(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
     ): ResponseEntity<List<PostResponse>> {
         val posts = memberService.getAllPostByUserPrincipal(userPrincipal)
-        return ResponseEntity.ok(posts)
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(posts)
     }
 
     @GetMapping("/likes")
@@ -69,7 +72,7 @@ class MemberController(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
     ): ResponseEntity<List<PostResponse>> {
         val like = memberService.getAllPostByLike(userPrincipal)
-        return ResponseEntity.ok(like)
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(like)
     }
-
 }
