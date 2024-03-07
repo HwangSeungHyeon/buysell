@@ -74,9 +74,6 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-
-    implementation ("org.slf4j:slf4j-api:1.7.30")
-    implementation ("ch.qos.logback:logback-classic:1.2.3")
 }
 
 tasks.withType<KotlinCompile> {

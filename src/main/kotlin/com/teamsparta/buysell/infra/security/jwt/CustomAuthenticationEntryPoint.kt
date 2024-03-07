@@ -20,16 +20,3 @@ class CustomAuthenticationEntryPoint: AuthenticationEntryPoint {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.message)
     }
 }
-//@Component
-//class CustomAuthenticationEntryPoint(
-//    @Qualifier("handlerExceptionResolver")
-//    private val resolver: HandlerExceptionResolver
-//):AuthenticationEntryPoint {
-//    override fun commence(
-//        request: HttpServletRequest,
-//        response: HttpServletResponse,
-//        authException: AuthenticationException
-//    ){
-//        resolver.resolveException(request, response, null, request.getAttribute("exception") as Exception)
-//    }
-//}

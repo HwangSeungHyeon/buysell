@@ -1,9 +1,12 @@
 package com.teamsparta.buysell.domain.member.model
 
+import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
+
 
 @Entity
 @Table(name = "member")
+@Schema(description = "소셜 회원 정보")
 class Social(
     @Column(name = "email")
     val email : String?,
