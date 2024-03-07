@@ -14,7 +14,7 @@ class Account (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
 
-    fun modifyBalance(money: Int){
+    fun depositToAccount(money: Int){
         accountBalance += money
     }
 

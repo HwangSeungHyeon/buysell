@@ -27,7 +27,7 @@ class AccountServiceImpl(
             ?: throw ModelNotFoundException("Member", memberId)
 
         member.account.apply {
-            modifyBalance(money)
+            depositToAccount(money)
         }
 
         return AccountResponse(member.account.accountBalance)
