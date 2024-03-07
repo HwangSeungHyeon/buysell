@@ -10,10 +10,10 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 
+
 @Service
-class GoogleService(
+class SocialService(
     private val socialRepository: SocialRepository,
-    //private val socialMemberRepository: SocialMemberRepository,
     private val jwtProvider: JwtProvider,
 
 ) {
@@ -23,10 +23,9 @@ class GoogleService(
 
     fun googleLogin(oAuth2User: OAuth2User) : JwtDto {
         val email = oAuth2User.attributes.get("email").toString()
-
         val platform = Platform.GOOGLE
         val role = Role.MEMBER
-        val member = if(!socialRepository.existsByEmail(email)) {
+        val member = socialRepository.findByEmailAndPlatform(email, platform) ?: run {
             val newMember = Social(
                 email = email,
                 role = role,
@@ -34,23 +33,21 @@ class GoogleService(
             )
             socialRepository.save(newMember)
             newMember
-        } else {
-            socialRepository.findByEmail(email) ?: throw BadCredentialsException("User with email $email not found")
         }
 
         return jwtProvider.generateJwtDto(oAuth2User, member.id.toString(), role.name, platform)
     }
 
     fun getKakaoLoginPage(): String{
-        return "http://localhost:8080/oauth2/authorization/kakako"
+        return "http://localhost:8080/oauth2/authorization/kakao"
     }
 
     fun kakaoLogin(oAuth2User: OAuth2User) : JwtDto {
-        val email = oAuth2User.attributes.get("email").toString()
-
+        val kakaoAccount = oAuth2User.attributes["kakao_account"] as Map<*, *>
+        val email = kakaoAccount["email"].toString()
         val platform = Platform.KAKAO
         val role = Role.MEMBER
-        val member = if(!socialRepository.existsByEmail(email)) {
+        val member = socialRepository.findByEmailAndPlatform(email, platform) ?: run {
             val newMember = Social(
                 email = email,
                 role = role,
@@ -58,30 +55,29 @@ class GoogleService(
             )
             socialRepository.save(newMember)
             newMember
-        } else {
-            socialRepository.findByEmail(email) ?: throw BadCredentialsException("User with email $email not found")
         }
-
         return jwtProvider.generateJwtDto(oAuth2User, member.id.toString(), role.name, platform)
     }
 
-//    fun getKakaoLoginPage(): String {
-//        return "http://localhost:8080/oauth2/authorization/kakao"
-//    }
-//    fun kakaoLogin(oAuth2User: OAuth2User) : JwtDto {
-//        val id = oAuth2User.attributes.get("id").toString()
-//        val nickname = oAuth2User.attributes.get("properties.nickname").toString()
-//
-//        val platform = Platform.KAKAO
-//        val role = Role.MEMBER
-//        val member = if(!socialMemberRepository.existsByPlatformAndPlatformId(platform, id)) {
-//            val newMember = SocialMember.ofKakao(id, nickname)
-//            socialMemberRepository.save(newMember)
-//            newMember
-//        } else {
-//            socialMemberRepository.findByPlatformAndPlatformId(platform, id)
-//        }
-//
-//        return jwtProvider.generateJwtDto(oAuth2User, member.id.toString(), role.name, platform)
-//    }
+    fun getNaverLoginPage(): String{
+        return "http://localhost:8080/oauth2/authorization/naver"
+    }
+
+    fun naverLogin(oAuth2User: OAuth2User): JwtDto {
+        val platform = Platform.NAVER
+        val role = Role.MEMBER
+        val attributes = oAuth2User.attributes["response"] as Map<*, *>
+        val email = attributes["email"]?.toString()
+            ?: throw BadCredentialsException("이메일 정보가 존재하지 않습니다.")
+        val member = socialRepository.findByEmailAndPlatform(email, platform) ?: run {
+            val newMember = Social(
+                email = email,
+                role = role,
+                platform = platform
+            )
+            socialRepository.save(newMember)
+            newMember
+        }
+        return jwtProvider.generateJwtDto(oAuth2User, member.id.toString(), role.name, platform)
+    }
 }

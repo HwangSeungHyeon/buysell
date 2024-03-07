@@ -31,17 +31,13 @@ class SecurityConfig(
     private val customUserDetailService: CustomUserDetailService,
     private val socialJwtAuthenticationFilter: SocialJwtAuthenticationFilter,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
-
-//    private val oAuth2UserService: OAuth2UserService,
-//    private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
-
 ) {
     private val allowedUrls = arrayOf(
         "/", "/swagger-ui/**", "/v3/**","/members/**"
     )
 
     private val anonymousUrls = arrayOf(
-        "/signup", "/login", "**",
+        "/signup", "/login", "**","/members/**"
     )
 
     @Bean
@@ -55,8 +51,9 @@ class SecurityConfig(
             }
             .oauth2Login {
                 it.userInfoEndpoint { u -> u.userService(customUserDetailService) }
-                it.failureUrl("/loginFailure") // 로그인 실패 시 리다이렉트할 URL
                 it.successHandler(oAuth2LoginSuccessHandler)
+                it.failureUrl("/loginFailure") // 로그인 실패 시 리다이렉트할 URL
+
             }
             .authorizeHttpRequests {
                 it.requestMatchers(*allowedUrls).permitAll()
@@ -87,18 +84,24 @@ class SecurityConfig(
         val customRegistrations = customOAuth2ClientProperties.registration
 
         // 추가 소셜 설정을 기본 소셜 설정에 추가
-        for (customRegistration in customRegistrations) {
+        if (customRegistrations != null) {
+            for (customRegistration in customRegistrations) {
 
-            when (customRegistration.key) {
-                "kakao" -> registrations.add(
-                    CustomOAuth2Provider.KAKAO.getBuilder("kakao")
-                        .clientId(customRegistration.value.clientId)
-                        .clientSecret(customRegistration.value.clientSecret)
-                        .scope(customRegistration.value.scope)
-                        .build())
+                when (customRegistration.key) {
+                    "kakao" -> registrations.add(
+                        CustomOAuth2Provider.KAKAO.getBuilder("kakao")
+                            .clientId(customRegistration.value.clientId)
+                            .clientSecret(customRegistration.value.clientSecret)
+                            .build())
+                    "naver" -> registrations.add(
+                        CustomOAuth2Provider.NAVER.getBuilder("naver")
+                            .clientId(customRegistration.value.clientId)
+                            .clientSecret(customRegistration.value.clientSecret)
+                            .build())
+
+                }
 
             }
-
         }
 
         return InMemoryClientRegistrationRepository(registrations)

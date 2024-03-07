@@ -18,16 +18,14 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            #redirect_uri: http://localhost:8080/login/oauth2/code/google
-            scope:
-              - email
-              - profile
+
           kakao:
             client-id: ${KAKAO_CLIENT_ID} # REST API Key
             client-secret: ${KAKAO_CLIENT_SECRET} # Client Secret Key
-            #redirect-uri: http://localhost:8080/login/oauth2/code/kakao # Redirect URI
-            scope:
-              - account_email
+
+          naver:
+            client-id: ${NAVER_CLIENT_ID} # Client ID
+            client-secret: ${NAVER_CLIENT_SECRET} # Client Secret
 
 
     user:

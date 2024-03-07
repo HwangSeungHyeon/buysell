@@ -2,22 +2,34 @@ package com.teamsparta.buysell.infra.security.jwt
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
-import org.springframework.web.servlet.HandlerExceptionResolver
+
 
 @Component
-class CustomAuthenticationEntryPoint(
-    @Qualifier("handlerExceptionResolver")
-    private val resolver: HandlerExceptionResolver
-):AuthenticationEntryPoint {
+class CustomAuthenticationEntryPoint: AuthenticationEntryPoint {
+
     override fun commence(
         request: HttpServletRequest,
         response: HttpServletResponse,
         authException: AuthenticationException
     ){
-        resolver.resolveException(request, response, null, request.getAttribute("exception") as Exception)
+        // 예외를 처리하고 적절한 응답을 만드는 로직
+        val exception = request.getAttribute("exception") as Exception
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.message)
     }
 }
+//@Component
+//class CustomAuthenticationEntryPoint(
+//    @Qualifier("handlerExceptionResolver")
+//    private val resolver: HandlerExceptionResolver
+//):AuthenticationEntryPoint {
+//    override fun commence(
+//        request: HttpServletRequest,
+//        response: HttpServletResponse,
+//        authException: AuthenticationException
+//    ){
+//        resolver.resolveException(request, response, null, request.getAttribute("exception") as Exception)
+//    }
+//}

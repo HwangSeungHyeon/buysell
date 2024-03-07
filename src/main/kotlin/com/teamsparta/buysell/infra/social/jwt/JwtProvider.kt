@@ -36,8 +36,21 @@ class JwtProvider(
         val now = Instant.now()
         val expirationPeriod = java.time.Duration.ofHours(168)
         val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
+        val email: String? = when (platform.name) {
+            "google" -> oAuth2User.attributes["email"] as String
+            "naver" -> {
+                val responseAttributes = oAuth2User.attributes["response"] as Map<*, *>
+                responseAttributes["email"] as String?
+            }
+            "kakao" -> {
+                val kakaoAttributes = oAuth2User.attributes["kakao_account"] as Map<*, *>
+                kakaoAttributes["email"] as String?
+            }
+            else -> null
+        }
+
         val claims:Claims = Jwts.claims()
-            .add(mapOf("role" to role, "email" to oAuth2User.attributes["email"] as String,"platform" to platform))
+            .add(mapOf("role" to role, "email" to email,"platform" to platform))
             .build()
         val accessToken = Jwts.builder()
             .subject(id) // payload "sub": "id"

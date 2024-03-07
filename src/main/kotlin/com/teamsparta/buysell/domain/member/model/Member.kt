@@ -31,7 +31,7 @@ class Member(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int? = null
+    var id: Int? = null
 
     fun toResponse():MemberResponse{
         return MemberResponse(

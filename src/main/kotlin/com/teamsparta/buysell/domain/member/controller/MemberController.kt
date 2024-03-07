@@ -2,7 +2,7 @@ package com.teamsparta.buysell.domain.member.controller
 
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
-import com.teamsparta.buysell.domain.member.service.GoogleService
+import com.teamsparta.buysell.domain.member.service.SocialService
 import com.teamsparta.buysell.domain.member.service.MemberService
 import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import jakarta.validation.Valid
@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/members")
 class MemberController(
     private val memberService: MemberService,
-    private val googleService: GoogleService,
-    //private val socialMemberService: SocialMemberService,
-
+    private val socialService: SocialService,
 ) {
     //로컬 회원가입
     @PostMapping("/signup")
@@ -41,7 +39,7 @@ class MemberController(
     //구글 로그인 페이지 불러오기
     @GetMapping("/google/page")
     fun getGoogleLoginPage(): ResponseEntity<Any?> {
-        return ResponseEntity<Any?>(googleService.getGoogleLoginPage(), HttpStatus.OK)
+        return ResponseEntity<Any?>(socialService.getGoogleLoginPage(), HttpStatus.OK)
     }
     //구글 로그인 엑세스토큰 발급
     @GetMapping("/google/callback")
@@ -49,11 +47,11 @@ class MemberController(
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
         }
-        return ResponseEntity.ok(googleService.googleLogin(oAuth2User))
+        return ResponseEntity.ok(socialService.googleLogin(oAuth2User))
     }
     @GetMapping("/kakao/page")
     fun getKakaoLoginPage(): ResponseEntity<Any?> {
-        return ResponseEntity<Any?>(googleService.getKakaoLoginPage(), HttpStatus.OK)
+        return ResponseEntity<Any?>(socialService.getKakaoLoginPage(), HttpStatus.OK)
     }
 
     //카카오 로그인 엑세스토큰 발급
@@ -62,18 +60,18 @@ class MemberController(
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
         }
-        return ResponseEntity.ok(googleService.kakaoLogin(oAuth2User))
+        return ResponseEntity.ok(socialService.kakaoLogin(oAuth2User))
     }
-//    @GetMapping("/naver/page")
-//    fun getNaverLoginPage(): ResponseEntity<Any?> {
-//        return ResponseEntity<Any?>(googleService.getGoogleLoginPage(), HttpStatus.OK)
-//    }
-//    //네이버 로그인 엑세스토큰 발급
-//    @GetMapping("/naver/callback")
-//    fun naverLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
-//        if (oAuth2User == null) {
-//            throw BadCredentialsException("인증된 사용자가 없습니다")
-//        }
-//        return ResponseEntity.ok(googleService.googleLogin(oAuth2User))
-//    }
+    @GetMapping("/naver/page")
+    fun getNaverLoginPage(): ResponseEntity<Any?> {
+        return ResponseEntity<Any?>(socialService.getNaverLoginPage(), HttpStatus.OK)
+    }
+    //네이버 로그인 엑세스토큰 발급
+    @GetMapping("/naver/callback")
+    fun naverLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
+        if (oAuth2User == null) {
+            throw BadCredentialsException("인증된 사용자가 없습니다")
+        }
+        return ResponseEntity.ok(socialService.naverLogin(oAuth2User))
+    }
 }

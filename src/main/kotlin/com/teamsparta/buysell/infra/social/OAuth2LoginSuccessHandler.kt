@@ -20,6 +20,7 @@ class OAuth2LoginSuccessHandler : SimpleUrlAuthenticationSuccessHandler() {
         when (clientRegistrationId) {
             "google" -> this.defaultTargetUrl = "/members/google/callback"
             "kakao" -> this.defaultTargetUrl = "/members/kakao/callback"
+            "naver" -> this.defaultTargetUrl = "/members/naver/callback"
         }
 
         super.onAuthenticationSuccess(request, response, authentication)
