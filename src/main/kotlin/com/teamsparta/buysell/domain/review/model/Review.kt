@@ -19,9 +19,6 @@ class Review private constructor(
     @Column(name = "rating")
     var rating: Int,
 
-    @Column(name = "created_name")
-    var createdName: String?,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     val post: Post,
@@ -57,7 +54,6 @@ class Review private constructor(
             return Review(
                 content = request.content,
                 rating = request.rating,
-                createdName = member.nickname,
                 post = post,
                 member = member
             )
