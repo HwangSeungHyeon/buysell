@@ -70,7 +70,6 @@ class MemberServiceImpl(
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("Member", userPrincipal.id)
         member.nickname = request.nickname
-        member.gender = request.gender
         member.birthday = request.birthday
        return memberRepository.save(member).toResponse()
     } // 멤버 아이디 기준 정보 수정
