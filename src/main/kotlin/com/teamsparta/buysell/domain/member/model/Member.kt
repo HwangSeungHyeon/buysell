@@ -22,7 +22,7 @@ class Member(
     var nickname : String?,
 
     @Column(name = "gender")
-    var gender : String?,
+    val gender : String?,
 
     @Column(name = "birthday")
     var birthday : String?,
