@@ -9,6 +9,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -22,12 +23,14 @@ class MemberController(
     private val socialService: SocialService,
 ) {
     //로컬 회원가입
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/signup")
     fun signUp(@Valid @RequestBody request: SignUpRequest): ResponseEntity<Void> {
         memberService.signUp(request)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
     //로컬 로그인
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/login")
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<String>{
         val token = memberService.login(request)
