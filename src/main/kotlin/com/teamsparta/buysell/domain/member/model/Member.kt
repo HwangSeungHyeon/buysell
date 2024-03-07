@@ -2,10 +2,12 @@ package com.teamsparta.buysell.domain.member.model
 
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.order.model.Order
+import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
 
-@Table(name = "member")
 @Entity
+@Table(name = "member")
+@Schema(description = "회원 정보")
 class Member(
     @Column(name = "email")
     val email : String,

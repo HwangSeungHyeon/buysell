@@ -56,12 +56,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop") //aop
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
-    //jwt
+//jwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 
-    //querydsl
+//oauth2 소셜로그인
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
+//querydsl
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta") // 추가!
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta") // 추가!
     kapt("jakarta.annotation:jakarta.annotation-api")
@@ -69,7 +72,6 @@ dependencies {
 
 //    runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("org.postgresql:postgresql")
-
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -91,6 +93,6 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.withType<Test>().configureEach() {
+tasks.withType<Test> {
     useJUnitPlatform()
 }

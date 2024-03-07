@@ -47,4 +47,7 @@ class MemberServiceImpl(
         val token = jwtPlugin.generateAccessToken(member.id.toString(), member.email, member.role.toString(), member.platform.toString())
         return token
     }
+
+
+
 }
