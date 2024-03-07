@@ -6,8 +6,10 @@ import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
 
 //@SoftDelete(columnName = "is_deleted") //soft delete
+@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 @Entity
 @Table(name = "post")
 class Post(

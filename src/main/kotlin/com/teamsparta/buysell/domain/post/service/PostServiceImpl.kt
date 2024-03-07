@@ -80,8 +80,8 @@ class PostServiceImpl(
 
         post.checkPermission(principal)
 
-//        postRepository.delete(post)
-        post.softDelete()
+        postRepository.delete(post)
+//        post.softDelete()
     }
 
     override fun getPostsWithPagination(

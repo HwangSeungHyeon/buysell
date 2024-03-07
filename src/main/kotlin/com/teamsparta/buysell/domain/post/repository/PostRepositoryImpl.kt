@@ -30,7 +30,7 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
 
         val booleanBuilder = BooleanBuilder()
         booleanBuilder
-            .and(post.isDeleted.isFalse)
+//            .and(post.isDeleted.isFalse)
             .andAnyOf(
                 category?.let { post.category.eq(it) }
             )
