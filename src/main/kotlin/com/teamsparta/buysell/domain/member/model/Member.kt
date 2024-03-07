@@ -31,9 +31,9 @@ class Member(
     @JoinColumn(name = "account_id")
     var account: Account,
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Order_id")
-    var order: Order? = null,
+    @OneToMany(mappedBy = "member")
+    @JoinColumn
+    var order: Set<Order> = hashSetOf(),
 
     @Column(name = "platform")
     @Enumerated(EnumType.STRING)
