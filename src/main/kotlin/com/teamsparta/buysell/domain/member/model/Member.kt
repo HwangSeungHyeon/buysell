@@ -1,6 +1,7 @@
 package com.teamsparta.buysell.domain.member.model
 
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
+import com.teamsparta.buysell.domain.order.model.Order
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
 
@@ -26,6 +27,13 @@ class Member(
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     val role : Role?,
+
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "account_id")
+    var account: Account,
+
+    @OneToMany(mappedBy = "member", targetEntity = Order::class)
+    var order: Set<Order> = hashSetOf(),
 
     @Column(name = "platform")
     @Enumerated(EnumType.STRING)

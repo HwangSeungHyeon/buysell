@@ -3,6 +3,7 @@ package com.teamsparta.buysell.domain.member.service
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
+import com.teamsparta.buysell.domain.member.model.Account
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.model.Role
@@ -31,6 +32,7 @@ class MemberServiceImpl(
             gender = request.gender,
             birthday = request.birthday,
             platform = Platform.LOCAL,
+            account = Account()
         )
         memberRepository.save(member)
         return member.toResponse()

@@ -1,8 +1,9 @@
 package com.teamsparta.buysell.domain.member.model
 
+import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
+import com.teamsparta.buysell.domain.member.dto.response.SocialResponse
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
-
 
 @Entity
 @Table(name = "member")

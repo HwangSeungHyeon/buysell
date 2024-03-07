@@ -12,7 +12,7 @@ data class SignUpRequest (
 
     @field:Pattern(
         regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W).{6,12}$",
-        message = "비밀번호는 숫자, 영어 대소문자, 특수문자를 포함한 최소 6자 최대 12자로 설정해주세요.")
+        message = "비밀번호는 숫자, 대소문자, 특수문자를 포함한 6자 이상 12자 이하로 설정해주세요.")
     val password: String?,
 
     @field:Pattern(
