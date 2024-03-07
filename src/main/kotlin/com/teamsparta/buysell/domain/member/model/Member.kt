@@ -3,7 +3,6 @@ package com.teamsparta.buysell.domain.member.model
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.order.model.Order
 import jakarta.persistence.*
-import org.hibernate.annotations.SoftDelete
 
 @Table(name = "member")
 @Entity
@@ -31,8 +30,7 @@ class Member(
     @JoinColumn(name = "account_id")
     var account: Account,
 
-    @OneToMany(mappedBy = "member")
-    @JoinColumn
+    @OneToMany(mappedBy = "member", targetEntity = Order::class)
     var order: Set<Order> = hashSetOf(),
 
     @Column(name = "platform")
