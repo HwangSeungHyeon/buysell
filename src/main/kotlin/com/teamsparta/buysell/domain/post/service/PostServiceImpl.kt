@@ -35,7 +35,6 @@ class PostServiceImpl(
             Post(
                 title = request.title,
                 content = request.content,
-                createdName = member.nickname,
                 view = 0,
                 price = request.price,
                 member = member,
