@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.post.service
 
+import com.teamsparta.buysell.domain.post.repository.LikeRepository
 import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Member
@@ -12,7 +13,6 @@ import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.model.Like
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.post.model.toResponse
-import com.teamsparta.buysell.domain.post.repository.LikeRepository
 import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.transaction.Transactional
@@ -35,7 +35,6 @@ class PostServiceImpl(
             Post(
                 title = request.title,
                 content = request.content,
-                createdName = member.nickname,
                 view = 0,
                 price = request.price,
                 member = member,
@@ -84,6 +83,9 @@ class PostServiceImpl(
 //        post.softDelete()
     }
 
+    //게시글을 조회할 때 Pagination을 적용한 메서드
+    //카테고리가 없을 경우 기존과 동일하게 동작
+    //카테고리가 있을 경우 해당 카테고리 관련 게시글만 조회
     override fun getPostsWithPagination(
         category: Category?,
         pageable: Pageable
@@ -92,17 +94,26 @@ class PostServiceImpl(
             .getPostsWithPagination(category, pageable)
     }
 
+    //키워드 검색 메서드
+    override fun searchByKeyword(
+        keyword: String,
+        pageable: Pageable
+    ): Page<PostListResponse> {
+        return postRepository
+            .searchByKeyword(keyword, pageable)
+    }
+
     override fun addLikes(
         postId: Int,
         userPrincipal: UserPrincipal
-    ): MessageResponse {
+    ) : MessageResponse {
         val post = getPost(postId)
 
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
         Like.checkPermission(post, userPrincipal)
 
-        likeRepository.existsByPostIdAndMemberId(postId, userPrincipal.id)
-            .let { if (it) throw IllegalStateException("이미 찜을 등록하셨습니다.") }
+        likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
+            .let { if(it) throw IllegalStateException("이미 찜을 등록하셨습니다.") }
 
         val member = getMember(userPrincipal)
 
@@ -123,20 +134,28 @@ class PostServiceImpl(
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
         Like.checkPermission(post, userPrincipal)
 
-        if (likeRepository.existsByPostIdAndMemberId(postId, userPrincipal.id)) {
+        if (likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)) {
             likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id)
             return MessageResponse("찜이 취소되었습니다.")
-        } else {
+        }
+        else{
             return MessageResponse("잘못된 동작입니다.")
         }
+
+//        val likeEntity = likeRepository.findByPostIdAndMemberId(postId, userPrincipal.id)
+//            ?: throw ModelNotFoundException("like", null)
+//
+//        likeRepository.delete(likeEntity)
+
+
     }
 
-    private fun getPost(postId: Int): Post {
+    private fun getPost(postId: Int): Post{
         return postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
     }
 
-    private fun getMember(userPrincipal: UserPrincipal): Member {
+    private fun getMember(userPrincipal: UserPrincipal): Member{
         return memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("model", userPrincipal.id)
     }

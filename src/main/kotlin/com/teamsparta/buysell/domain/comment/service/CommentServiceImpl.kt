@@ -48,8 +48,8 @@ class CommentServiceImpl(
         request: UpdateRequest,
         principal: UserPrincipal
     ): MessageResponse {
-        val comment = commentRepository
-            .findByPostIdAndId(postId, commentId)
+        val comment = commentRepository.findByPostIdAndId(postId, commentId)
+            ?: throw ModelNotFoundException("Comment", commentId)
 
         comment.checkPermission(principal)
 
@@ -64,8 +64,8 @@ class CommentServiceImpl(
         commentId: Int,
         principal: UserPrincipal
     ): MessageResponse {
-        val comment = commentRepository
-            .findByPostIdAndId(postId, commentId)
+        val comment = commentRepository.findByPostIdAndId(postId, commentId)
+            ?: throw ModelNotFoundException("Comment", commentId)
 
         comment.checkPermission(principal)
 
