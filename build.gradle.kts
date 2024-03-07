@@ -61,6 +61,9 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 
+    //oauth2 소셜로그인
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
     //querydsl
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta") // 추가!
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta") // 추가!
@@ -91,6 +94,6 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.withType<Test>().configureEach() {
+tasks.withType<Test> {
     useJUnitPlatform()
 }
