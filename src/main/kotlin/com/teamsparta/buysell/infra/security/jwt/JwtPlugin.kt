@@ -32,7 +32,7 @@ class JwtPlugin(
                 .build()
             val now = Instant.now()
             val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
-            val expirationPeriod = java.time.Duration.ofHours((1680))
+            val expirationPeriod = java.time.Duration.ofHours(1)
 
             return Jwts.builder()
                 .subject(subject)
