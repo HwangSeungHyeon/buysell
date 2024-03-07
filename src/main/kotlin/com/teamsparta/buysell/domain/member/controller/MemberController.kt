@@ -43,7 +43,8 @@ class MemberController(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @RequestBody request: MemberProfileUpdateRequest
     ): ResponseEntity<MemberResponse> {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity
+            .status(HttpStatus.OK)
             .body(memberService.updateMember(userPrincipal, request))
     }
 
@@ -52,7 +53,8 @@ class MemberController(
     fun getProfile(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
     ): ResponseEntity<MemberResponse> {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity
+            .status(HttpStatus.OK)
             .body(memberService.getMember(userPrincipal))
     }
 
@@ -62,7 +64,8 @@ class MemberController(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
     ): ResponseEntity<List<PostResponse>> {
         val posts = memberService.getAllPostByUserPrincipal(userPrincipal)
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity
+            .status(HttpStatus.OK)
             .body(posts)
     }
 
@@ -72,7 +75,19 @@ class MemberController(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
     ): ResponseEntity<List<PostResponse>> {
         val like = memberService.getAllPostByLike(userPrincipal)
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity
+            .status(HttpStatus.OK)
             .body(like)
     }
+
+    @PutMapping("/signout")
+    fun Pretenddelete(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ):ResponseEntity<String>{
+        memberService.Pretenddelete(userPrincipal)
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body("탈퇴 신청 완료!")
+    }
+
 }

@@ -17,10 +17,12 @@ import com.teamsparta.buysell.infra.security.UserPrincipal
 import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 class MemberServiceImpl(
@@ -89,4 +91,30 @@ class MemberServiceImpl(
         val post = like.map { it.post }
         return post.map { it.toResponse() }
     }//내가 찜 한 글 전체 조회
+
+    override fun Pretenddelete(userPrincipal: UserPrincipal) {
+        val member = memberInformation(userPrincipal)
+
+        memberRepository.delete(member)
+//        member.status = MemberStatus.Pretenddelete
+//        memberRepository.save(member)
+    } //회원 탈퇴 요청
+//
+    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
+    fun completelydelete(){
+        val daysOver = LocalDateTime.now().minusMinutes(1)
+
+
+//        val members = memberRepository.findAllByStatus(MemberStatus.Pretenddelete)
+//            .filter { it.updatedAt.isAfter(daysOver) }
+//        if (members.isEmpty()){
+//            for (member in members){
+//                memberRepository.delete(member)
+//            }
+//        }
+    } //시간 경
+
+    private fun memberInformation(userPrincipal: UserPrincipal) = memberRepository.findByIdOrNull(userPrincipal.id)
+        ?:throw ModelNotFoundException("member",userPrincipal.id)
+
 }
