@@ -2,6 +2,7 @@ package com.teamsparta.buysell.domain.member.model
 
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import jakarta.persistence.*
+import org.hibernate.annotations.SoftDelete
 
 @Table(name = "member")
 @Entity
@@ -31,7 +32,7 @@ class Member(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int? = null
+    var id: Int? = null
 
     fun toResponse():MemberResponse{
         return MemberResponse(

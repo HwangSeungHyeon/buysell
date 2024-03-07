@@ -7,7 +7,6 @@ import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 
-//@SoftDelete(columnName = "is_deleted") //soft delete
 @Entity
 @Table(name = "post")
 class Post(
@@ -17,26 +16,14 @@ class Post(
     @Column(name = "content")
     var content: String,
 
-    @Column(name = "created_name")
-    val createdName: String?,
-
     @Column(name = "price")
     var price: Int,
 
     @Column(name = "is_soldout")
     var isSoldOut: Boolean = false,
 
-//    @Column(name = "is_deleted")
-//    var isDeleted: Boolean = false,
-
     @Column(name = "view")
     var view: Int = 0,
-
-//    @Column(name = "created_at")
-//    val createdAt: LocalDateTime = LocalDateTime.now(),
-//
-//    @Column(name = "updated_at")
-//    val updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -58,9 +45,6 @@ class Post(
             throw ForbiddenException("권한이 없습니다.")
     }
 
-//    fun softDelete(){
-//        this.isDeleted = true
-//    }
 }
 
 fun Post.toResponse(): PostResponse {
@@ -68,7 +52,7 @@ fun Post.toResponse(): PostResponse {
         id = id!!,
         title = title,
         content = content,
-        createdName = createdName, // member name 으로 수정
+        createdName = member.nickname,
         price = price,
         isSoldout = isSoldOut
 //        category = category
