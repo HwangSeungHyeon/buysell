@@ -38,7 +38,7 @@ class PostServiceImpl(
                 view = 0,
                 price = request.price,
                 member = member,
-                category = request.category
+                category = request.category,
             )
         ).toResponse()
     }
@@ -56,7 +56,7 @@ class PostServiceImpl(
 
         post.title = request.title
         post.content = request.content
-//        post.category = request.category
+        post.price = request.price
 
         return postRepository.save(post).toResponse()
     }
