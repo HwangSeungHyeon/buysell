@@ -1,6 +1,7 @@
 package com.teamsparta.buysell.domain.member.model
 
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
+import com.teamsparta.buysell.domain.order.model.Order
 import jakarta.persistence.*
 import org.hibernate.annotations.SoftDelete
 
@@ -29,6 +30,10 @@ class Member(
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "account_id")
     var account: Account,
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Order_id")
+    var order: Order? = null,
 
     @Column(name = "platform")
     @Enumerated(EnumType.STRING)
