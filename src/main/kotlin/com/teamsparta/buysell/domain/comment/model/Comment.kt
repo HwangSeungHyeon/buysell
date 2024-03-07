@@ -9,9 +9,6 @@ import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 
-//@SoftDelete(columnName = "is_deleted") //soft delete
-//@SQLDelete
-//@SQLRestriction
 @Table(name = "comment")
 @Entity
 class Comment private constructor(
@@ -41,7 +38,7 @@ class Comment private constructor(
         principal: UserPrincipal
     ){
         if(member.id != principal.id)
-            throw ForbiddenException("수정 권한이 없습니다.")
+            throw ForbiddenException("권한이 없습니다.")
     }
 
     companion object{

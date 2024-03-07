@@ -33,7 +33,7 @@ class CommentServiceTest @Autowired constructor(
     // 4. deleteComment - 로그인한 멤버가 자신이 단 댓글을 삭제할 수 있는지 확인
     // 5. deleteComment - 로그인한 멤버가 다른 사람의 댓글을 삭제할 수 있는지 확인
 
-    private val member1 = Member(
+    private val postWriter = Member(
         email = "test@gmail.com",
         password = "!test123",
         nickname = "데네브",
@@ -43,7 +43,7 @@ class CommentServiceTest @Autowired constructor(
         platform = Platform.LOCAL,
     )
 
-    private val member2 = Member(
+    private val consumer = Member(
         email = "test2@gmail.com",
         password = "!test123",
         nickname = "데네브",
@@ -63,14 +63,14 @@ class CommentServiceTest @Autowired constructor(
                 "에눌 문의 정중히 사양합니다",
         view = 0,
         price = 950000,
-        member = member1,
+        member = postWriter,
         category = Category.FOOD
     )
 
     private fun testInit(){
-        memberRepository.save(member1) //멤버 1이 가입
+        memberRepository.save(postWriter) //멤버 1이 가입
         postRepository.save(post) //멤버 1이 게시글 작성
-        memberRepository.save(member2) //멤버 2 가입
+        memberRepository.save(consumer) //멤버 2 가입
     }
 
     private fun makeCreateRequest(): CreateRequest{
@@ -130,7 +130,7 @@ class CommentServiceTest @Autowired constructor(
         }
 
         // THEN : 결과값 검증
-        exception.message shouldBe "수정 권한이 없습니다."
+        exception.message shouldBe "권한이 없습니다."
     }
 
     @Test
@@ -160,6 +160,6 @@ class CommentServiceTest @Autowired constructor(
         }
 
         // THEN : 결과값 검증
-        exception.message shouldBe "수정 권한이 없습니다."
+        exception.message shouldBe "권한이 없습니다."
     }
 }
