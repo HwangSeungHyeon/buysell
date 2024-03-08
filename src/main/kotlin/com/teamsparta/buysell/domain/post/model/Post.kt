@@ -61,9 +61,12 @@ class Post(
             throw ForbiddenException("권한이 없습니다.")
     }
 
-//    fun softDelete(){
-//        this.isDeleted = true
-//    }
+    fun myPostCheckPermission(
+        principal: UserPrincipal
+    ){
+        if(member.id != principal.id)
+            throw ForbiddenException("내 게시물에 리뷰를 작성할 수 없습니다.")
+    }
 }
 
 fun Post.toResponse(): PostResponse {

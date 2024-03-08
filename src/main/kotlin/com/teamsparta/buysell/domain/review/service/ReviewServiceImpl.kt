@@ -29,6 +29,8 @@ class ReviewServiceImpl(
         val member = memberRepository.findByIdOrNull(principal.id)
             ?: throw ModelNotFoundException("Member", principal.id)
 
+        post.myPostCheckPermission(principal)
+
         Review.makeEntity(
             request = request,
             post = post,
