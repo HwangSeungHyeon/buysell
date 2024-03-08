@@ -69,7 +69,7 @@ class SecurityConfig(
             }
         return http.build()
     }
-}
+
 
     @Bean
     fun clientRegistrationRepository(oAuth2ClientProperties: OAuth2ClientProperties,
