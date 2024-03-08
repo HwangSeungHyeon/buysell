@@ -37,12 +37,12 @@ class JwtProvider(
         val expirationPeriod = java.time.Duration.ofHours(168)
         val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
         val email: String? = when (platform.name) {
-            "google" -> oAuth2User.attributes["email"] as String
-            "naver" -> {
+            "GOOGLE" -> oAuth2User.attributes["email"] as String
+            "NAVER" -> {
                 val responseAttributes = oAuth2User.attributes["response"] as Map<*, *>
                 responseAttributes["email"] as String?
             }
-            "kakao" -> {
+            "KAKAO" -> {
                 val kakaoAttributes = oAuth2User.attributes["kakao_account"] as Map<*, *>
                 kakaoAttributes["email"] as String?
             }
