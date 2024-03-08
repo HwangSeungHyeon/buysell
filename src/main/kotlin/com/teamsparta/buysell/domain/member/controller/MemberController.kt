@@ -10,7 +10,6 @@ import com.teamsparta.buysell.infra.security.UserPrincipal
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import com.teamsparta.buysell.domain.member.service.SocialService
-import com.teamsparta.buysell.domain.member.service.MemberService
 import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders

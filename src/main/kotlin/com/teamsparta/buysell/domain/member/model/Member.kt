@@ -5,6 +5,7 @@ import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.post.model.Post
 import org.hibernate.annotations.SQLDelete
 import com.teamsparta.buysell.domain.order.model.Order
+import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
 
