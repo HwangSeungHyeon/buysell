@@ -32,6 +32,8 @@ class CommentServiceImpl(
         val post = postRepository.findByIdOrNull(postId)
             ?:throw ModelNotFoundException("Post", postId)
 
+        post.checkDelete() //게시글이 soft delete로 삭제되었는지 확인
+
         Comment.makeEntity(
             request = request,
             member = member,
@@ -48,8 +50,8 @@ class CommentServiceImpl(
         request: UpdateRequest,
         principal: UserPrincipal
     ): MessageResponse {
-        val comment = commentRepository
-            .findByPostIdAndId(postId, commentId)
+        val comment = commentRepository.findByPostIdAndId(postId, commentId)
+            ?: throw ModelNotFoundException("Comment", commentId)
 
         comment.checkPermission(principal)
 
@@ -64,12 +66,13 @@ class CommentServiceImpl(
         commentId: Int,
         principal: UserPrincipal
     ): MessageResponse {
-        val comment = commentRepository
-            .findByPostIdAndId(postId, commentId)
+        val comment = commentRepository.findByPostIdAndId(postId, commentId)
+            ?: throw ModelNotFoundException("Comment", commentId)
 
         comment.checkPermission(principal)
 
-        comment.softDelete()
+        commentRepository.delete(comment)
+//        comment.softDelete()
 
         return MessageResponse("댓글이 삭제되었습니다.")
     }

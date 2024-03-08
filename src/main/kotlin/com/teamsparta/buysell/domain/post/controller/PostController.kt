@@ -8,7 +8,6 @@ import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.service.PostService
 import com.teamsparta.buysell.infra.security.UserPrincipal
-import io.swagger.v3.oas.annotations.Operation
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -27,7 +26,7 @@ class PostController(
     private val postService: PostService
 ) {
 
-    @PreAuthorize("hasRole('MEMBER')")
+    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @PostMapping
     fun createPost(
         @RequestBody createPostRequest: CreatePostRequest,
@@ -38,7 +37,7 @@ class PostController(
             .body(postService.createPost(createPostRequest, principal))
     }
 
-    @PreAuthorize("hasRole('MEMBER')")
+    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @PutMapping("/{postId}")
     fun updatePost(
         @PathVariable postId: Int,
@@ -64,6 +63,22 @@ class PostController(
             .body(postService.getPostsWithPagination(category, pageable))
     }
 
+    @GetMapping("/search")
+    fun searchByKeyword(
+        @Valid @NotBlank
+        @Size(min = 1, max = 30, message = "검색어는 1자 이상 30자 이하여야 합니다.")
+        @RequestParam keyword: String,
+        @PageableDefault(
+            page = 0,
+            size = 10,
+            sort = ["title"]
+        ) pageable: Pageable
+    ): ResponseEntity<Page<PostListResponse>>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.searchByKeyword(keyword, pageable))
+    }
+
     @GetMapping("/{postId}")
     fun getPostById(
         @PathVariable postId: Int
@@ -73,7 +88,7 @@ class PostController(
             .body(postService.getPostById(postId))
     }
 
-    @PreAuthorize("hasRole('MEMBER')")
+    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @DeleteMapping("/{postId}")
     fun deletePost(
         @PathVariable postId: Int,
@@ -85,23 +100,23 @@ class PostController(
             .build()
     }
 
-    @PreAuthorize("hasRole('MEMBER')")
+    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @PostMapping("/{postId}/likes")
     fun addLikes(
         @PathVariable postId: Int,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
-    ) : ResponseEntity<MessageResponse>{
+    ): ResponseEntity<MessageResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(postService.addLikes(postId, userPrincipal))
     }
 
-    @PreAuthorize("hasRole('MEMBER')")
+    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @DeleteMapping("/{postId}/likes")
     fun cancelLikes(
         @PathVariable postId: Int,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
-    ) : ResponseEntity<MessageResponse>{
+    ): ResponseEntity<MessageResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(postService.cancelLikes(postId, userPrincipal))

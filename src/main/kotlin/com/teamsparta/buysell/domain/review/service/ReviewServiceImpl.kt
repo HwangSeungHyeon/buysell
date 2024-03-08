@@ -10,10 +10,13 @@ import com.teamsparta.buysell.domain.review.model.Review
 import com.teamsparta.buysell.domain.review.repository.ReviewRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.transaction.Transactional
+import org.hibernate.annotations.SQLDelete
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
+
 @Service
+@SQLDelete(sql = "UPDATE review SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
     private val postRepository: PostRepository,
@@ -65,7 +68,9 @@ class ReviewServiceImpl(
             ?: throw ModelNotFoundException("Review", reviewId)
 
         review.checkPermission(principal)
-        review.softDelete()
+
+        reviewRepository.delete(review)
+//        review.softDelete()
 
         return MessageResponse("리뷰가 삭제되었습니다.")
     }

@@ -35,11 +35,10 @@ class PostServiceImpl(
             Post(
                 title = request.title,
                 content = request.content,
-                createdName = member.nickname,
                 view = 0,
                 price = request.price,
                 member = member,
-                category = request.category
+                category = request.category,
             )
         ).toResponse()
     }
@@ -53,43 +52,56 @@ class PostServiceImpl(
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
 
+        post.checkDelete() //삭제 여부 확인
         post.checkPermission(principal)
 
         post.title = request.title
         post.content = request.content
-//        post.category = request.category
+        post.price = request.price
 
         return postRepository.save(post).toResponse()
     }
 
     override fun getPosts(): List<PostResponse> {
         return postRepository.findAll().map { it.toResponse() }
-
     }
 
     override fun getPostById(postId: Int): PostResponse {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
+        post.checkDelete() //삭제 여부 확인
         return post.toResponse()
     }
 
-    @Transactional
+//    @Transactional
     override fun deletePost(postId: Int, principal: UserPrincipal) {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
 
         post.checkPermission(principal)
 
-//        postRepository.delete(post)
-        post.softDelete()
+        postRepository.delete(post)
+//        post.softDelete()
     }
 
+    //게시글을 조회할 때 Pagination을 적용한 메서드
+    //카테고리가 없을 경우 기존과 동일하게 동작
+    //카테고리가 있을 경우 해당 카테고리 관련 게시글만 조회
     override fun getPostsWithPagination(
         category: Category?,
         pageable: Pageable
     ): Page<PostListResponse> {
         return postRepository
             .getPostsWithPagination(category, pageable)
+    }
+
+    //키워드 검색 메서드
+    override fun searchByKeyword(
+        keyword: String,
+        pageable: Pageable
+    ): Page<PostListResponse> {
+        return postRepository
+            .searchByKeyword(keyword, pageable)
     }
 
     override fun addLikes(
@@ -112,6 +124,7 @@ class PostServiceImpl(
         return MessageResponse("찜 목록에 등록하였습니다.")
     }
 
+    @Transactional
     override fun cancelLikes(
         postId: Int,
         userPrincipal: UserPrincipal
@@ -122,15 +135,20 @@ class PostServiceImpl(
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
         Like.checkPermission(post, userPrincipal)
 
-        likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
-            .let { if(it) likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id) }
+        if (likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)) {
+            likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id)
+            return MessageResponse("찜이 취소되었습니다.")
+        }
+        else{
+            return MessageResponse("잘못된 동작입니다.")
+        }
 
 //        val likeEntity = likeRepository.findByPostIdAndMemberId(postId, userPrincipal.id)
 //            ?: throw ModelNotFoundException("like", null)
 //
 //        likeRepository.delete(likeEntity)
 
-        return MessageResponse("찜이 취소되었습니다.")
+
     }
 
     private fun getPost(postId: Int): Post{

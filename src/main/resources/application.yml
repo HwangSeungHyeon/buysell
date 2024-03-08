@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -7,13 +6,29 @@ spring:
     password: ${postgresql.password}
   jpa:
     hibernate:
-      ddl-auto: validate # 이거 조금 더 찾아보기
+      ddl-auto: update # 이거 조금 더 찾아보기
     properties:
       hibernate:
         show_sql: true
         format_sql: false
         highlight_sql: true
   security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID} # REST API Key
+            client-secret: ${KAKAO_CLIENT_SECRET} # Client Secret Key
+
+          naver:
+            client-id: ${NAVER_CLIENT_ID} # Client ID
+            client-secret: ${NAVER_CLIENT_SECRET} # Client Secret
+
+
     user:
       password: 1
   data:
@@ -61,19 +76,8 @@ cloud:
     stack:
       auto: false
 
-oauth2:
-  kakao:
-    client_id: ${oauth2.client_id}
-    redirect_url: ${oauth2.redirect_url}
-  google:
-    client_id: ${oauth2.client_id}
-    redirect_url: ${oauth2.redirect_url}
-  naver:
-    client_id: ${oauth2.client_id}
-    redirect_url: ${oauth2.redirect_url}
-
 auth:
   jwt:
     issuer: team.sparta.com
     secret: ${jwt.secret}
-    accessTokenExpirationHour: 1680
+    accessTokenExpirationHour: 1

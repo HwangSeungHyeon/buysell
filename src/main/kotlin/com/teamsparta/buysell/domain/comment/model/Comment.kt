@@ -8,21 +8,20 @@ import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
 
 @Table(name = "comment")
 @Entity
+@SQLDelete(sql = "UPDATE comment SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 class Comment private constructor(
     @Column(name = "comment_content")
     var content: String,
 
-    @Column(name = "created_name")
-    var createdName: String?,
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     var member: Member,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     var post: Post
 
@@ -52,7 +51,6 @@ class Comment private constructor(
         ) : Comment {
             return Comment(
                 content = request.content,
-                createdName = member.nickname,
                 member = member,
                 post = post
             )

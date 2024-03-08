@@ -39,6 +39,8 @@ repositories {
 }
 
 val queryDslVersion = "5.0.0"
+val kotestVersion = "5.5.5"
+val mockkVersion = "1.13.8"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -54,12 +56,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop") //aop
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
-    //jwt
+//jwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 
-    //querydsl
+//oauth2 소셜로그인
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
+//querydsl
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta") // 추가!
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta") // 추가!
     kapt("jakarta.annotation:jakarta.annotation-api")
@@ -68,10 +73,17 @@ dependencies {
 //    runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("org.postgresql:postgresql")
 
-
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+
+    testRuntimeOnly("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {

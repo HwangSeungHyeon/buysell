@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable
 
 interface CustomPostRepository {
     fun getPostsWithPagination(category: Category?, pageable: Pageable): Page<PostListResponse>
+
+    fun searchByKeyword(keyword: String, pageable: Pageable): Page<PostListResponse>
 }

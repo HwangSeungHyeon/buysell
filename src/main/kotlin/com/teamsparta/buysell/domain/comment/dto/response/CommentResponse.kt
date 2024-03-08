@@ -13,7 +13,7 @@ data class CommentResponse(
         ):CommentResponse{
             return CommentResponse(
                 content = comment.content,
-                createdName = comment.createdName
+                createdName = comment.member.nickname
             )
         }
     }
