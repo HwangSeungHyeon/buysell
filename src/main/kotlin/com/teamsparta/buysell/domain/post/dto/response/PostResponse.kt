@@ -9,7 +9,7 @@ data class PostResponse(
     val title: String,
     val content: String,
     val createdName: String?,
-    val price: Int,
+    val price: Long,
     val isSoldout: Boolean,
     val comment: List<CommentResponse>
 //    val imgUrl: List<blahbalh>

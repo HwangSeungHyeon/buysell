@@ -16,7 +16,7 @@ data class CreatePostRequest(
     val content: String,
 
     @Schema(description = "제품 가격", example = "제품 가격")
-    val price: Int,
+    val price: Long,
     val category: Category
 //    val imgUrl:
 )

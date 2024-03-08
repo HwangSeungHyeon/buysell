@@ -24,7 +24,7 @@ class Post(
     var content: String,
 
     @Column(name = "price")
-    var price: Int,
+    var price: Long,
 
     @Column(name = "is_soldout")
     var isSoldOut: Boolean = false,

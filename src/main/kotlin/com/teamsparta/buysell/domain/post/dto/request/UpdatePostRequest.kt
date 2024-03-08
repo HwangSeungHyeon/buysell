@@ -13,6 +13,6 @@ data class UpdatePostRequest(
     @field:NotBlank(message = "본문을 입력해주세요.")
     @Schema(description = "작성한 본문 내용", example = "본문 내용")
     val content: String,
-    val price: Int,
+    val price: Long,
 //    val category: Category
 )
