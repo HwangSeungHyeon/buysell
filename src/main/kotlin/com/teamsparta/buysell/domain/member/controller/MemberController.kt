@@ -81,7 +81,7 @@ class MemberController(
     }
 
     @PutMapping("/signout")
-    fun Pretenddelete(
+    fun pretendDelete(
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ):ResponseEntity<String>{
         memberService.pretendDelete(userPrincipal)
