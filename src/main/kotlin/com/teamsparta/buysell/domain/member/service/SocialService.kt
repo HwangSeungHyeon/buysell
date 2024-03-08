@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.service
 
+import com.teamsparta.buysell.domain.member.model.Account
 import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.model.Role
 import com.teamsparta.buysell.domain.member.model.Social
@@ -29,7 +30,8 @@ class SocialService(
             val newMember = Social(
                 email = email,
                 role = role,
-                platform = platform
+                platform = platform,
+                account = Account()
             )
             socialRepository.save(newMember)
             newMember
@@ -51,7 +53,8 @@ class SocialService(
             val newMember = Social(
                 email = email,
                 role = role,
-                platform = platform
+                platform = platform,
+                account = Account()
             )
             socialRepository.save(newMember)
             newMember
@@ -73,7 +76,8 @@ class SocialService(
             val newMember = Social(
                 email = email,
                 role = role,
-                platform = platform
+                platform = platform,
+                account = Account()
             )
             socialRepository.save(newMember)
             newMember
