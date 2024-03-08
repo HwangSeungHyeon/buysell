@@ -60,7 +60,7 @@ class CommentServiceImpl(
         return MessageResponse("댓글이 수정되었습니다.")
     }
 
-//    @Transactional
+    @Transactional
     override fun deleteComment(
         postId: Int,
         commentId: Int,
