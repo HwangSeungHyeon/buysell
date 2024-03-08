@@ -52,6 +52,7 @@ class PostServiceImpl(
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
 
+        post.checkDelete() //삭제 여부 확인
         post.checkPermission(principal)
 
         post.title = request.title
@@ -63,16 +64,16 @@ class PostServiceImpl(
 
     override fun getPosts(): List<PostResponse> {
         return postRepository.findAll().map { it.toResponse() }
-
     }
 
     override fun getPostById(postId: Int): PostResponse {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
+        post.checkDelete() //삭제 여부 확인
         return post.toResponse()
     }
 
-    @Transactional
+//    @Transactional
     override fun deletePost(postId: Int, principal: UserPrincipal) {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)

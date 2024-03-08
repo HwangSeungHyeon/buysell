@@ -5,6 +5,6 @@ import com.teamsparta.buysell.domain.member.dto.response.AccountResponse
 interface AccountService {
     fun getMyAccount(memberId: Int): AccountResponse
 
-    fun chargeAccount(money: Int, memberId: Int): AccountResponse
+    fun chargeAccount(money: Long, memberId: Int): AccountResponse
 
 }

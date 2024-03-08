@@ -2,7 +2,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${postgresql.url}
-    username: ${postgresql.username}
+    username: test
     password: ${postgresql.password}
   jpa:
     hibernate:
@@ -31,25 +31,25 @@ spring:
 
     user:
       password: 1
-#  data:
-#    redis:
-#      host: ${redis.host}
-#      port: ${redis.port}
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: ${smtp.name}
-#    password: ${smtp.password}
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
-#            required: true
-#          connectiontimeout: 5000
-#          timeout: 5000
-#          writetimeout: 5000
+  data:
+    redis:
+      host: ${redis.host}
+      port: ${redis.port}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${smtp.name}
+    password: ${smtp.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 springdoc:
   swagger-ui:
@@ -64,17 +64,17 @@ logging:
           jdbc:
             bind: trace
 
-#cloud:
-#  aws:
-#    s3:
-#      bucket: ${aws.bucket}
-#    credentials:
-#      access-key: ${aws.accessKey}
-#      secret-key: ${aws.secretKey}
-#    region:
-#      static: ap-northeast-2
-#    stack:
-#      auto: false
+cloud:
+  aws:
+    s3:
+      bucket: ${aws.bucket}
+    credentials:
+      access-key: ${aws.accessKey}
+      secret-key: ${aws.secretKey}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
 auth:
   jwt:

@@ -29,7 +29,7 @@ class AccountController(
 
     @PatchMapping
     fun chargeAccount(
-        @RequestParam money:Int,
+        @RequestParam money:Long,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ): ResponseEntity<AccountResponse> {
         return ResponseEntity

@@ -22,7 +22,7 @@ class AccountServiceImpl(
     }
 
     @Transactional
-    override fun chargeAccount(money: Int, memberId: Int): AccountResponse{
+    override fun chargeAccount(money: Long, memberId: Int): AccountResponse{
         val member = memberRepository.findByIdOrNull(memberId)
             ?: throw ModelNotFoundException("Member", memberId)
 

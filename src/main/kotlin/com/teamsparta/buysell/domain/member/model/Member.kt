@@ -3,16 +3,16 @@ package com.teamsparta.buysell.domain.member.model
 import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.post.model.Post
-import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import org.hibernate.annotations.SQLDelete
 import com.teamsparta.buysell.domain.order.model.Order
+import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
 
 @Entity
-@SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 @Table(name = "member")
 @Schema(description = "회원 정보")
+@SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 class Member(
     @Column(name = "email")
     val email : String,
