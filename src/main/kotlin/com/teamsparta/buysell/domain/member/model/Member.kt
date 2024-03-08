@@ -4,12 +4,15 @@ import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
-import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
+import com.teamsparta.buysell.domain.order.model.Order
+import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.persistence.*
 
-@Table(name = "member")
 @Entity
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
+@Table(name = "member")
+@Schema(description = "회원 정보")
 class Member(
     @Column(name = "email")
     val email : String,
@@ -29,6 +32,13 @@ class Member(
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     val role : Role?,
+
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "account_id")
+    var account: Account,
+
+    @OneToMany(mappedBy = "member", targetEntity = Order::class)
+    var order: Set<Order> = hashSetOf(),
 
     @Column(name = "platform")
     @Enumerated(EnumType.STRING)

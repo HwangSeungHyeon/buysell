@@ -15,4 +15,5 @@ interface MemberService {
     fun getAllPostByUserPrincipal(userPrincipal: UserPrincipal) : List<PostResponse>?
     fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>?
     fun pretendDelete(userPrincipal: UserPrincipal)
+    //fun googleLogin(oAuth2User: OAuth2User): JwtDto
 }

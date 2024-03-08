@@ -4,13 +4,10 @@ import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.model.Role
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(description = "회원 정보 응답 데이터")
-data class MemberResponse (
+@Schema(description = "소셜 회원 정보 응답 데이터")
+data class SocialResponse (
     val id : Int?,
-    val email : String,
-    val nickname: String?,
+    val email : String?,
     val role: Role?,
-    val gender: String?,
-    val birthday: String?,
     val platform: Platform?,
 )

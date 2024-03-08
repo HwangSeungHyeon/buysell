@@ -40,7 +40,7 @@ class Comment private constructor(
         principal: UserPrincipal
     ){
         if(member.id != principal.id)
-            throw ForbiddenException("권한이 없습니다.")
+            throw ForbiddenException("수정 권한이 없습니다.")
     }
 
     companion object{

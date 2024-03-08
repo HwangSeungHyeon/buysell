@@ -1,6 +1,5 @@
 package com.teamsparta.buysell.domain.post.service
 
-import com.teamsparta.buysell.domain.post.repository.LikeRepository
 import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Member
@@ -13,6 +12,7 @@ import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.model.Like
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.post.model.toResponse
+import com.teamsparta.buysell.domain.post.repository.LikeRepository
 import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.transaction.Transactional
@@ -38,7 +38,7 @@ class PostServiceImpl(
                 view = 0,
                 price = request.price,
                 member = member,
-                category = request.category
+                category = request.category,
             )
         ).toResponse()
     }
@@ -56,7 +56,7 @@ class PostServiceImpl(
 
         post.title = request.title
         post.content = request.content
-//        post.category = request.category
+        post.price = request.price
 
         return postRepository.save(post).toResponse()
     }
