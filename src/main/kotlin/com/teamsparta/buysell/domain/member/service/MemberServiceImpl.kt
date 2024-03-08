@@ -51,9 +51,9 @@ class MemberServiceImpl(
 
     override fun login(request: LoginRequest): String {
         val member = memberRepository.findByEmail(request.email)
-            ?: throw BadCredentialsException("이메일이 존재하지 않거나 틀렸습니다.")
+            ?: throw BadCredentialsException("이메일이나 비밀번호가 존재하지않거나 틀렸습니다.")
         if(!passwordEncoder.matches(request.password,member.password)){
-            throw BadCredentialsException("비밀번호가 존재하지 않거나 틀렸습니다.")
+            throw BadCredentialsException("이메일이나 비밀번호가 존재하지않거나 틀렸습니다.")
         }
         val token = jwtPlugin.generateAccessToken(member.id.toString(), member.email, member.role.toString(), member.platform.toString())
         return token
