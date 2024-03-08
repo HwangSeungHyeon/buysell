@@ -72,15 +72,15 @@ class PostServiceImpl(
         return post.toResponse()
     }
 
-    @Transactional
+//    @Transactional
     override fun deletePost(postId: Int, principal: UserPrincipal) {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
 
         post.checkPermission(principal)
 
-//        postRepository.delete(post)
-        post.softDelete()
+        postRepository.delete(post)
+//        post.softDelete()
     }
 
     //게시글을 조회할 때 Pagination을 적용한 메서드

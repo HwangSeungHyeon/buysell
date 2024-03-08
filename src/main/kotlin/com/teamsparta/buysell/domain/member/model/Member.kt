@@ -2,12 +2,15 @@ package com.teamsparta.buysell.domain.member.model
 
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.order.model.Order
+import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
 
 @Entity
 @Table(name = "member")
 @Schema(description = "회원 정보")
+@SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 class Member(
     @Column(name = "email")
     val email : String,
@@ -38,7 +41,7 @@ class Member(
     @Column(name = "platform")
     @Enumerated(EnumType.STRING)
     val platform : Platform?,
-) {
+) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null

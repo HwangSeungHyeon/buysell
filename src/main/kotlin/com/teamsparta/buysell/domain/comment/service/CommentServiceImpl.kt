@@ -32,6 +32,8 @@ class CommentServiceImpl(
         val post = postRepository.findByIdOrNull(postId)
             ?:throw ModelNotFoundException("Post", postId)
 
+        post.checkDelete() //게시글이 soft delete로 삭제되었는지 확인
+
         Comment.makeEntity(
             request = request,
             member = member,
@@ -58,7 +60,7 @@ class CommentServiceImpl(
         return MessageResponse("댓글이 수정되었습니다.")
     }
 
-    @Transactional
+//    @Transactional
     override fun deleteComment(
         postId: Int,
         commentId: Int,
@@ -69,7 +71,8 @@ class CommentServiceImpl(
 
         comment.checkPermission(principal)
 
-        comment.softDelete()
+        commentRepository.delete(comment)
+//        comment.softDelete()
 
         return MessageResponse("댓글이 삭제되었습니다.")
     }

@@ -3,14 +3,17 @@ package com.teamsparta.buysell.domain.post.model
 import com.teamsparta.buysell.domain.comment.dto.response.CommentResponse
 import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.exception.ForbiddenException
+import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.order.model.Order
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
 
 
+@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 @Entity
 @Table(name = "post")
 class Post(
@@ -54,6 +57,12 @@ class Post(
     ){
         if(member.id != principal.id)
             throw ForbiddenException("권한이 없습니다.")
+    }
+
+    //삭제된 게시글인지 확인하는 메서드
+    fun checkDelete(){
+        if(isDeleted) //삭제된 게시글로 판단될 경우
+            throw ModelNotFoundException("Post", id)
     }
 }
 

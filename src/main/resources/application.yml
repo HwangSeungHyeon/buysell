@@ -6,7 +6,7 @@ spring:
     password: ${postgresql.password}
   jpa:
     hibernate:
-      ddl-auto: validate # 이거 조금 더 찾아보기
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
