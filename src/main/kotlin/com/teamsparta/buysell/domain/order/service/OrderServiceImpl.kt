@@ -5,6 +5,7 @@ import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import com.teamsparta.buysell.domain.order.dto.request.CreateOrderRequest
 import com.teamsparta.buysell.domain.order.model.Order
+import com.teamsparta.buysell.domain.order.model.OrderState
 import com.teamsparta.buysell.domain.order.repository.OrderRepository
 import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
@@ -33,13 +34,37 @@ class OrderServiceImpl(
             address = request.address,
             phoneNumber = request.phoneNumber,
             member = member,
-            post = post
+            post = post,
+            orderState = OrderState.COMPLED
         )
 
         member.account.payment(post.price)
 
         orderRepository.save(order)
 
-            return MessageResponse("결제가 완료되었습니다.")
-        }
+        return MessageResponse("결제가 완료되었습니다.")
     }
+
+    @Transactional
+    override fun cancelOrder(
+        postId: Int,
+        orderId: Int,
+        principal: UserPrincipal
+    ): MessageResponse {
+        val order = orderRepository.findByIdOrNull(orderId)
+            ?: throw ModelNotFoundException("Order", orderId)
+
+        if (order.orderState != OrderState.COMPLED) {
+            throw IllegalStateException("이미 취소된 주문입니다.")
+        }
+
+        val member = order.member
+        val refundAmount = order.post.price
+
+        member.account.refundToAccount(refundAmount)
+
+        order.orderState = OrderState.CANCELLED
+
+        return MessageResponse("주문이 취소되었습니다.")
+    }
+}

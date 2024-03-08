@@ -8,8 +8,7 @@ class Account (
 
     @Column(name = "account_balance")
     var accountBalance: Long = 0
-
-){
+): SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -28,5 +27,8 @@ class Account (
 
     fun availableForPurchase(price: Long): Boolean{
         return accountBalance > price
+    }
+    fun refundToAccount(money: Long) {
+        accountBalance += money
     }
 }
