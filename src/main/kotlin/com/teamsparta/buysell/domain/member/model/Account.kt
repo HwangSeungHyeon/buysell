@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.model
 
+import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import jakarta.persistence.*
 
 @Entity
