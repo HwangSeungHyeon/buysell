@@ -84,7 +84,7 @@ class MemberController(
     fun Pretenddelete(
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ):ResponseEntity<String>{
-        memberService.Pretenddelete(userPrincipal)
+        memberService.pretendDelete(userPrincipal)
         return ResponseEntity
             .status(HttpStatus.OK)
             .body("탈퇴 신청 완료!")

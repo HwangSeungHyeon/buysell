@@ -89,7 +89,7 @@ class MemberServiceImpl(
         return post.map { it.toResponse() }
     }//내가 찜 한 글 전체 조회
 
-    override fun Pretenddelete(userPrincipal: UserPrincipal) {
+    override fun pretendDelete(userPrincipal: UserPrincipal) {
         val member = memberInformation(userPrincipal)
 
         memberRepository.delete(member)

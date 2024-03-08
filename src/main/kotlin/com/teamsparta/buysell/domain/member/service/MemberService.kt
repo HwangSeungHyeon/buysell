@@ -14,5 +14,5 @@ interface MemberService {
     fun updateMember(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse
     fun getAllPostByUserPrincipal(userPrincipal: UserPrincipal) : List<PostResponse>?
     fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>?
-    fun Pretenddelete(userPrincipal: UserPrincipal)
+    fun pretendDelete(userPrincipal: UserPrincipal)
 }
