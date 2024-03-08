@@ -33,11 +33,12 @@ class SecurityConfig(
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
 ) {
     private val allowedUrls = arrayOf(
-        "/", "/swagger-ui/**", "/v3/**","/members/**"
+        "/", "/swagger-ui/**", "/v3/**",
+        "/members/**", "/posts/**", "/accounts/**"
     )
 
     private val anonymousUrls = arrayOf(
-         "/signup","/login", "**","/members/**"
+        "**"
     )
 
     @Bean
@@ -85,20 +86,18 @@ class SecurityConfig(
         val customRegistrations = customOAuth2ClientProperties.registration
 
         // 추가 소셜 설정을 기본 소셜 설정에 추가
-        if (customRegistrations != null) {
-            for (customRegistration in customRegistrations) {
-                when (customRegistration.key) {
-                    "kakao" -> registrations.add(
-                        CustomOAuth2Provider.KAKAO.getBuilder("kakao")
-                            .clientId(customRegistration.value.clientId)
-                            .clientSecret(customRegistration.value.clientSecret)
-                            .build())
-                    "naver" -> registrations.add(
-                        CustomOAuth2Provider.NAVER.getBuilder("naver")
-                            .clientId(customRegistration.value.clientId)
-                            .clientSecret(customRegistration.value.clientSecret)
-                            .build())
-                }
+        for (customRegistration in customRegistrations) {
+            when (customRegistration.key) {
+                "kakao" -> registrations.add(
+                    CustomOAuth2Provider.KAKAO.getBuilder("kakao")
+                        .clientId(customRegistration.value.clientId)
+                        .clientSecret(customRegistration.value.clientSecret)
+                        .build())
+                "naver" -> registrations.add(
+                    CustomOAuth2Provider.NAVER.getBuilder("naver")
+                        .clientId(customRegistration.value.clientId)
+                        .clientSecret(customRegistration.value.clientSecret)
+                        .build())
             }
         }
         return InMemoryClientRegistrationRepository(registrations)
