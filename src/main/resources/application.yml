@@ -1,11 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/testDB
+    driver-class-name: org.postgresql.Driver
+    url: ${postgresql.url}
     username: test
-    password: 123
+    password: ${postgresql.password}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # 이거 조금 더 찾아보기
     properties:
       hibernate:
         show_sql: true
@@ -74,8 +75,6 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
-
-
 
 auth:
   jwt:

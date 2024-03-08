@@ -37,7 +37,7 @@ class SecurityConfig(
     )
 
     private val anonymousUrls = arrayOf(
-         "/signup","/login", "**"
+         "/signup","/login", "**","/members/**"
     )
 
     @Bean
@@ -85,7 +85,7 @@ class SecurityConfig(
         val customRegistrations = customOAuth2ClientProperties.registration
 
         // 추가 소셜 설정을 기본 소셜 설정에 추가
-
+        if (customRegistrations != null) {
             for (customRegistration in customRegistrations) {
                 when (customRegistration.key) {
                     "kakao" -> registrations.add(
@@ -100,7 +100,7 @@ class SecurityConfig(
                             .build())
                 }
             }
-
+        }
         return InMemoryClientRegistrationRepository(registrations)
     }
 
