@@ -69,7 +69,9 @@ class CommentServiceImpl(
 
         comment.checkPermission(principal)
 
-        comment.softDelete()
+//        comment.softDelete()
+
+        commentRepository.delete(comment)
 
         return MessageResponse("댓글이 삭제되었습니다.")
     }
