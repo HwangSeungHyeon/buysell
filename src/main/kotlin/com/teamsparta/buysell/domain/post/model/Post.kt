@@ -64,7 +64,13 @@ class Post(
         principal: UserPrincipal
     ) {
         if (member.id == principal.id)
-            throw ForbiddenException("내 게시물에 리뷰를 작성할 수 없습니다.")
+            throw ForbiddenException("본인의 게시물에 이용할 수 없는 서비스입니다.")
+    }
+
+    fun outOfStockStatus() {
+        if (isSoldOut) {
+            throw IllegalStateException("판매완료된 게시글입니다.")
+        }
     }
 
     //삭제된 게시글인지 확인하는 메서드

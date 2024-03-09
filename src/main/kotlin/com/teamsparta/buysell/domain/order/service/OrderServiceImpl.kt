@@ -30,6 +30,9 @@ class OrderServiceImpl(
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("Post", postId)
 
+        post.myPostCheckPermission(principal)
+        post.outOfStockStatus()
+
         val order = Order(
             address = request.address,
             phoneNumber = request.phoneNumber,
@@ -39,6 +42,7 @@ class OrderServiceImpl(
         )
 
         member.account.payment(post.price)
+        post.isSoldOut = true
 
         orderRepository.save(order)
 
