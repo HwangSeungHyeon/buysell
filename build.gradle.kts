@@ -51,7 +51,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc") //jdbc
     implementation("org.springframework.boot:spring-boot-starter-security") //security
     implementation("org.springframework.boot:spring-boot-starter-mail") //mail
-//    implementation("org.springframework.boot:spring-boot-starter-data-redis") //redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis") //redis
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE") //s3
     implementation("org.springframework.boot:spring-boot-starter-aop") //aop
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -60,6 +60,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+
 
 //oauth2 소셜로그인
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")

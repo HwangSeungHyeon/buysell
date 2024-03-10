@@ -15,16 +15,16 @@ import jakarta.persistence.*
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 class Member(
     @Column(name = "email")
-    val email : String,
+    var email : String,
 
     @Column(name = "password")
-    val password : String?,
+    var password : String?,
 
     @Column(name = "nickname")
     var nickname : String?,
 
     @Column(name = "gender")
-    val gender : String?,
+    var gender : String?,
 
     @Column(name = "birthday")
     var birthday : String?,
@@ -62,6 +62,9 @@ class Member(
         cascade = [CascadeType.ALL]
     )
     var comment : MutableList<Comment> = mutableListOf(),
+
+    @Column(name = "is_verified")
+    var isVerified: Boolean = false
 ) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

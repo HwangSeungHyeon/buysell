@@ -15,5 +15,5 @@ data class LoginRequest(
         regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W).{6,12}$",
         message = "비밀번호는 숫자, 대소문자, 특수문자를 포함한 6자 이상 12자 이하입니다.")
     @Schema(description = "회원가입에 사용할 비밀번호", example = "evy123!")
-    val password: String,
+    var password: String,
 )

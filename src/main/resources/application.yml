@@ -17,7 +17,7 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID}
+            client-id: ${GOOGLE_CLIENT_ID} #
             client-secret: ${GOOGLE_CLIENT_SECRET}
 
           kakao:
@@ -50,7 +50,7 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
-
+      auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30분
 springdoc:
   swagger-ui:
     operations-sorter: method
