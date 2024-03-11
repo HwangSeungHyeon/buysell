@@ -13,10 +13,9 @@ import com.teamsparta.buysell.domain.post.repository.LikeRepository
 import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
-import org.springframework.beans.factory.annotation.Autowired
+import jakarta.security.auth.message.AuthException
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -34,6 +33,11 @@ class MemberServiceImpl(
 
 ): MemberService{
     override fun signUp(request: SignUpRequest): MemberResponse {
+        request.nickname?.let { nickname ->
+            memberRepository.findByNickname(nickname)?.also {
+                throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
+            }
+        }
         memberRepository.findByEmail(request.email)?.let { existingMember ->
             if (!existingMember.isVerified || existingMember.isDeleted) {
                 existingMember.apply {
@@ -53,6 +57,8 @@ class MemberServiceImpl(
                 throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
             }
         }
+
+
         val member = Member(
             email = request.email,
             password = passwordEncoder.encode(request.password),
@@ -70,17 +76,27 @@ class MemberServiceImpl(
         emailService.sendMessage(member.email, "회원가입 인증 코드", messageText)
         return member.toResponse()
     }
+    override fun regenerateAuthCode(memberId: String): String{
+            authCodeService.deleteAuthCode(memberId)
+            val member = memberRepository.findByIdOrNull(memberId.toInt()) ?: throw BadCredentialsException("사용자를 촺을 수 없습니다.")
+            val newAuthCode = authCodeService.generateAndSaveAuthCode(member.id.toString(), 300)
+            val messageText = "인증 코드를 재발급 받았습니다: $newAuthCode"
+            emailService.sendMessage(member.email, "회원가입 인증 코드", messageText)
+            return "인증코드 재발급 성공"
+    }
 
-    override fun verifyMember(memberId: String, inputVerificationCode: String): VerifyResult {
-        if (!authCodeService.validateAuthCode(memberId, inputVerificationCode)) {
-            return VerifyResult.FAILURE_INVALID_CODE
-        }
-        val member = memberRepository.findById(memberId.toIntOrNull() ?: return VerifyResult.FAILURE_USER_NOT_FOUND)
-            .orElse(null) ?: return VerifyResult.FAILURE_USER_NOT_FOUND
-        member.isVerified = true
-        memberRepository.save(member)
-        authCodeService.deleteAuthCode(memberId)
-        return VerifyResult.SUCCESS
+    override fun verifyMember(memberId: String, inputVerificationCode: String): String {
+            if (!authCodeService.validateAuthCode(memberId, inputVerificationCode)) {
+                throw AuthException("유효하지 않은 인증코드 입니다.")
+            }
+            val memberInt = memberId.toIntOrNull() ?: throw ModelNotFoundException("Member",null)
+            val member = memberRepository.findById(memberInt)
+                .orElseThrow {ModelNotFoundException("Member",memberInt)}
+
+            member.isVerified = true
+            memberRepository.save(member)
+            authCodeService.deleteAuthCode(memberId)
+            return "회원 인증 성공"
     }
 
     override fun login(request: LoginRequest): String {

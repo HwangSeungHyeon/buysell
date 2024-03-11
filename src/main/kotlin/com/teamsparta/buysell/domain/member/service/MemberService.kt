@@ -10,7 +10,8 @@ import com.teamsparta.buysell.infra.security.UserPrincipal
 
 interface MemberService {
     fun signUp(request: SignUpRequest): MemberResponse
-    fun verifyMember(memberId: String, inputVerificationCode: String): VerifyResult
+    fun verifyMember(memberId: String, inputVerificationCode: String): String
+    fun regenerateAuthCode(memberId: String): String
     fun login(request: LoginRequest): String
     fun getMember(userPrincipal: UserPrincipal): MemberResponse?
     fun updateMember(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse

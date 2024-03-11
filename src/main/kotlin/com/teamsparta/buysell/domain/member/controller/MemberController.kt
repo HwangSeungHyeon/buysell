@@ -42,13 +42,15 @@ class MemberController(
     @PostMapping("/verify")
     fun verifyMember(@RequestBody request: VerifyRequest): ResponseEntity<String> {
         val result = memberService.verifyMember(request.memberId, request.inputVerificationCode)
-
-        return when (result) {
-            VerifyResult.SUCCESS -> ResponseEntity.ok("인증에 성공했습니다.")
-            VerifyResult.FAILURE_INVALID_CODE -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 코드가 유효하지 않습니다.")
-            VerifyResult.FAILURE_USER_NOT_FOUND -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자를 찾을 수 없습니다.")
-        }
+        return ResponseEntity.ok(result)
     }
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/resend-code")
+    fun regenerateAuthCode(memberId: String): ResponseEntity<String> {
+        val result = memberService.regenerateAuthCode(memberId)
+        return ResponseEntity.ok(result)
+    }
+
     //로컬 로그인
     @PreAuthorize("isAnonymous()")
     @PostMapping("/login")
