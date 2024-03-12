@@ -5,12 +5,12 @@ import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateReque
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.service.MemberService
+import com.teamsparta.buysell.domain.member.service.SocialService
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
+import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import com.teamsparta.buysell.domain.member.service.SocialService
-import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -59,14 +59,14 @@ class MemberController(
             .body(memberService.updateMember(userPrincipal, request))
     }
 
-    @GetMapping
+    @GetMapping("/{memberId}")
     @Operation(summary = "프로필 조회", description = "프로필을 조회합니다.")
     fun getProfile(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
+        @PathVariable memberId:Int,
     ): ResponseEntity<MemberResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(memberService.getMember(userPrincipal))
+            .body(memberService.getMember(memberId))
     }
 
     @GetMapping("/posts")

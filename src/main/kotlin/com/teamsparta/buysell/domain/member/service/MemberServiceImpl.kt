@@ -61,10 +61,10 @@ class MemberServiceImpl(
 
 
     @Transactional
-    override fun getMember(userPrincipal: UserPrincipal): MemberResponse? {
-        val member = memberRepository.findByIdOrNull(userPrincipal.id)
-            ?: throw ModelNotFoundException("Member", userPrincipal.id)
-        return member.toResponse()
+    override fun getMember(memberId:Int): MemberResponse? {
+        val foundMember = memberRepository.findByIdOrNull(memberId)
+            ?: throw ModelNotFoundException("Member",memberId)
+        return foundMember.toResponse()
     } // 멤버 아이디 기준 정보 조회
 
     @Transactional
