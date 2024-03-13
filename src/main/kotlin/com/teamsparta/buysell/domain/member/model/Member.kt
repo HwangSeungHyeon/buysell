@@ -44,10 +44,6 @@ class Member(
     @Enumerated(EnumType.STRING)
     val platform : Platform?,
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    var status: MemberStatus = MemberStatus.NORMAL,
-
     @OneToMany(
         orphanRemoval = true,
         mappedBy = "member",
