@@ -59,22 +59,22 @@ class MemberController(
             .body(memberService.updateMember(userPrincipal, request))
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping
     @Operation(summary = "프로필 조회", description = "프로필을 조회합니다.")
     fun getProfile(
-        @PathVariable memberId:Int,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
     ): ResponseEntity<MemberResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(memberService.getMember(memberId))
+            .body(memberService.getMember(userPrincipal))
     }
 
-    @GetMapping("/posts")
-    @Operation(summary = "내가 쓴 게시글 조회", description = "내가 쓴 게시글을 조회합니다.")
+    @GetMapping("/{memberId}/posts")
+    @Operation(summary = "작성한 게시글 조회", description = "작성한 모든 게시글을 조회합니다.")
     fun getAllPosts(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
+        @PathVariable memberId:Int,
     ): ResponseEntity<List<PostResponse>> {
-        val posts = memberService.getAllPostByUserPrincipal(userPrincipal)
+        val posts = memberService.getAllPostByMemberId(memberId)
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(posts)

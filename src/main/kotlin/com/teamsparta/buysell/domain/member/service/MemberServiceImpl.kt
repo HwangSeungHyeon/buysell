@@ -61,11 +61,11 @@ class MemberServiceImpl(
 
 
     @Transactional
-    override fun getMember(memberId:Int): MemberResponse? {
-        val foundMember = memberRepository.findByIdOrNull(memberId)
-            ?: throw ModelNotFoundException("Member",memberId)
-        return foundMember.toResponse()
-    } // 멤버 아이디 기준 정보 조회
+    override fun getMember(userPrincipal: UserPrincipal): MemberResponse? {
+        val member = memberRepository.findByIdOrNull(userPrincipal.id)
+            ?: throw ModelNotFoundException("Member", userPrincipal.id)
+        return member.toResponse()
+    } // 현재 로그인 한 멤버 아이디 기준 정보 조회
 
     @Transactional
     override fun updateMember(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse {
@@ -74,14 +74,14 @@ class MemberServiceImpl(
         member.nickname = request.nickname
         member.birthday = request.birthday
        return memberRepository.save(member).toResponse()
-    } // 멤버 아이디 기준 정보 수정
+    } // 로그인 한 멤버 아이디 기준 정보 수정
 
-    override fun getAllPostByUserPrincipal(userPrincipal: UserPrincipal): List<PostResponse>? {
-        val member = memberRepository.findByIdOrNull(userPrincipal.id)
-            ?: throw ModelNotFoundException("member", userPrincipal.id)
+    override fun getAllPostByMemberId(memberId:Int): List<PostResponse>? {
+        val member = memberRepository.findByIdOrNull(memberId)
+            ?: throw ModelNotFoundException("member", memberId)
         val post = postRepository.findAllByMember(member)
         return post.map { it.toResponse() }
-    }//내가 쓴 글 전체 조회
+    }// 멤버가 쓴 글 전체 조회
 
     override fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>? {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
