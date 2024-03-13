@@ -56,7 +56,7 @@ class MemberController(
     ): ResponseEntity<MemberResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(memberService.updateMember(userPrincipal, request))
+            .body(memberService.updateMyProfile(userPrincipal, request))
     }
 
     @GetMapping
@@ -66,12 +66,12 @@ class MemberController(
     ): ResponseEntity<MemberResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(memberService.getMember(userPrincipal))
+            .body(memberService.getMyProfile(userPrincipal))
     }
 
     @GetMapping("/{memberId}/posts")
     @Operation(summary = "작성한 게시글 조회", description = "작성한 모든 게시글을 조회합니다.")
-    fun getAllPosts(
+    fun getAllPostsMemberId(
         @PathVariable memberId:Int,
     ): ResponseEntity<List<PostResponse>> {
         val posts = memberService.getAllPostByMemberId(memberId)
@@ -95,7 +95,7 @@ class MemberController(
     fun pretendDelete(
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ):ResponseEntity<String>{
-        memberService.pretendDelete(userPrincipal)
+        memberService.signOut(userPrincipal)
         return ResponseEntity
             .status(HttpStatus.OK)
             .body("탈퇴 신청 완료!")

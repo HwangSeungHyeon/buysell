@@ -59,43 +59,47 @@ class MemberServiceImpl(
         return token
     }
 
-
+    // 현재 로그인 한 멤버 아이디 기준 정보 조회
     @Transactional
-    override fun getMember(userPrincipal: UserPrincipal): MemberResponse? {
+    override fun getMyProfile(userPrincipal: UserPrincipal): MemberResponse? {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("Member", userPrincipal.id)
         return member.toResponse()
-    } // 현재 로그인 한 멤버 아이디 기준 정보 조회
+    }
 
+    // 로그인 한 멤버 아이디 기준 정보 수정
     @Transactional
-    override fun updateMember(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse {
+    override fun updateMyProfile(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("Member", userPrincipal.id)
         member.nickname = request.nickname
         member.birthday = request.birthday
        return memberRepository.save(member).toResponse()
-    } // 로그인 한 멤버 아이디 기준 정보 수정
+    }
 
+    // 멤버가 쓴 글 전체 조회
     override fun getAllPostByMemberId(memberId:Int): List<PostResponse>? {
         val member = memberRepository.findByIdOrNull(memberId)
             ?: throw ModelNotFoundException("member", memberId)
         val post = postRepository.findAllByMember(member)
         return post.map { it.toResponse() }
-    }// 멤버가 쓴 글 전체 조회
+    }
 
+    //내가 찜 한 글 전체 조회
     override fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>? {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("member", userPrincipal.id)
         val like = likeRepository.findByMember(member)
         val post = like.map { it.post }
         return post.map { it.toResponse() }
-    }//내가 찜 한 글 전체 조회
+    }
 
-    override fun pretendDelete(userPrincipal: UserPrincipal) {
+    //회원 탈퇴 요청
+    override fun signOut(userPrincipal: UserPrincipal) {
         val member = memberInformation(userPrincipal)
 
         memberRepository.delete(member)
-    } //회원 탈퇴 요청
+    }
 
     private fun memberInformation(userPrincipal: UserPrincipal) = memberRepository.findByIdOrNull(userPrincipal.id)
         ?:throw ModelNotFoundException("member",userPrincipal.id)
