@@ -3,16 +3,15 @@ package com.teamsparta.buysell.domain.member.controller
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
-import com.teamsparta.buysell.domain.member.dto.request.VerifyRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
-import com.teamsparta.buysell.domain.member.model.VerifyResult
+import com.teamsparta.buysell.domain.member.service.AuthLinkService
 import com.teamsparta.buysell.domain.member.service.MemberService
+import com.teamsparta.buysell.domain.member.service.SocialService
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
+import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import com.teamsparta.buysell.domain.member.service.SocialService
-import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -30,6 +29,7 @@ import org.springframework.web.bind.annotation.*
 class MemberController(
     private val memberService: MemberService,
     private val socialService: SocialService,
+    private val authLinkService: AuthLinkService,
 ) {
     //로컬 회원가입
     @PreAuthorize("isAnonymous()")
@@ -39,15 +39,15 @@ class MemberController(
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
     @PreAuthorize("isAnonymous()")
-    @PostMapping("/verify")
-    fun verifyMember(@RequestBody request: VerifyRequest): ResponseEntity<String> {
-        val result = memberService.verifyMember(request.memberId, request.inputVerificationCode)
-        return ResponseEntity.ok(result)
+    @GetMapping("/verify")
+    fun verifyMember(@RequestParam ("token") token: String): ResponseEntity<Unit> {
+        authLinkService.verifyMember(token)
+        return ResponseEntity.status(HttpStatus.OK).build()
     }
     @PreAuthorize("isAnonymous()")
-    @PostMapping("/resend-code")
-    fun regenerateAuthCode(memberId: String): ResponseEntity<String> {
-        val result = memberService.regenerateAuthCode(memberId)
+    @PostMapping("/resend-link")
+    fun regenerateAuthLink(memberId: String): ResponseEntity<String> {
+        val result = authLinkService.regenerateAuthLink(memberId)
         return ResponseEntity.ok(result)
     }
 

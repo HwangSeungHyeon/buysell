@@ -23,9 +23,9 @@ spring:
             client-id: ${NAVER_CLIENT_ID} # Client ID
             client-secret: ${NAVER_CLIENT_SECRET} # Client Secret
 
-
     user:
       password: 1
+
   data:
     redis:
       host: ${redis.host}
@@ -45,7 +45,7 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
-      auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30분
+      #auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30분
 springdoc:
   swagger-ui:
     operations-sorter: method
@@ -76,3 +76,5 @@ auth:
     issuer: team.sparta.com
     secret: ${jwt.secret}
     accessTokenExpirationHour: 1
+app:
+ baseUrl: http://localhost:8080/members
