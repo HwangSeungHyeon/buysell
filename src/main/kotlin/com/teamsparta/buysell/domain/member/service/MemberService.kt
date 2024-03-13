@@ -10,10 +10,10 @@ import com.teamsparta.buysell.infra.security.UserPrincipal
 interface MemberService {
     fun signUp(request: SignUpRequest): MemberResponse
     fun login(request: LoginRequest): String
-    fun getMember(userPrincipal: UserPrincipal): MemberResponse?
-    fun updateMember(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse
-    fun getAllPostByUserPrincipal(userPrincipal: UserPrincipal) : List<PostResponse>?
+    fun getMyProfile(userPrincipal: UserPrincipal): MemberResponse?
+    fun updateMyProfile(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse
+    fun getAllPostByMemberId(memberId:Int) : List<PostResponse>?
     fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>?
-    fun pretendDelete(userPrincipal: UserPrincipal)
+    fun signOut(userPrincipal: UserPrincipal)
     //fun googleLogin(oAuth2User: OAuth2User): JwtDto
 }
