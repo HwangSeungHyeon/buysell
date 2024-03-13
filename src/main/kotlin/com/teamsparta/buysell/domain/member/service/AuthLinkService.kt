@@ -1,7 +1,9 @@
 package com.teamsparta.buysell.domain.member.service
 
+import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import jakarta.mail.internet.MimeMessage
+import jakarta.security.auth.message.AuthException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.redis.core.RedisTemplate
@@ -42,9 +44,9 @@ class AuthLinkService(
 
     fun verifyMember(token: String){
         val email : String = redisTemplate.opsForValue().get(token)
-            ?: throw Exception("유효하지 않거나 만료된 토큰입니다.")
+            ?: throw AuthException("유효하지 않거나 만료된 토큰입니다.")
         val member = memberRepository.findByEmail(email)
-            ?:throw Exception("사용자를 찾을 수 없습니다.",)
+            ?:throw ModelNotFoundException("Member", null)
         member.isVerified = true
         memberRepository.save(member)
 
