@@ -5,12 +5,12 @@ import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateReque
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.service.MemberService
+import com.teamsparta.buysell.domain.member.service.SocialService
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
+import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import com.teamsparta.buysell.domain.member.service.SocialService
-import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -56,7 +56,7 @@ class MemberController(
     ): ResponseEntity<MemberResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(memberService.updateMember(userPrincipal, request))
+            .body(memberService.updateMyProfile(userPrincipal, request))
     }
 
     @GetMapping
@@ -66,15 +66,15 @@ class MemberController(
     ): ResponseEntity<MemberResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(memberService.getMember(userPrincipal))
+            .body(memberService.getMyProfile(userPrincipal))
     }
 
-    @GetMapping("/posts")
-    @Operation(summary = "내가 쓴 게시글 조회", description = "내가 쓴 게시글을 조회합니다.")
-    fun getAllPosts(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
+    @GetMapping("/{memberId}/posts")
+    @Operation(summary = "작성한 게시글 조회", description = "작성한 모든 게시글을 조회합니다.")
+    fun getAllPostsMemberId(
+        @PathVariable memberId:Int,
     ): ResponseEntity<List<PostResponse>> {
-        val posts = memberService.getAllPostByUserPrincipal(userPrincipal)
+        val posts = memberService.getAllPostByMemberId(memberId)
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(posts)
@@ -95,7 +95,7 @@ class MemberController(
     fun pretendDelete(
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ):ResponseEntity<String>{
-        memberService.pretendDelete(userPrincipal)
+        memberService.signOut(userPrincipal)
         return ResponseEntity
             .status(HttpStatus.OK)
             .body("탈퇴 신청 완료!")
