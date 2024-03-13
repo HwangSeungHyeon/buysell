@@ -10,5 +10,5 @@ data class PostListResponse(
     val id: Int,
     val title: String,
     val createdName: String,
-    val price: Int
+    val price: Long
 )
