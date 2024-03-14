@@ -32,6 +32,8 @@ class ReviewServiceImpl(
         val member = memberRepository.findByIdOrNull(principal.id)
             ?: throw ModelNotFoundException("Member", principal.id)
 
+        post.myPostCheckPermission(principal)
+
         Review.makeEntity(
             request = request,
             post = post,
@@ -51,7 +53,7 @@ class ReviewServiceImpl(
             ?: throw ModelNotFoundException("Review", reviewId)
 
         review.checkPermission(principal)
-        review.edit(request)
+        review.editReview(request)
 
         return MessageResponse("리뷰가 수정되었습니다.")
     }
@@ -68,7 +70,6 @@ class ReviewServiceImpl(
         review.checkPermission(principal)
 
         reviewRepository.delete(review)
-//        review.softDelete()
 
         return MessageResponse("리뷰가 삭제되었습니다.")
     }

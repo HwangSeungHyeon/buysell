@@ -26,4 +26,15 @@ class OrderController(
             .body(orderService.createOrder(postId, createOrderRequest, principal))
     }
 
+    @DeleteMapping("/{orderId}")
+    fun cancelOrder(
+        @PathVariable postId: Int,
+        @PathVariable orderId: Int,
+        @AuthenticationPrincipal principal: UserPrincipal,
+    ): ResponseEntity<MessageResponse> {
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(orderService.cancelOrder(postId, orderId, principal))
+    }
 }
