@@ -63,7 +63,6 @@ class MemberServiceImpl(
                 }
             }
         }
-
         memberRepository.save(member)
         authLinkService.sendAuthEmail(member.email)
         return member.toResponse()

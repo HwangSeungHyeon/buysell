@@ -24,21 +24,17 @@ class AuthLinkService(
     private val memberRepository: MemberRepository
 
 ) {
-
-
-    fun sendAuthEmail(email: String){
+    fun sendAuthEmail(email: String): String{
+        redisTemplate.delete(email)
         val baseUrl = baseUrl
         val newToken = UUID.randomUUID().toString()
-        val oldToken = redisTemplate.opsForValue().get(email)
-        oldToken?.let{
-            redisTemplate.delete(oldToken)
-        }
-        val url = buildAuthUrl(baseUrl, newToken)
+        val url = buildAuthUrl(baseUrl, email, newToken)
         sendMessage(email, "회원가입 인증", url)
         redisTemplate.opsForValue().set(email, newToken, 1, TimeUnit.HOURS)
-        redisTemplate.opsForValue().set(newToken, email, 1, TimeUnit.HOURS)
+        return "인증 링크 발급 성공"
     }
-    private fun buildAuthUrl(baseUrl: String, token: String): String="$baseUrl/verify?token=$token"
+
+    private fun buildAuthUrl(baseUrl: String, email: String, token: String): String="$baseUrl/verify?email=$email&token=$token"
 
     fun sendMessage(email: String, subject: String, url: String) {
         val message: MimeMessage = emailSender.createMimeMessage()
@@ -49,8 +45,11 @@ class AuthLinkService(
         emailSender.send(message)
     }
 
-    fun verifyMember(token: String){
-        val email : String = redisTemplate.opsForValue().get(token) ?: throw AuthException("유효하지 않거나 만료된 토큰입니다.")
+    fun verifyMember(email:String, token: String){
+        val redisToken = redisTemplate.opsForValue().get(email)
+        if(redisToken != token){
+            throw AuthException("유효하지 않거나 만료된 토큰입니다.")
+        }
         val member = memberRepository.findByEmailAndPlatform(email, platform = Platform.LOCAL)
             ?:throw ModelNotFoundException("Member", null)
         if(member.isVerified){
@@ -59,16 +58,15 @@ class AuthLinkService(
         member.isVerified = true
         memberRepository.save(member)
 
-        redisTemplate.delete(token)
+        redisTemplate.delete(email)
     }
-
-
-    fun regenerateAuthLink(memberId: String): String{
-        val member = memberRepository.findByIdOrNull(memberId.toInt()) ?: throw BadCredentialsException("사용자를 촺을 수 없습니다.")
-        if(member.isVerified){
-            throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
-        }
-        sendAuthEmail(member.email)
-        return "인증링크 재발급 성공"
-    }
+//    fun resendAuthLink(email: String): String{
+//
+//        val member = memberRepository.findByEmail(email) ?: throw BadCredentialsException("사용자를 촺을 수 없습니다.")
+//        if(member.isVerified){
+//            throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
+//        }
+//        sendAuthEmail(email)
+//        return "인증링크 재발급 성공"
+//    }
 }

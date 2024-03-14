@@ -40,14 +40,14 @@ class MemberController(
     }
     @PreAuthorize("isAnonymous()")
     @GetMapping("/verify")
-    fun verifyMember(@RequestParam ("token") token: String): ResponseEntity<Unit> {
-        authLinkService.verifyMember(token)
+    fun verifyMember(@RequestParam ("email") email: String, @RequestParam ("token") token: String): ResponseEntity<Unit> {
+        authLinkService.verifyMember(email, token)
         return ResponseEntity.status(HttpStatus.OK).build()
     }
     @PreAuthorize("isAnonymous()")
     @PostMapping("/resend-link")
-    fun regenerateAuthLink(memberId: String): ResponseEntity<String> {
-        val result = authLinkService.regenerateAuthLink(memberId)
+    fun resendAuthLink(email: String): ResponseEntity<String> {
+        val result = authLinkService.sendAuthEmail(email)
         return ResponseEntity.ok(result)
     }
 
