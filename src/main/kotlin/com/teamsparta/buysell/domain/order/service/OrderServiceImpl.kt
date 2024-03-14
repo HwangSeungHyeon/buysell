@@ -38,7 +38,7 @@ class OrderServiceImpl(
             phoneNumber = request.phoneNumber,
             member = member,
             post = post,
-            orderState = OrderState.COMPLED
+            orderState = OrderState.COMPLETED
         )
 
         member.account.payment(post.price)
@@ -58,7 +58,7 @@ class OrderServiceImpl(
         val order = orderRepository.findByIdOrNull(orderId)
             ?: throw ModelNotFoundException("Order", orderId)
 
-        if (order.orderState != OrderState.COMPLED) {
+        if (order.orderState != OrderState.COMPLETED) {
             throw IllegalStateException("이미 취소된 주문입니다.")
         }
 

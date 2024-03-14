@@ -18,7 +18,7 @@ class Order (
     val member: Member,
 
     @OneToOne(fetch = FetchType.LAZY )
-    var post: Post,
+    val post: Post,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_state")
