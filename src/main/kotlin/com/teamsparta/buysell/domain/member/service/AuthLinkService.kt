@@ -8,10 +8,8 @@ import jakarta.security.auth.message.AuthException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -60,13 +58,4 @@ class AuthLinkService(
 
         redisTemplate.delete(email)
     }
-//    fun resendAuthLink(email: String): String{
-//
-//        val member = memberRepository.findByEmail(email) ?: throw BadCredentialsException("사용자를 촺을 수 없습니다.")
-//        if(member.isVerified){
-//            throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
-//        }
-//        sendAuthEmail(email)
-//        return "인증링크 재발급 성공"
-//    }
 }

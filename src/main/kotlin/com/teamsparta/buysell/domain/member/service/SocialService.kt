@@ -7,7 +7,6 @@ import com.teamsparta.buysell.domain.member.model.Social
 import com.teamsparta.buysell.domain.member.repository.SocialRepository
 import com.teamsparta.buysell.infra.social.jwt.JwtDto
 import com.teamsparta.buysell.infra.social.jwt.JwtProvider
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 
