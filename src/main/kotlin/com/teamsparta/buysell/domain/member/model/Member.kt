@@ -14,8 +14,8 @@ import jakarta.persistence.*
 @Schema(description = "회원 정보")
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 class Member(
-    @Column(name = "email", unique = true)
-    var email : String,
+    @Column(name = "email")
+    val email : String,
 
     @Column(name = "password")
     var password : String?,

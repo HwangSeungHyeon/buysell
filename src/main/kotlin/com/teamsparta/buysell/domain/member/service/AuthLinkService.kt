@@ -1,6 +1,7 @@
 package com.teamsparta.buysell.domain.member.service
 
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
+import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import jakarta.mail.internet.MimeMessage
 import jakarta.security.auth.message.AuthException
@@ -23,13 +24,19 @@ class AuthLinkService(
     private val memberRepository: MemberRepository
 
 ) {
+
+
     fun sendAuthEmail(email: String){
         val baseUrl = baseUrl
-        val token = UUID.randomUUID().toString()
-        val url = buildAuthUrl(baseUrl, token)
+        val newToken = UUID.randomUUID().toString()
+        val oldToken = redisTemplate.opsForValue().get(email)
+        oldToken?.let{
+            redisTemplate.delete(oldToken)
+        }
+        val url = buildAuthUrl(baseUrl, newToken)
         sendMessage(email, "회원가입 인증", url)
-
-        redisTemplate.opsForValue().set(token, email, 5, TimeUnit.MINUTES)
+        redisTemplate.opsForValue().set(email, newToken, 1, TimeUnit.HOURS)
+        redisTemplate.opsForValue().set(newToken, email, 1, TimeUnit.HOURS)
     }
     private fun buildAuthUrl(baseUrl: String, token: String): String="$baseUrl/verify?token=$token"
 
@@ -43,15 +50,18 @@ class AuthLinkService(
     }
 
     fun verifyMember(token: String){
-        val email : String = redisTemplate.opsForValue().get(token)
-            ?: throw AuthException("유효하지 않거나 만료된 토큰입니다.")
-        val member = memberRepository.findByEmail(email)
+        val email : String = redisTemplate.opsForValue().get(token) ?: throw AuthException("유효하지 않거나 만료된 토큰입니다.")
+        val member = memberRepository.findByEmailAndPlatform(email, platform = Platform.LOCAL)
             ?:throw ModelNotFoundException("Member", null)
+        if(member.isVerified){
+            throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
+        }
         member.isVerified = true
         memberRepository.save(member)
 
         redisTemplate.delete(token)
     }
+
 
     fun regenerateAuthLink(memberId: String): String{
         val member = memberRepository.findByIdOrNull(memberId.toInt()) ?: throw BadCredentialsException("사용자를 촺을 수 없습니다.")

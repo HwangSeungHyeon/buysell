@@ -34,28 +34,6 @@ class MemberServiceImpl(
 
     ): MemberService{
     override fun signUp(request: SignUpRequest): MemberResponse {
-        request.nickname?.let { nickname ->
-            memberRepository.findByNickname(nickname)?.also {
-                throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
-            }
-        }
-        memberRepository.findByEmail(request.email)?.let { existingMember ->
-            if (!existingMember.isVerified || existingMember.isDeleted) {
-                existingMember.apply {
-                    isDeleted = false
-                    email = request.email
-                    password = passwordEncoder.encode(request.password)
-                    nickname = request.nickname
-                    birthday = request.birthday
-                    gender = request.gender
-                }
-                memberRepository.save(existingMember)
-                authLinkService.sendAuthEmail(existingMember.email)
-                return existingMember.toResponse()
-            } else {
-                throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
-            }
-        }
         val member = Member(
             email = request.email,
             password = passwordEncoder.encode(request.password),
@@ -67,6 +45,25 @@ class MemberServiceImpl(
             account = Account(),
             isVerified = false
         )
+        request.nickname?.let { memberRepository.findByNickname(it) } ?.let {
+            if (request.nickname == member.nickname) {
+                throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
+            }
+        }
+        memberRepository.findByEmailAndIsVerified(member.email, member.isVerified)?.let{
+            if(member.isVerified) {
+                throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
+            }
+        }
+
+        member.platform?.let {
+            memberRepository.findByEmailAndPlatform(member.email, it)?.let {
+                if(request.email == member.email && member.platform==Platform.LOCAL){
+                    throw DataIntegrityViolationException("이미 가입된 이메일이 존재합니다.")
+                }
+            }
+        }
+
         memberRepository.save(member)
         authLinkService.sendAuthEmail(member.email)
         return member.toResponse()
