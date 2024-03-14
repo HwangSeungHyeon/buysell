@@ -1,15 +1,11 @@
 package com.teamsparta.buysell.domain.member.controller
 
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
-import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
-import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.service.MemberService
 import com.teamsparta.buysell.domain.member.service.SocialService
-import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import com.teamsparta.buysell.infra.social.jwt.JwtDto
-import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
@@ -48,51 +44,10 @@ class MemberController(
     }
 
 
-    @PutMapping
-    @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
-    fun updateProfile(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @RequestBody request: MemberProfileUpdateRequest
-    ): ResponseEntity<MemberResponse> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(memberService.updateMyProfile(userPrincipal, request))
-    }
 
-    @GetMapping
-    @Operation(summary = "프로필 조회", description = "프로필을 조회합니다.")
-    fun getProfile(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
-    ): ResponseEntity<MemberResponse> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(memberService.getMyProfile(userPrincipal))
-    }
-
-    @GetMapping("/{memberId}/posts")
-    @Operation(summary = "작성한 게시글 조회", description = "작성한 모든 게시글을 조회합니다.")
-    fun getAllPostsMemberId(
-        @PathVariable memberId:Int,
-    ): ResponseEntity<List<PostResponse>> {
-        val posts = memberService.getAllPostByMemberId(memberId)
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(posts)
-    }
-
-    @GetMapping("/likes")
-    @Operation(summary = "내가 찜한 게시글 조회", description = "내가 찜한 게시글을 조회합니다.")
-    fun getLikesByMember(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
-    ): ResponseEntity<List<PostResponse>> {
-        val like = memberService.getAllPostByLike(userPrincipal)
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(like)
-    }
 
     @PutMapping("/signout")
-    fun pretendDelete(
+    fun signout(
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ):ResponseEntity<String>{
         memberService.signOut(userPrincipal)
