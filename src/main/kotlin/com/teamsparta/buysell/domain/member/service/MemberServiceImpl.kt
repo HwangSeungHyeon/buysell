@@ -10,10 +10,6 @@ import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.model.Role
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
-import com.teamsparta.buysell.domain.post.dto.response.PostResponse
-import com.teamsparta.buysell.domain.post.model.toResponse
-import com.teamsparta.buysell.domain.post.repository.LikeRepository
-import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
 import org.springframework.dao.DataIntegrityViolationException
@@ -26,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class MemberServiceImpl(
     private val memberRepository: MemberRepository,
-    private val postRepository: PostRepository,
-    private val likeRepository: LikeRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin,
 ): MemberService {
@@ -78,21 +72,6 @@ class MemberServiceImpl(
     }
 
     // 멤버가 쓴 글 전체 조회
-    override fun getAllPostByMemberId(memberId:Int): List<PostResponse>? {
-        val member = memberRepository.findByIdOrNull(memberId)
-            ?: throw ModelNotFoundException("member", memberId)
-        val post = postRepository.findAllByMember(member)
-        return post.map { it.toResponse() }
-    }
-
-    //내가 찜 한 글 전체 조회
-    override fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>? {
-        val member = memberRepository.findByIdOrNull(userPrincipal.id)
-            ?: throw ModelNotFoundException("member", userPrincipal.id)
-        val like = likeRepository.findByMember(member)
-        val post = like.map { it.post }
-        return post.map { it.toResponse() }
-    }
 
     //회원 탈퇴 요청
     override fun signOut(userPrincipal: UserPrincipal) {

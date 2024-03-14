@@ -2,12 +2,12 @@ package com.teamsparta.buysell.domain.member.model
 
 import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
-import com.teamsparta.buysell.domain.post.model.Post
-import org.hibernate.annotations.SQLDelete
 import com.teamsparta.buysell.domain.order.model.Order
+import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
 
 @Entity
 @Table(name = "member")
@@ -43,10 +43,6 @@ class Member(
     @Column(name = "platform")
     @Enumerated(EnumType.STRING)
     val platform : Platform?,
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    var status: MemberStatus = MemberStatus.NORMAL,
 
     @OneToMany(
         orphanRemoval = true,
