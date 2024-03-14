@@ -54,28 +54,43 @@ class Post(
 
     fun checkPermission(
         principal: UserPrincipal
-    ){
-        if(member.id != principal.id)
+    ) {
+        if (member.id != principal.id)
             throw ForbiddenException("권한이 없습니다.")
     }
 
+
+    fun myPostCheckPermission(
+        principal: UserPrincipal
+    ) {
+        if (member.id == principal.id)
+            throw ForbiddenException("본인의 게시물에 이용할 수 없는 서비스입니다.")
+    }
+
+    fun outOfStockStatus() {
+        if (isSoldOut) {
+            throw IllegalStateException("판매완료된 게시글입니다.")
+        }
+    }
+
     //삭제된 게시글인지 확인하는 메서드
-    fun checkDelete(){
-        if(isDeleted) //삭제된 게시글로 판단될 경우
+    fun checkDelete() {
+        if (isDeleted) //삭제된 게시글로 판단될 경우
             throw ModelNotFoundException("Post", id)
     }
 }
 
-fun Post.toResponse(): PostResponse {
-    return PostResponse(
-        id = id!!,
-        title = title,
-        content = content,
-        createdName = member.nickname,
-        price = price,
-        isSoldout = isSoldOut,
-        comment = comment
-            .filter { !it.isDeleted }
-            .map { CommentResponse.toResponse(it) }
-    )
-}
+    fun Post.toResponse(): PostResponse {
+        return PostResponse(
+            id = id!!,
+            title = title,
+            content = content,
+            createdName = member.nickname,
+            price = price,
+            isSoldout = isSoldOut,
+            comment = comment
+                .filter { !it.isDeleted }
+                .map { CommentResponse.toResponse(it) }
+        )
+    }
+
