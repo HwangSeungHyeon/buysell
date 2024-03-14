@@ -32,8 +32,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${smtp.name}
-    password: ${smtp.password}
+    username: ${SMTP_NAME}
+    password: ${SMTP_PASSWORD}
     properties:
       mail:
         smtp:
@@ -61,10 +61,10 @@ logging:
 cloud:
   aws:
     s3:
-      bucket: ${aws.bucket}
+      bucket: ${AWS_BUCKET}
     credentials:
-      access-key: ${aws.accessKey}
-      secret-key: ${aws.secretKey}
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
     region:
       static: ap-northeast-2
     stack:
