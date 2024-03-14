@@ -24,11 +24,13 @@ class SocialService(
 
     fun googleLogin(oAuth2User: OAuth2User) : JwtDto {
         val email = oAuth2User.attributes.get("email").toString()
+        val nickname = oAuth2User.attributes.get("name").toString()
         val platform = Platform.GOOGLE
         val role = Role.MEMBER
         val member = socialRepository.findByEmailAndPlatform(email, platform) ?: run {
             val newMember = Social(
                 email = email,
+                nickname = nickname,
                 role = role,
                 platform = platform,
                 account = Account()
@@ -47,11 +49,14 @@ class SocialService(
     fun kakaoLogin(oAuth2User: OAuth2User) : JwtDto {
         val kakaoAccount = oAuth2User.attributes["kakao_account"] as Map<*, *>
         val email = kakaoAccount["email"].toString()
+        val profile = kakaoAccount["profile"] as Map<*, *>
+        val nickname = profile["nickname"].toString()
         val platform = Platform.KAKAO
         val role = Role.MEMBER
         val member = socialRepository.findByEmailAndPlatform(email, platform) ?: run {
             val newMember = Social(
                 email = email,
+                nickname = nickname,
                 role = role,
                 platform = platform,
                 account = Account()
@@ -70,12 +75,13 @@ class SocialService(
         val platform = Platform.NAVER
         val role = Role.MEMBER
         val attributes = oAuth2User.attributes["response"] as Map<*, *>
-        val email = attributes["email"]?.toString()
-            ?: throw BadCredentialsException("이메일 정보가 존재하지 않습니다.")
+        val email = attributes["email"].toString()
+        val nickname = attributes["nickname"].toString()
         val member = socialRepository.findByEmailAndPlatform(email, platform) ?: run {
             val newMember = Social(
                 email = email,
                 role = role,
+                nickname = nickname,
                 platform = platform,
                 account = Account()
             )

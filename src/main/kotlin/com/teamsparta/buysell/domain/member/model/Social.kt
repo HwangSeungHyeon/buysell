@@ -37,6 +37,8 @@ class Social(
     var comment : MutableList<Comment> = mutableListOf(),
     @Column(name = "email")
     val email : String?,
+    @Column(name = "nickname", unique = true)
+    var nickname: String?,
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     val role : Role?,

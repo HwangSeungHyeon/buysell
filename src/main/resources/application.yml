@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update # 이거 조금 더 찾아보기
+      ddl-auto: create # 이거 조금 더 찾아보기
     properties:
       hibernate:
         show_sql: true
