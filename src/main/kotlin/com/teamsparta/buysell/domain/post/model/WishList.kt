@@ -7,7 +7,7 @@ import jakarta.persistence.*
 
 @Table(name = "post_likes")
 @Entity
-class Like private constructor(
+class WishList private constructor(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     var post: Post,
@@ -24,8 +24,8 @@ class Like private constructor(
         fun makeEntity(
             member: Member,
             post: Post
-        ): Like{
-            return Like(
+        ): WishList{
+            return WishList(
                 member = member,
                 post = post
             )
@@ -36,7 +36,7 @@ class Like private constructor(
             userPrincipal: UserPrincipal
         ){
             if(post.member.id == userPrincipal.id)
-                throw ForbiddenException("자신이 작성한 게시글에는 찜을 할 수 없습니다.")
+                throw ForbiddenException("자신이 작성한 게시글은 위시리스트에 추가할 수 없습니다.")
         }
     }
 }
