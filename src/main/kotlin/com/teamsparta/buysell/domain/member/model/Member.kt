@@ -58,6 +58,9 @@ class Member(
         cascade = [CascadeType.ALL]
     )
     var comment : MutableList<Comment> = mutableListOf(),
+
+    @Column(name = "seller_rating")
+    var sellerRating: Double? = null,
 ) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
