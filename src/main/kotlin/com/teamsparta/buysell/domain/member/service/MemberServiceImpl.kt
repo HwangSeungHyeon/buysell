@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.service
 
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
@@ -33,7 +34,7 @@ class MemberServiceImpl(
     private val authLinkService: AuthLinkService,
 
     ): MemberService{
-    override fun signUp(request: SignUpRequest): MemberResponse {
+    override fun signUp(request: SignUpRequest){
         val member = Member(
             email = request.email,
             password = passwordEncoder.encode(request.password),
@@ -65,9 +66,7 @@ class MemberServiceImpl(
         }
         memberRepository.save(member)
         authLinkService.sendAuthEmail(member.email)
-        return member.toResponse()
     }
-
 
     override fun login(request: LoginRequest): String {
         val member = memberRepository.findByEmail(request.email)

@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.service
 
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
@@ -22,14 +23,14 @@ class AuthLinkService(
     private val memberRepository: MemberRepository
 
 ) {
-    fun sendAuthEmail(email: String): String{
+    fun sendAuthEmail(email: String): MessageResponse{
         redisTemplate.delete(email)
         val baseUrl = baseUrl
         val newToken = UUID.randomUUID().toString()
         val url = buildAuthUrl(baseUrl, email, newToken)
         sendMessage(email, "회원가입 인증", url)
         redisTemplate.opsForValue().set(email, newToken, 1, TimeUnit.HOURS)
-        return "인증 링크 발급 성공"
+        return MessageResponse("이메일로 인증코드를 발송하였습니다.")
     }
 
     private fun buildAuthUrl(baseUrl: String, email: String, token: String): String="$baseUrl/verify?email=$email&token=$token"
@@ -43,7 +44,7 @@ class AuthLinkService(
         emailSender.send(message)
     }
 
-    fun verifyMember(email:String, token: String){
+    fun verifyMember(email:String, token: String): MessageResponse{
         val redisToken = redisTemplate.opsForValue().get(email)
         if(redisToken != token){
             throw AuthException("유효하지 않거나 만료된 토큰입니다.")
@@ -57,5 +58,6 @@ class AuthLinkService(
         memberRepository.save(member)
 
         redisTemplate.delete(email)
+        return MessageResponse("이메일 인증이 완료되었습니다.")
     }
 }

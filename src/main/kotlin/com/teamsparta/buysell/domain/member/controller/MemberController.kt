@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.controller
 
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
@@ -33,32 +34,40 @@ class MemberController(
 ) {
     //로컬 회원가입
     @PreAuthorize("isAnonymous()")
+    @Operation(summary = "회원 가입", description = "회원 가입을 합니다.")
     @PostMapping("/signup")
     fun signUp(@Valid @RequestBody request: SignUpRequest): ResponseEntity<Void> {
         memberService.signUp(request)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
     @PreAuthorize("isAnonymous()")
+    @Operation(summary = "인증 링크 확인", description = "이메일로 인증 처리를 합니다.")
     @GetMapping("/verify")
-    fun verifyMember(@RequestParam ("email") email: String, @RequestParam ("token") token: String): ResponseEntity<Unit> {
-        authLinkService.verifyMember(email, token)
-        return ResponseEntity.status(HttpStatus.OK).build()
+    fun verifyMember(@RequestParam ("email") email: String, @RequestParam ("token") token: String): ResponseEntity<MessageResponse> {
+        val verifyMember = authLinkService.verifyMember(email, token)
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(verifyMember)
     }
     @PreAuthorize("isAnonymous()")
-    @PostMapping("/resend-link")
-    fun resendAuthLink(email: String): ResponseEntity<String> {
-        val result = authLinkService.sendAuthEmail(email)
-        return ResponseEntity.ok(result)
+    @Operation(summary = "인증 링크 메시지 전송", description = "이메일로 인증 링크를 전송합니다.")
+    @PostMapping("/sendemail")
+    fun sendEmail(email: String): ResponseEntity<MessageResponse> {
+        val sendEmail = authLinkService.sendAuthEmail(email)
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(sendEmail)
     }
 
     //로컬 로그인
     @PreAuthorize("isAnonymous()")
+    @Operation(summary = "로그인", description = "로그인을 합니다.")
     @PostMapping("/login")
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<String>{
         val token = memberService.login(request)
         return ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-            .body("로그인 성공.")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ${token}")
+            .body("로그인 성공했습니다.")
     }
 
 
@@ -118,11 +127,13 @@ class MemberController(
     //소셜로그인
     //구글 로그인 페이지 불러오기
     @GetMapping("/google/page")
+    @Operation(summary = "구글 로그인 페이지", description = "구글 로그인 페이지를 불러옵니다.")
     fun getGoogleLoginPage(): ResponseEntity<Any?> {
         return ResponseEntity<Any?>(socialService.getGoogleLoginPage(), HttpStatus.OK)
     }
     //구글 로그인 엑세스토큰 발급
     @GetMapping("/google/callback")
+    @Operation(summary = "구글 엑세스 토큰 발급", description = "구글 엑세스 토큰을 발급 합니다.")
     fun googleLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
@@ -130,12 +141,14 @@ class MemberController(
         return ResponseEntity.ok(socialService.googleLogin(oAuth2User))
     }
     @GetMapping("/kakao/page")
+    @Operation(summary = "카카오 로그인 페이지", description = "카카오 로그인 페이지를 불러옵니다.")
     fun getKakaoLoginPage(): ResponseEntity<Any?> {
         return ResponseEntity<Any?>(socialService.getKakaoLoginPage(), HttpStatus.OK)
     }
 
     //카카오 로그인 엑세스토큰 발급
     @GetMapping("/kakao/callback")
+    @Operation(summary = "카카오 엑세스 토큰 발급", description = "카카오 엑세스 토큰을 발급 합니다.")
     fun kakaoLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
@@ -143,11 +156,13 @@ class MemberController(
         return ResponseEntity.ok(socialService.kakaoLogin(oAuth2User))
     }
     @GetMapping("/naver/page")
+    @Operation(summary = "네이버 로그인 페이지", description = "네이버 로그인 페이지를 불러옵니다.")
     fun getNaverLoginPage(): ResponseEntity<Any?> {
         return ResponseEntity<Any?>(socialService.getNaverLoginPage(), HttpStatus.OK)
     }
     //네이버 로그인 엑세스토큰 발급
     @GetMapping("/naver/callback")
+    @Operation(summary = "네이버 엑세스 토큰 발급", description = "네이버 엑세스 토큰을 발급 합니다.")
     fun naverLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
