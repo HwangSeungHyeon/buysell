@@ -46,7 +46,7 @@ class ReviewController(
         @AuthenticationPrincipal principal: UserPrincipal
     ): ResponseEntity<MessageResponse> {
         return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
+            .status(HttpStatus.OK)
             .body(reviewService.deleteReview(postId, reviewId, principal))
     }
 

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Query
 
 interface ReviewRepository: JpaRepository<Review, Int> {
 
-    fun findByPostIdAndId(postId: Int, reviewId: Int): Review
+    fun findByPostMemberId(memberId: Int): List<Review>
 
-    @Query ("SELECT AVG(r.rating) FROM Review r WHERE r.member.id = :memberId")
+    @Query ("SELECT AVG(r.rating) FROM Review r WHERE r.post.member.id = :memberId")
     fun getAverageRatingByMember(memberId: Int): Double
 }

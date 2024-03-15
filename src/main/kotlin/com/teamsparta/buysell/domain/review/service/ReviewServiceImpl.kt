@@ -32,15 +32,30 @@ class ReviewServiceImpl(
         val member = memberRepository.findByIdOrNull(principal.id)
             ?: throw ModelNotFoundException("Member", principal.id)
 
+        val seller = post.member
+
+        if (!post.isSoldOut) {
+            throw IllegalStateException("판매되지 않은 물품에 리뷰를 작성할 수 없습니다.")
+        }
+        // order.memberId == review.memberId 일 경우에 작성가능한 메서드 추가
+        // review 중복작성 불가한 예외 추가
+
         post.myPostCheckPermission(principal)
 
-        Review.makeEntity(
-            request = request,
+        val sellerReview = Review.makeEntity(
+            request = request.copy(sellerRating = request.rating),
             post = post,
             member = member
-        ).let { reviewRepository.save(it) }
+        )
+        reviewRepository.save(sellerReview)
+
+        val averageRating = reviewRepository.getAverageRatingByMember(seller.id!!)
+        seller.sellerRating = averageRating
+        memberRepository.save(seller)
+
         return MessageResponse("리뷰가 작성되었습니다.")
     }
+
 
     @Transactional
     override fun editReview(
