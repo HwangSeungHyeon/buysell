@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.post.dto.request
 
+import com.teamsparta.buysell.domain.post.model.Category
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -14,5 +15,5 @@ data class UpdatePostRequest(
     @Schema(description = "작성한 본문 내용", example = "본문 내용")
     val content: String,
     val price: Long,
-//    val category: Category
+    val category: Category
 )

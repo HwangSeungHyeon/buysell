@@ -9,11 +9,10 @@ import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.domain.post.model.Category
-import com.teamsparta.buysell.domain.post.model.Like
 import com.teamsparta.buysell.domain.post.model.Post
-import com.teamsparta.buysell.domain.post.model.toResponse
-import com.teamsparta.buysell.domain.post.repository.LikeRepository
+import com.teamsparta.buysell.domain.post.model.WishList
 import com.teamsparta.buysell.domain.post.repository.PostRepository
+import com.teamsparta.buysell.domain.post.repository.WishListRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
@@ -25,13 +24,13 @@ import org.springframework.stereotype.Service
 class PostServiceImpl(
     private val postRepository: PostRepository,
     private val memberRepository: MemberRepository,
-    private val likeRepository: LikeRepository
+    private val wishListRepository: WishListRepository
 ) : PostService {
     @Transactional
-    override fun createPost(request: CreatePostRequest, principal: UserPrincipal): PostResponse {
+    override fun createPost(request: CreatePostRequest, principal: UserPrincipal): MessageResponse {
         val member = getMember(principal)
 
-        return postRepository.save(
+        postRepository.save(
             Post(
                 title = request.title,
                 content = request.content,
@@ -40,7 +39,9 @@ class PostServiceImpl(
                 member = member,
                 category = request.category,
             )
-        ).toResponse()
+        )
+
+        return MessageResponse("상품을 등록하였습니다.")
     }
 
     @Transactional
@@ -48,18 +49,15 @@ class PostServiceImpl(
         postId: Int,
         request: UpdatePostRequest,
         principal: UserPrincipal
-    ): PostResponse {
+    ): MessageResponse {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
 
         post.checkDelete() //삭제 여부 확인
         post.checkPermission(principal)
+        post.postUpdate(request)
 
-        post.title = request.title
-        post.content = request.content
-        post.price = request.price
-
-        return postRepository.save(post).toResponse()
+        return MessageResponse("상품 정보가 수정되었습니다.")
     }
 
     override fun getPosts(): List<PostResponse> {
@@ -73,15 +71,14 @@ class PostServiceImpl(
         return post.toResponse()
     }
 
-//    @Transactional
-    override fun deletePost(postId: Int, principal: UserPrincipal) {
+    override fun deletePost(postId: Int, principal: UserPrincipal): MessageResponse {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
 
         post.checkPermission(principal)
 
         postRepository.delete(post)
-//        post.softDelete()
+        return MessageResponse("상품이 삭제되었습니다.")
     }
 
     //게시글을 조회할 때 Pagination을 적용한 메서드
@@ -104,28 +101,28 @@ class PostServiceImpl(
             .searchByKeyword(keyword, pageable)
     }
 
-    override fun addLikes(
+    override fun addWishList(
         postId: Int,
         userPrincipal: UserPrincipal
     ) : MessageResponse {
         val post = getPost(postId)
 
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
-        Like.checkPermission(post, userPrincipal)
+        WishList.checkPermission(post, userPrincipal)
 
-        likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
-            .let { if(it) throw IllegalStateException("이미 찜을 등록하셨습니다.") }
+        wishListRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)
+            .let { if(it) throw IllegalStateException("이미 위시리스트에 등록하셨습니다.") }
 
         val member = getMember(userPrincipal)
 
-        Like.makeEntity(post = post, member = member)
-            .let { likeRepository.save(it) }
+        WishList.makeEntity(post = post, member = member)
+            .let { wishListRepository.save(it) }
 
-        return MessageResponse("찜 목록에 등록하였습니다.")
+        return MessageResponse("위시리스트에 등록하였습니다.")
     }
 
     @Transactional
-    override fun cancelLikes(
+    override fun cancelWishList(
         postId: Int,
         userPrincipal: UserPrincipal
     ): MessageResponse {
@@ -133,22 +130,15 @@ class PostServiceImpl(
             ?: throw ModelNotFoundException("post", postId)
 
         //작성자는 자기 게시글에 찜 버튼을 누를 수 없다
-        Like.checkPermission(post, userPrincipal)
+        WishList.checkPermission(post, userPrincipal)
 
-        if (likeRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)) {
-            likeRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id)
-            return MessageResponse("찜이 취소되었습니다.")
+        if (wishListRepository.existsByPostIdAndMemberId(postId,userPrincipal.id)) {
+            wishListRepository.deleteByPostIdAndMemberId(postId, userPrincipal.id)
+            return MessageResponse("위시리스트에서 삭제하였습니다.")
         }
         else{
             return MessageResponse("잘못된 동작입니다.")
         }
-
-//        val likeEntity = likeRepository.findByPostIdAndMemberId(postId, userPrincipal.id)
-//            ?: throw ModelNotFoundException("like", null)
-//
-//        likeRepository.delete(likeEntity)
-
-
     }
 
     private fun getPost(postId: Int): Post{

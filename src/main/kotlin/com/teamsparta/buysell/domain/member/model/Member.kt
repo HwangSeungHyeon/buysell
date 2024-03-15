@@ -68,10 +68,8 @@ class Member(
             id = id!!,
             email = email,
             nickname = nickname,
-            role = role,
             gender = gender,
             birthday = birthday,
-            platform = platform,
         )
     }
 }

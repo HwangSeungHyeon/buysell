@@ -96,7 +96,9 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
                     post.id,
                     post.title,
                     post.member.nickname,
-                    post.price
+                    post.price,
+                    post.createdAt,
+                    post.view
                 )
             )
             .from(post)
@@ -109,12 +111,12 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
 
     //BooleanBuilder 를 만들고, 초기 공통값을 세팅하는 메서드
     private fun initBooleanBuilder(): BooleanBuilder{
-//        return BooleanBuilder().and(isDeleted())
-        return BooleanBuilder()
+        return BooleanBuilder().and(isDeleted())
+//        return BooleanBuilder()
     }
 
     //삭제되지 않은 게시글을 조회할 때 사용하는 BooleanExpression
-//    private fun isDeleted() = post.isDeleted.isFalse
+    private fun isDeleted() = post.isDeleted.isFalse
 
     //카테고리를 선택하였을 때, 그 카테고리 관련 게시글만 조회하도록 하는 BooleanExpression
     private fun eqCategory(category: Category?) = category?.let { post.category.eq(it) }

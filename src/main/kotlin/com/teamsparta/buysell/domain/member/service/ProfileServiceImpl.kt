@@ -4,9 +4,8 @@ import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
-import com.teamsparta.buysell.domain.post.dto.response.PostResponse
-import com.teamsparta.buysell.domain.post.model.toResponse
-import com.teamsparta.buysell.domain.post.repository.LikeRepository
+import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
+import com.teamsparta.buysell.domain.post.repository.WishListRepository
 import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
@@ -17,22 +16,22 @@ import org.springframework.transaction.annotation.Transactional
 class ProfileServiceImpl(
     private val memberRepository: MemberRepository,
     private val postRepository: PostRepository,
-    private val likeRepository: LikeRepository,
+    private val wishListRepository: WishListRepository,
 ):ProfileService {
-    override fun getAllPostByMemberId(memberId:Int): List<PostResponse>? {
+    override fun getAllPostByMemberId(memberId:Int): List<PostListResponse>? {
         val member = memberRepository.findByIdOrNull(memberId)
             ?: throw ModelNotFoundException("member", memberId)
         val post = postRepository.findAllByMember(member)
-        return post.map { it.toResponse() }
+        return post.map { it.toListResponse() }
     }
 
     //내가 찜 한 글 전체 조회
-    override fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostResponse>? {
+    override fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostListResponse>? {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("member", userPrincipal.id)
-        val like = likeRepository.findByMember(member)
+        val like = wishListRepository.findByMember(member)
         val post = like.map { it.post }
-        return post.map { it.toResponse() }
+        return post.map { it.toListResponse() }
     }
     // 현재 로그인 한 멤버 아이디 기준 정보 조회
     @Transactional

@@ -6,6 +6,8 @@ import com.teamsparta.buysell.domain.exception.ForbiddenException
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.order.model.Order
+import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
+import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
@@ -78,9 +80,28 @@ class Post(
         if (isDeleted) //삭제된 게시글로 판단될 경우
             throw ModelNotFoundException("Post", id)
     }
-}
 
-    fun Post.toResponse(): PostResponse {
+    fun postUpdate(
+        request: UpdatePostRequest
+    ){
+        this.title = request.title
+        this.content = request.content
+        this.price = request.price
+        this.category = request.category
+    }
+
+    fun toListResponse(): PostListResponse{
+        return PostListResponse(
+            id = id,
+            title = title,
+            createdName = member.nickname,
+            price = price,
+            createdAt = createdAt,
+            view = view
+        )
+    }
+
+    fun toResponse(): PostResponse {
         return PostResponse(
             id = id!!,
             title = title,
@@ -88,9 +109,14 @@ class Post(
             createdName = member.nickname,
             price = price,
             isSoldout = isSoldOut,
+            createdAt = createdAt,
+            view = view,
             comment = comment
                 .filter { !it.isDeleted }
                 .map { CommentResponse.toResponse(it) }
         )
     }
+}
+
+
 

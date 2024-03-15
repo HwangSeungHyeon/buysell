@@ -12,9 +12,9 @@ import org.springframework.data.domain.Pageable
 
 
 interface PostService {
-    fun createPost(request: CreatePostRequest, principal: UserPrincipal): PostResponse
+    fun createPost(request: CreatePostRequest, principal: UserPrincipal): MessageResponse
 
-    fun updatePost(postId: Int, request: UpdatePostRequest, principal: UserPrincipal): PostResponse
+    fun updatePost(postId: Int, request: UpdatePostRequest, principal: UserPrincipal): MessageResponse
 
     fun getPosts(): List<PostResponse>
 
@@ -24,9 +24,9 @@ interface PostService {
 
     fun getPostById(postId: Int): PostResponse
 
-    fun deletePost(postId: Int, principal: UserPrincipal)
+    fun deletePost(postId: Int, principal: UserPrincipal): MessageResponse
 
-    fun addLikes(postId: Int, userPrincipal: UserPrincipal): MessageResponse
+    fun addWishList(postId: Int, userPrincipal: UserPrincipal): MessageResponse
 
-    fun cancelLikes(postId: Int, userPrincipal: UserPrincipal): MessageResponse
+    fun cancelWishList(postId: Int, userPrincipal: UserPrincipal): MessageResponse
 }
