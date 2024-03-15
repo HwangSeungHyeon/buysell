@@ -5,6 +5,7 @@ import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.review.dto.request.CreateReviewRequest
 import com.teamsparta.buysell.domain.review.dto.request.UpdateReviewRequest
+import com.teamsparta.buysell.domain.review.dto.response.ReviewResponse
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
@@ -29,7 +30,7 @@ class Review private constructor(
     @JoinColumn(name = "member_id")
     val member: Member,
 
-) : SoftDeleteEntity() {
+    ) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -61,5 +62,13 @@ class Review private constructor(
             )
         }
     }
+}
+
+fun Review.toResponse(): ReviewResponse{
+    return ReviewResponse(
+        nickname = member.nickname,
+        rating = rating,
+        content = content
+    )
 }
 

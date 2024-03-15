@@ -2,8 +2,10 @@ package com.teamsparta.buysell.domain.member.controller
 
 import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
+import com.teamsparta.buysell.domain.member.dto.response.OtherProfileResponse
 import com.teamsparta.buysell.domain.member.service.ProfileService
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
+import com.teamsparta.buysell.domain.review.dto.response.ReviewResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.HttpStatus
@@ -16,11 +18,24 @@ import org.springframework.web.bind.annotation.*
 class ProfileController(
     private val profileService: ProfileService
 ) {
+
+//    // review list 조회 메서드 추가
+    @GetMapping("/{memberId}/profile/reviews")
+    @Operation(summary = "판매자 게시글에 대한 리뷰 리스트 조회", description = "판매자의 게시글에 대한 리뷰를 조회합니다.")
+    fun getReviewsByMemberId(
+        @PathVariable memberId: Int,
+    ): ResponseEntity<List<ReviewResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(profileService.getReviewsByMemberId(memberId))
+        
+    }
+
     @GetMapping("/{memberId}/profile/posts")
     @Operation(summary = "특정 멤버가 작성한 게시글 조회", description = "특정 멤버가 작성한 모든 게시글을 조회합니다.")
     fun getAllPostsMemberId(
         @PathVariable memberId:Int,
-    ): ResponseEntity<List<PostResponse>> {
+    ): ResponseEntity<OtherProfileResponse> {
         val posts = profileService.getAllPostByMemberId(memberId)
         return ResponseEntity
             .status(HttpStatus.OK)
