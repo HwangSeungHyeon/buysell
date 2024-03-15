@@ -1,15 +1,16 @@
 package com.teamsparta.buysell.domain.member.model
 
-import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "account")
 class Account (
+    @Column(name = "is_deleted")
+    var isDeleted: Boolean = false,
 
     @Column(name = "account_balance")
     var accountBalance: Long = 0
-): SoftDeleteEntity() {
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null

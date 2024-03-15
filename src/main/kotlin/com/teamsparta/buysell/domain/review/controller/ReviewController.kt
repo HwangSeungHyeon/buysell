@@ -8,6 +8,7 @@ import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*
 class ReviewController(
     private val reviewService: ReviewService
 ) {
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     fun createReview(
         @PathVariable postId: Int,
@@ -27,6 +29,7 @@ class ReviewController(
             .body(reviewService.createReview(postId, request, principal))
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{reviewId}")
     fun editReview(
         @PathVariable reviewId: Int,
@@ -39,6 +42,7 @@ class ReviewController(
             .body(reviewService.editReview(reviewId, postId, request, principal))
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{reviewId}")
     fun deleteReview(
         @PathVariable postId: Int,

@@ -1,12 +1,7 @@
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: ${postgresql.url}
-    username: ${postgresql.username}
-    password: ${postgresql.password}
   jpa:
     hibernate:
-      ddl-auto: update # 이거 조금 더 찾아보기
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -28,18 +23,17 @@ spring:
             client-id: ${NAVER_CLIENT_ID} # Client ID
             client-secret: ${NAVER_CLIENT_SECRET} # Client Secret
 
-
     user:
       password: 1
   data:
     redis:
-      host: ${redis.host}
-      port: ${redis.port}
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${smtp.name}
-    password: ${smtp.password}
+    username: ${SMTP_NAME}
+    password: ${SMTP_PASSWORD}
     properties:
       mail:
         smtp:
@@ -67,10 +61,10 @@ logging:
 cloud:
   aws:
     s3:
-      bucket: ${aws.bucket}
+      bucket: ${AWS_BUCKET}
     credentials:
-      access-key: ${aws.accessKey}
-      secret-key: ${aws.secretKey}
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
     region:
       static: ap-northeast-2
     stack:
@@ -79,5 +73,5 @@ cloud:
 auth:
   jwt:
     issuer: team.sparta.com
-    secret: ${jwt.secret}
+    secret: ${JWT_SECRET}
     accessTokenExpirationHour: 1
