@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.service
 
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.dto.response.AccountResponse
 import com.teamsparta.buysell.domain.member.repository.AccountRepository
@@ -18,11 +19,10 @@ class AccountServiceImpl(
             ?: throw ModelNotFoundException("Member", memberId)
 
         return AccountResponse(member.account.accountBalance)
-
     }
 
     @Transactional
-    override fun chargeAccount(money: Long, memberId: Int): AccountResponse{
+    override fun chargeAccount(money: Long, memberId: Int): MessageResponse{
         val member = memberRepository.findByIdOrNull(memberId)
             ?: throw ModelNotFoundException("Member", memberId)
 
@@ -30,6 +30,6 @@ class AccountServiceImpl(
             depositToAccount(money)
         }
 
-        return AccountResponse(member.account.accountBalance)
+        return MessageResponse("입금 되었습니다.")
     }
 }

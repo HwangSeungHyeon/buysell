@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.controller
 
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.member.dto.response.AccountResponse
 import com.teamsparta.buysell.domain.member.service.AccountService
 import com.teamsparta.buysell.infra.security.UserPrincipal
@@ -31,7 +32,7 @@ class AccountController(
     fun chargeAccount(
         @RequestParam money:Long,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
-    ): ResponseEntity<AccountResponse> {
+    ): ResponseEntity<MessageResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(accountService.chargeAccount(money, userPrincipal.id))
