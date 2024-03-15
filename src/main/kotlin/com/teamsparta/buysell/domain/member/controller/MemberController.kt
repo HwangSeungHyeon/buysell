@@ -45,15 +45,15 @@ class MemberController(
 
 
 
-
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/signout")
-    fun signout(
+    fun signOut(
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ):ResponseEntity<String>{
         memberService.signOut(userPrincipal)
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body("탈퇴 신청 완료!")
+            .body("회원탈퇴가 완료되었습니다.")
     }
 
     //소셜로그인
