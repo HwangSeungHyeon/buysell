@@ -18,9 +18,6 @@ class Social(
     var account: Account,
     @OneToMany(mappedBy = "member", targetEntity = Order::class)
     var order: Set<Order> = hashSetOf(),
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    var status: MemberStatus = MemberStatus.NORMAL,
     @OneToMany(
         orphanRemoval = true,
         mappedBy = "member",
