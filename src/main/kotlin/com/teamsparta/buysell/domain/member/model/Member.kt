@@ -20,7 +20,7 @@ class Member(
     @Column(name = "password")
     val password : String?,
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", unique = true)
     var nickname : String?,
 
     @Column(name = "gender")
