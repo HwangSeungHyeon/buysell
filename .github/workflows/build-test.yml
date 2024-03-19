@@ -34,6 +34,8 @@ jobs:
         run: ./gradlew clean test
 
   build:
+    # needs 블록을 통해 이 Job이 실행되기 이전에 완료되어야 하는 Job 정의 가능
+    needs: test
     # 스크립트 실행 환경 (OS)
     runs-on: [ ubuntu-latest ] 
 
