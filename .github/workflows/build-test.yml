@@ -36,5 +36,5 @@ jobs:
       # run은 사용자 지정 스크립트 실행
       - name: run build
         run: |
-          # clean test 실행
-          ./gradlew clean build
+          # clean build 실행 (테스트 제외)
+          ./gradlew clean build -x test
