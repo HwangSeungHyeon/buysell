@@ -18,13 +18,13 @@ class Member(
     val email : String,
 
     @Column(name = "password")
-    val password : String?,
+    var password : String?,
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", unique = true)
     var nickname : String?,
 
     @Column(name = "gender")
-    val gender : String?,
+    var gender : String?,
 
     @Column(name = "birthday")
     var birthday : String?,
@@ -58,6 +58,9 @@ class Member(
         cascade = [CascadeType.ALL]
     )
     var comment : MutableList<Comment> = mutableListOf(),
+
+    @Column(name = "is_verified")
+    var isVerified: Boolean = false
 ) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
