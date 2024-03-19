@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.service
 
+import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
@@ -22,11 +23,10 @@ class MemberServiceImpl(
     private val memberRepository: MemberRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin,
-): MemberService {
-    override fun signUp(request: SignUpRequest): MemberResponse {
-        memberRepository.findByEmail(request.email)?.let {
-            throw DataIntegrityViolationException("이미 존재하는 이메일입니다.")
-        }
+    private val authLinkService: AuthLinkService,
+
+    ): MemberService{
+    override fun signUp(request: SignUpRequest){
         val member = Member(
             email = request.email,
             password = passwordEncoder.encode(request.password),
@@ -35,25 +35,43 @@ class MemberServiceImpl(
             gender = request.gender,
             birthday = request.birthday,
             platform = Platform.LOCAL,
-            account = Account()
+            account = Account(),
+            isVerified = false
         )
+        request.nickname?.let { memberRepository.findByNickname(it) } ?.let {
+            if (request.nickname == member.nickname) {
+                throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
+            }
+        }
+        memberRepository.findByEmailAndIsVerified(member.email, member.isVerified)?.let{
+            if(member.isVerified) {
+                throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
+            }
+        }
+
+        member.platform?.let {
+            memberRepository.findByEmailAndPlatform(member.email, it)?.let {
+                if(request.email == member.email && member.platform==Platform.LOCAL){
+                    throw DataIntegrityViolationException("이미 가입된 이메일이 존재합니다.")
+                }
+            }
+        }
         memberRepository.save(member)
-        return member.toResponse()
+        authLinkService.sendAuthEmail(member.email)
     }
 
     override fun login(request: LoginRequest): String {
         val member = memberRepository.findByEmail(request.email)
-            ?: throw BadCredentialsException("이메일이 존재하지 않거나 틀렸습니다.")
+            ?: throw BadCredentialsException("이메일이나 비밀번호가 존재하지않거나 틀렸습니다.")
         if(!passwordEncoder.matches(request.password,member.password)){
-            throw BadCredentialsException("비밀번호가 존재하지 않거나 틀렸습니다.")
+            throw BadCredentialsException("이메일이나 비밀번호가 존재하지않거나 틀렸습니다.")
+        }
+        if (!member.isVerified) {
+            throw BadCredentialsException("계정이 인증되지 않았습니다. 이메일을 확인해주세요.")
         }
         val token = jwtPlugin.generateAccessToken(member.id.toString(), member.email, member.role.toString(), member.platform.toString())
         return token
     }
-
-
-
-    // 멤버가 쓴 글 전체 조회
 
     //회원 탈퇴 요청
     override fun signOut(userPrincipal: UserPrincipal) {

@@ -25,6 +25,7 @@ spring:
 
     user:
       password: 1
+
   data:
     redis:
       host: ${REDIS_HOST}
@@ -75,3 +76,5 @@ auth:
     issuer: team.sparta.com
     secret: ${JWT_SECRET}
     accessTokenExpirationHour: 1
+app:
+ baseUrl: http://localhost:8080/members

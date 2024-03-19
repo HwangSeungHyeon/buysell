@@ -61,6 +61,9 @@ class Member(
 
     @Column(name = "seller_rating")
     var sellerRating: Double? = null,
+
+    @Column(name = "is_verified")
+    var isVerified: Boolean = false
 ) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

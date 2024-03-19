@@ -61,6 +61,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 
+
 //oauth2 소셜로그인
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
