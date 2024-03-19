@@ -12,7 +12,28 @@ on:
 
 # 실제 어떤 작업을 실행할지에 대한 명시
 jobs:
-  ci:
+  test:
+    runs-on: [ ubuntu-latest ]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: java setup
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt' # See 'Supported distributions' for available options
+          java-version: '17'
+
+      # 실행 권한 추가
+      - name: make executable gradlew
+        run: chmod +x ./gradlew
+
+      # clean test 실행
+      - name: run test
+        run: ./gradlew clean test
+
+  build:
     # 스크립트 실행 환경 (OS)
     runs-on: [ ubuntu-latest ] 
 
@@ -33,8 +54,6 @@ jobs:
       - name: make executable gradlew
         run: chmod +x ./gradlew
 
-      # run은 사용자 지정 스크립트 실행
+      # clean build 실행 (테스트 제외)
       - name: run build
-        run: |
-          # clean build 실행 (테스트 제외)
-          ./gradlew clean build -x test
+        run: ./gradlew clean build -x test
