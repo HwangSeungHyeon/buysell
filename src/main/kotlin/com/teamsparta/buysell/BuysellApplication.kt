@@ -1,6 +1,6 @@
 package com.teamsparta.buysell
 
-import com.teamsparta.buysell.infra.social.CustomOAuth2ClientProperties
+import com.teamsparta.buysell.infra.security.social.CustomOAuth2ClientProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication

@@ -1,4 +1,4 @@
-package com.teamsparta.buysell.infra.social
+package com.teamsparta.buysell.infra.security.social
 
 
 import jakarta.servlet.http.HttpServletRequest

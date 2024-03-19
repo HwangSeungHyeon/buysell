@@ -1,4 +1,4 @@
-package com.teamsparta.buysell.infra.social.jwt
+package com.teamsparta.buysell.infra.security.jwt
 
 data class JwtDto(
    val grantType: String,

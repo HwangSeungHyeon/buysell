@@ -3,10 +3,9 @@ package com.teamsparta.buysell.infra.security
 import com.teamsparta.buysell.domain.member.service.CustomUserDetailService
 import com.teamsparta.buysell.infra.security.jwt.CustomAccessDeniedHandler
 import com.teamsparta.buysell.infra.security.jwt.JwtAuthenticationFilter
-import com.teamsparta.buysell.infra.social.CustomOAuth2ClientProperties
-import com.teamsparta.buysell.infra.social.CustomOAuth2Provider
-import com.teamsparta.buysell.infra.social.OAuth2LoginSuccessHandler
-import com.teamsparta.buysell.infra.social.jwt.SocialJwtAuthenticationFilter
+import com.teamsparta.buysell.infra.security.social.CustomOAuth2ClientProperties
+import com.teamsparta.buysell.infra.security.social.CustomOAuth2Provider
+import com.teamsparta.buysell.infra.security.social.OAuth2LoginSuccessHandler
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -29,7 +28,6 @@ class SecurityConfig(
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: CustomAccessDeniedHandler,
     private val customUserDetailService: CustomUserDetailService,
-    private val socialJwtAuthenticationFilter: SocialJwtAuthenticationFilter,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
 ) {
     private val allowedUrls = arrayOf(
@@ -62,7 +60,6 @@ class SecurityConfig(
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-            .addFilterBefore(socialJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
                 it.authenticationEntryPoint(authenticationEntryPoint)
                 it.accessDeniedHandler(accessDeniedHandler)

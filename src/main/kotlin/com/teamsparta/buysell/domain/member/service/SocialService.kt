@@ -5,8 +5,8 @@ import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.model.Role
 import com.teamsparta.buysell.domain.member.model.Social
 import com.teamsparta.buysell.domain.member.repository.SocialRepository
-import com.teamsparta.buysell.infra.social.jwt.JwtDto
-import com.teamsparta.buysell.infra.social.jwt.JwtProvider
+import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
+import com.teamsparta.buysell.infra.security.jwt.JwtDto
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 @Service
 class SocialService(
     private val socialRepository: SocialRepository,
-    private val jwtProvider: JwtProvider,
+    private val jwtPlugin: JwtPlugin
 
 ) {
     fun getGoogleLoginPage(): String {
@@ -32,6 +32,8 @@ class SocialService(
         val nickname = oAuth2User.attributes.get("name").toString()
         val platform = Platform.GOOGLE
         val role = Role.MEMBER
+
+
         socialRepository.findByEmailAndPlatform(email, platform)
         val social =  Social(
             email = email,
@@ -42,7 +44,7 @@ class SocialService(
         )
         socialRepository.save(social)
 
-        return jwtProvider.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+        return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
     }
     fun kakaoLogin(oAuth2User: OAuth2User) : JwtDto {
         val kakaoAccount = oAuth2User.attributes["kakao_account"] as Map<*, *>
@@ -60,7 +62,7 @@ class SocialService(
             account = Account()
         )
         socialRepository.save(social)
-        return jwtProvider.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+        return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
     }
     fun naverLogin(oAuth2User: OAuth2User): JwtDto {
         val platform = Platform.NAVER
@@ -78,6 +80,6 @@ class SocialService(
              )
             socialRepository.save(social)
 
-        return jwtProvider.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+        return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
     }
 }
