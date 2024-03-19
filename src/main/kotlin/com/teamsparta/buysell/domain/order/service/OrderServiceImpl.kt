@@ -69,6 +69,6 @@ class OrderServiceImpl(
 
         order.orderState = OrderState.CANCELLED
 
-        return MessageResponse("주문이 취소되었습니다.")
+        return MessageResponse("결제가 취소되었습니다.")
     }
 }

@@ -18,13 +18,13 @@ class Member(
     val email : String,
 
     @Column(name = "password")
-    var password : String?,
+    val password : String?,
 
     @Column(name = "nickname", unique = true)
     var nickname : String?,
 
     @Column(name = "gender")
-    var gender : String?,
+    val gender : String?,
 
     @Column(name = "birthday")
     var birthday : String?,
@@ -58,6 +58,9 @@ class Member(
         cascade = [CascadeType.ALL]
     )
     var comment : MutableList<Comment> = mutableListOf(),
+
+    @Column(name = "seller_rating")
+    var sellerRating: Double? = null,
 
     @Column(name = "is_verified")
     var isVerified: Boolean = false

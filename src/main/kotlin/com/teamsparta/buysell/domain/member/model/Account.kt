@@ -1,22 +1,27 @@
 package com.teamsparta.buysell.domain.member.model
 
-import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 
 @Entity
 @Table(name = "account")
 @SQLDelete(sql = "UPDATE account SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
+
 class Account (
+    @Column(name = "is_deleted")
+    var isDeleted: Boolean = false,
+
     @Column(name = "account_balance")
     var accountBalance: Long = 0
-): SoftDeleteEntity() {
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
+
     fun depositToAccount(money: Long){
         accountBalance += money
     }
+
     fun payment(price: Long){
         if(availableForPurchase(price)){ //결제 가능할 때
             accountBalance -= price
@@ -24,6 +29,7 @@ class Account (
             throw IllegalArgumentException("잔액이 부족합니다.")
         }
     }
+
     fun availableForPurchase(price: Long): Boolean{
         return accountBalance > price
     }
