@@ -1,9 +1,12 @@
 package com.teamsparta.buysell.domain.member.model
 
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
 
 @Entity
 @Table(name = "account")
+@SQLDelete(sql = "UPDATE account SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
+
 class Account (
     @Column(name = "is_deleted")
     var isDeleted: Boolean = false,
