@@ -12,6 +12,7 @@ import com.teamsparta.buysell.domain.member.model.Role
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
+import jakarta.transaction.Transactional
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.BadCredentialsException
@@ -76,7 +77,8 @@ class MemberServiceImpl(
     //회원 탈퇴 요청
     override fun signOut(userPrincipal: UserPrincipal) {
         val member = memberInformation(userPrincipal)
-
+        member.role = Role.FREEZE
+        memberRepository.save(member)
         memberRepository.delete(member)
     }
 

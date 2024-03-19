@@ -42,6 +42,8 @@ class Social(
     @Column(name = "platform")
     @Enumerated(EnumType.STRING)
     val platform : Platform?,
+    @Column(name = "is_verified")
+    var isVerified: Boolean = true
 ) : SoftDeleteEntity(){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

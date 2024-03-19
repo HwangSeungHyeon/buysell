@@ -26,7 +26,7 @@ class PostController(
     private val postService: PostService
 ) {
 
-    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @PostMapping
     fun createPost(
         @RequestBody createPostRequest: CreatePostRequest,
@@ -37,7 +37,7 @@ class PostController(
             .body(postService.createPost(createPostRequest, principal))
     }
 
-    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @PutMapping("/{postId}")
     fun updatePost(
         @PathVariable postId: Int,
@@ -88,7 +88,7 @@ class PostController(
             .body(postService.getPostById(postId))
     }
 
-    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @DeleteMapping("/{postId}")
     fun deletePost(
         @PathVariable postId: Int,
@@ -99,7 +99,7 @@ class PostController(
             .body(postService.deletePost(postId, principal))
     }
 
-    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @PostMapping("/{postId}/my/wishlist")
     fun addWishList(
         @PathVariable postId: Int,
@@ -110,7 +110,7 @@ class PostController(
             .body(postService.addWishList(postId, userPrincipal))
     }
 
-    @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
     @DeleteMapping("/{postId}/my/wishlist")
     fun cancelWishList(
         @PathVariable postId: Int,

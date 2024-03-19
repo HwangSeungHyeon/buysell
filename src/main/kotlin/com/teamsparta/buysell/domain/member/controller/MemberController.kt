@@ -3,13 +3,11 @@ package com.teamsparta.buysell.domain.member.controller
 import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
-import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.service.AuthLinkService
 import com.teamsparta.buysell.domain.member.service.MemberService
 import com.teamsparta.buysell.domain.member.service.SocialService
-import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
-import com.teamsparta.buysell.infra.social.jwt.JwtDto
+import com.teamsparta.buysell.infra.security.jwt.JwtDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -71,7 +69,7 @@ class MemberController(
 
 
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @PutMapping("/signout")
     fun signOut(
         @AuthenticationPrincipal userPrincipal: UserPrincipal

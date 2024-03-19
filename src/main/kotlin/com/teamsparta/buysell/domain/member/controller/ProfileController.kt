@@ -41,7 +41,7 @@ class ProfileController(
             .body(posts)
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @GetMapping("/my/profile/likes")
     @Operation(summary = "내가 찜한 게시글 조회", description = "내가 찜한 게시글을 조회합니다.")
     fun getAllPostByLike(
@@ -53,7 +53,7 @@ class ProfileController(
             .body(like)
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @PutMapping("/my/profile")
     @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
     fun updateMyProfile(
@@ -65,7 +65,7 @@ class ProfileController(
             .body(profileService.updateMyProfile(userPrincipal, request))
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @GetMapping("/my/profile")
     @Operation(summary = "내 프로필 조회", description = "내 프로필을 조회합니다.")
     fun getMyProfile(

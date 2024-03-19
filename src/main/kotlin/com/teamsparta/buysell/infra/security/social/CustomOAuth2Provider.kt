@@ -1,4 +1,4 @@
-package com.teamsparta.buysell.infra.social
+package com.teamsparta.buysell.infra.security.social
 
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.core.AuthorizationGrantType
