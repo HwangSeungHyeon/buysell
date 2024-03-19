@@ -9,6 +9,7 @@ import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
 import com.teamsparta.buysell.infra.security.jwt.JwtDto
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 
 @Service
@@ -29,11 +30,15 @@ class SocialService(
 
     fun googleLogin(oAuth2User: OAuth2User) : JwtDto {
         val email = oAuth2User.attributes.get("email").toString()
-        val nickname = oAuth2User.attributes.get("name").toString()
+
+        var nickname = makeNickName()
+
+        while (socialRepository.existsByNickname(nickname)){
+            nickname = makeNickName()
+        }
+
         val platform = Platform.GOOGLE
         val role = Role.MEMBER
-
-
         socialRepository.findByEmailAndPlatform(email, platform)
         val social =  Social(
             email = email,
@@ -49,8 +54,13 @@ class SocialService(
     fun kakaoLogin(oAuth2User: OAuth2User) : JwtDto {
         val kakaoAccount = oAuth2User.attributes["kakao_account"] as Map<*, *>
         val email = kakaoAccount["email"].toString()
-        val profile = kakaoAccount["profile"] as Map<*, *>
-        val nickname = profile["nickname"].toString()
+
+        var nickname = makeNickName()
+
+        while (socialRepository.existsByNickname(nickname)){
+            nickname = makeNickName()
+        }
+
         val platform = Platform.KAKAO
         val role = Role.MEMBER
         socialRepository.findByEmailAndPlatform(email, platform)
@@ -69,7 +79,11 @@ class SocialService(
         val role = Role.MEMBER
         val attributes = oAuth2User.attributes["response"] as Map<*, *>
         val email = attributes["email"].toString()
-        val nickname = attributes["nickname"].toString()
+        var nickname = makeNickName()
+
+        while (socialRepository.existsByNickname(nickname)){
+            nickname = makeNickName()
+        }
         socialRepository.findByEmailAndPlatform(email, platform)
             val social =  Social(
                 email = email,
@@ -81,5 +95,11 @@ class SocialService(
             socialRepository.save(social)
 
         return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+    }
+
+    private fun makeNickName(): String{
+        val uuid = UUID.randomUUID().toString().split("-")
+        val nickName = "Guest - " + uuid[0]
+        return nickName
     }
 }
