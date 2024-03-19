@@ -29,8 +29,7 @@ class Review private constructor(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     val member: Member,
-
-    ) : SoftDeleteEntity() {
+) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -64,7 +63,7 @@ class Review private constructor(
     }
 }
 
-fun Review.toResponse(): ReviewResponse{
+fun Review.toResponse(): ReviewResponse {
     return ReviewResponse(
         nickname = member.nickname,
         rating = rating,
