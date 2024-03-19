@@ -1,5 +1,5 @@
 # Action 이름
-name: 'Build Test'
+name: 'CI Test'
 
 # Event Trigger : 명시된 branch에 특정 액션(여기서는 Push와 Pull)이 발생했을 때
 on:
@@ -24,6 +24,16 @@ jobs:
         with:
           distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '17'
+
+      - name: gradle caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       # 실행 권한 추가
       - name: make executable gradlew
@@ -51,6 +61,16 @@ jobs:
         with:
           distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '17'
+
+      - name: gradle caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       # 실행 권한 추가
       - name: make executable gradlew
