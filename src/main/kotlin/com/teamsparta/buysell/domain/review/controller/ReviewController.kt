@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 class ReviewController(
     private val reviewService: ReviewService
 ) {
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @PostMapping
     fun createReview(
         @PathVariable postId: Int,
@@ -29,7 +29,7 @@ class ReviewController(
             .body(reviewService.createReview(postId, request, principal))
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @PutMapping("/{reviewId}")
     fun editReview(
         @PathVariable reviewId: Int,
@@ -42,7 +42,7 @@ class ReviewController(
             .body(reviewService.editReview(reviewId, postId, request, principal))
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @DeleteMapping("/{reviewId}")
     fun deleteReview(
         @PathVariable postId: Int,

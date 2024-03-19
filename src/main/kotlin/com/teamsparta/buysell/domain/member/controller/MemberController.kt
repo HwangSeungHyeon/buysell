@@ -45,7 +45,7 @@ class MemberController(
 
 
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @PutMapping("/signout")
     fun signOut(
         @AuthenticationPrincipal userPrincipal: UserPrincipal

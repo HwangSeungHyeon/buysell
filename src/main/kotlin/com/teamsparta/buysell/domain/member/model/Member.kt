@@ -31,7 +31,7 @@ class Member(
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    val role : Role?,
+    var role : Role?,
 
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "account_id")

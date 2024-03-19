@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 class OrderController(
     private val orderService: OrderService
 ) {
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @PostMapping
     fun createOrder(
         @PathVariable postId: Int,
@@ -27,7 +27,7 @@ class OrderController(
             .body(orderService.createOrder(postId, createOrderRequest, principal))
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
     @DeleteMapping("/{orderId}")
     fun cancelOrder(
         @PathVariable postId: Int,
