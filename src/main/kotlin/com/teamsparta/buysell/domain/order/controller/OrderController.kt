@@ -6,6 +6,7 @@ import com.teamsparta.buysell.domain.order.service.OrderService
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 class OrderController(
     private val orderService: OrderService
 ) {
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     fun createOrder(
         @PathVariable postId: Int,
@@ -26,4 +27,16 @@ class OrderController(
             .body(orderService.createOrder(postId, createOrderRequest, principal))
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{orderId}")
+    fun cancelOrder(
+        @PathVariable postId: Int,
+        @PathVariable orderId: Int,
+        @AuthenticationPrincipal principal: UserPrincipal,
+    ): ResponseEntity<MessageResponse> {
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(orderService.cancelOrder(postId, orderId, principal))
+    }
 }

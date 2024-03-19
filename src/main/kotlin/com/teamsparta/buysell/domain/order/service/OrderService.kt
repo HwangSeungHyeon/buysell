@@ -8,4 +8,5 @@ interface OrderService {
 
     fun createOrder(postId: Int, request: CreateOrderRequest, principal: UserPrincipal): MessageResponse
 
+    fun cancelOrder(postId: Int, orderId: Int, principal: UserPrincipal): MessageResponse
 }

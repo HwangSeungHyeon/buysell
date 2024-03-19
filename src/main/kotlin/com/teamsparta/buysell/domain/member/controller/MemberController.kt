@@ -2,7 +2,6 @@ package com.teamsparta.buysell.domain.member.controller
 
 import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
-import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.service.AuthLinkService
@@ -71,57 +70,16 @@ class MemberController(
     }
 
 
-    @PutMapping
-    @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
-    fun updateProfile(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @RequestBody request: MemberProfileUpdateRequest
-    ): ResponseEntity<MemberResponse> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(memberService.updateMember(userPrincipal, request))
-    }
 
-    @GetMapping
-    @Operation(summary = "프로필 조회", description = "프로필을 조회합니다.")
-    fun getProfile(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
-    ): ResponseEntity<MemberResponse> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(memberService.getMember(userPrincipal))
-    }
-
-    @GetMapping("/posts")
-    @Operation(summary = "내가 쓴 게시글 조회", description = "내가 쓴 게시글을 조회합니다.")
-    fun getAllPosts(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
-    ): ResponseEntity<List<PostResponse>> {
-        val posts = memberService.getAllPostByUserPrincipal(userPrincipal)
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(posts)
-    }
-
-    @GetMapping("/likes")
-    @Operation(summary = "내가 찜한 게시글 조회", description = "내가 찜한 게시글을 조회합니다.")
-    fun getLikesByMember(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal,
-    ): ResponseEntity<List<PostResponse>> {
-        val like = memberService.getAllPostByLike(userPrincipal)
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(like)
-    }
-
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/signout")
-    fun pretendDelete(
+    fun signOut(
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ):ResponseEntity<String>{
-        memberService.pretendDelete(userPrincipal)
+        memberService.signOut(userPrincipal)
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body("탈퇴 신청 완료!")
+            .body("회원탈퇴가 완료되었습니다.")
     }
 
     //소셜로그인

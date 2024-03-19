@@ -31,7 +31,7 @@ class PostController(
     fun createPost(
         @RequestBody createPostRequest: CreatePostRequest,
         @AuthenticationPrincipal principal: UserPrincipal
-    ): ResponseEntity<PostResponse> {
+    ): ResponseEntity<MessageResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(postService.createPost(createPostRequest, principal))
@@ -43,7 +43,7 @@ class PostController(
         @PathVariable postId: Int,
         @RequestBody updateRequest: UpdatePostRequest,
         @AuthenticationPrincipal principal: UserPrincipal
-    ): ResponseEntity<PostResponse> {
+    ): ResponseEntity<MessageResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(postService.updatePost(postId, updateRequest, principal))
@@ -93,32 +93,31 @@ class PostController(
     fun deletePost(
         @PathVariable postId: Int,
         @AuthenticationPrincipal principal: UserPrincipal
-    ): ResponseEntity<Unit> {
-        postService.deletePost(postId, principal)
+    ): ResponseEntity<MessageResponse> {
         return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .build()
+            .status(HttpStatus.OK)
+            .body(postService.deletePost(postId, principal))
     }
 
     @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
-    @PostMapping("/{postId}/likes")
-    fun addLikes(
+    @PostMapping("/{postId}/my/wishlist")
+    fun addWishList(
         @PathVariable postId: Int,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ): ResponseEntity<MessageResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(postService.addLikes(postId, userPrincipal))
+            .body(postService.addWishList(postId, userPrincipal))
     }
 
     @PreAuthorize("isAuthenticated()") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)
-    @DeleteMapping("/{postId}/likes")
-    fun cancelLikes(
+    @DeleteMapping("/{postId}/my/wishlist")
+    fun cancelWishList(
         @PathVariable postId: Int,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ): ResponseEntity<MessageResponse> {
         return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(postService.cancelLikes(postId, userPrincipal))
+            .status(HttpStatus.OK)
+            .body(postService.cancelWishList(postId, userPrincipal))
     }
 }

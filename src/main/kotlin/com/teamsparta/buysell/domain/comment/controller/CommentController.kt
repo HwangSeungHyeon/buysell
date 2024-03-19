@@ -43,7 +43,7 @@ class CommentController(
         @AuthenticationPrincipal principal: UserPrincipal
     ) : ResponseEntity<MessageResponse>{
         return ResponseEntity
-            .status(HttpStatus.CREATED)
+            .status(HttpStatus.OK)
             .body(commentService.editComment(postId, commentId, request, principal))
     }
 
@@ -56,7 +56,7 @@ class CommentController(
         @AuthenticationPrincipal principal: UserPrincipal
     ) : ResponseEntity<MessageResponse>{
         return ResponseEntity
-            .status(HttpStatus.CREATED)
+            .status(HttpStatus.OK)
             .body(commentService.deleteComment(postId, commentId, principal))
     }
 }

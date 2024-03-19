@@ -8,9 +8,11 @@ import com.teamsparta.buysell.domain.review.dto.request.UpdateReviewRequest
 import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
 
 @Entity
 @Table(name = "review")
+@SQLDelete(sql = "UPDATE review SET is_deleted = true WHERE id = ?")
 class Review private constructor(
 
     @Column(name = "content")
@@ -39,7 +41,7 @@ class Review private constructor(
             throw ForbiddenException("수정 권한이 없습니다.")
     }
 
-    fun edit(
+    fun editReview(
         request: UpdateReviewRequest
     ) {
         this.content = request.content
