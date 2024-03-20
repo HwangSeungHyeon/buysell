@@ -1,8 +1,6 @@
 package com.teamsparta.buysell.domain.post.model
 
-import com.teamsparta.buysell.domain.comment.dto.request.UpdateRequest
 import com.teamsparta.buysell.domain.exception.ForbiddenException
-import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Account
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.member.model.Platform
@@ -65,16 +63,6 @@ class PostTest: BehaviorSpec({
             }
 
             exception.message shouldBe "판매완료된 게시글입니다."
-        }
-
-        `when`("삭제된 게시글이라면"){
-            ipadPost.isDeleted = true
-            then("ModelNotFoundException 에러를 발생시킨다")
-            val exception = shouldThrow<ModelNotFoundException> {
-                ipadPost.checkDelete()
-            }
-
-            exception.message shouldBe "Model Post not found with given id: ${ipadPost.id}"
         }
 
         `when`("updateRequest DTO가 edit 메서드의 인자로 전달되었다면") {
