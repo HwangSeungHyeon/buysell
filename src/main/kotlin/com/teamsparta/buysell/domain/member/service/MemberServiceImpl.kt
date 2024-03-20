@@ -25,9 +25,23 @@ class MemberServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin,
     private val authLinkService: AuthLinkService,
-
-    ): MemberService{
+): MemberService{
     override fun signUp(request: SignUpRequest){
+        if (memberRepository.existsByNickname(request.nickname))
+            throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
+
+        memberRepository.findByEmail(request.email)?.let{
+            if(it.isVerified) {
+                throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
+            }
+        }
+
+        memberRepository.findByEmail(request.email)?.let {
+            if(it.platform == Platform.LOCAL){
+                throw DataIntegrityViolationException("이미 가입된 이메일이 존재합니다.")
+            }
+        }
+
         val member = Member(
             email = request.email,
             password = passwordEncoder.encode(request.password),
@@ -39,24 +53,6 @@ class MemberServiceImpl(
             account = Account(),
             isVerified = false
         )
-        request.nickname?.let { memberRepository.findByNickname(it) } ?.let {
-            if (request.nickname == member.nickname) {
-                throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
-            }
-        }
-        memberRepository.findByEmailAndIsVerified(member.email, member.isVerified)?.let{
-            if(member.isVerified) {
-                throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
-            }
-        }
-
-        member.platform?.let {
-            memberRepository.findByEmailAndPlatform(member.email, it)?.let {
-                if(request.email == member.email && member.platform==Platform.LOCAL){
-                    throw DataIntegrityViolationException("이미 가입된 이메일이 존재합니다.")
-                }
-            }
-        }
         memberRepository.save(member)
         authLinkService.sendAuthEmail(member.email)
     }
@@ -75,10 +71,10 @@ class MemberServiceImpl(
     }
 
     //회원 탈퇴 요청
+    @Transactional
     override fun signOut(userPrincipal: UserPrincipal) {
         val member = memberInformation(userPrincipal)
         member.role = Role.FREEZE
-        memberRepository.save(member)
         memberRepository.delete(member)
     }
 

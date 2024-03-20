@@ -8,11 +8,13 @@ import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
 @Entity
 @Table(name = "member")
 @Schema(description = "회원 정보")
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
+@SQLRestriction("is_deleted = false")
 class Member(
     @Column(name = "email")
     val email : String,

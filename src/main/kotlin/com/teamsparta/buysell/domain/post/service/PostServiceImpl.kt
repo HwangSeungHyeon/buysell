@@ -53,7 +53,6 @@ class PostServiceImpl(
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
 
-        post.checkDelete() //삭제 여부 확인
         post.checkPermission(principal)
         post.postUpdate(request)
 
@@ -67,7 +66,6 @@ class PostServiceImpl(
     override fun getPostById(postId: Int): PostResponse {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
-        post.checkDelete() //삭제 여부 확인
         return post.toResponse()
     }
 
