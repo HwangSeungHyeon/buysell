@@ -17,7 +17,7 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @ExtendWith(MockKExtension::class)
 class MemberServiceUnitTest: BehaviorSpec({
@@ -28,8 +28,15 @@ class MemberServiceUnitTest: BehaviorSpec({
     }
 
     val memberRepository = mockk<MemberRepository>()
-    val passwordEncoder = mockk<PasswordEncoder>()
-    val jwtPlugin = mockk<JwtPlugin>()
+
+    val passwordEncoder = BCryptPasswordEncoder()
+
+    val jwtPlugin = JwtPlugin(
+        issuer = "test",
+        secret = "testtesttesttesttesttesttesttesttesttest",
+        accessTokenExpirationHour = 1,
+        refreshTokenExpirationHour = 1
+    )
     val authLinkService = mockk<AuthLinkService>()
 
     val memberService = MemberServiceImpl(memberRepository, passwordEncoder, jwtPlugin, authLinkService)
@@ -71,9 +78,8 @@ class MemberServiceUnitTest: BehaviorSpec({
 
         `when`("DB에 중복 닉네임이 있다면"){
             then("DataIntegrityViolationException 에러를 발생시킨다."){
-                every { memberRepository.findByNickname(any()) } returns signedMember
-                every { memberRepository.findByEmailAndIsVerified(any(), any()) } returns null
-                every { memberRepository.findByEmailAndPlatform(any(), any()) } returns null
+                every { memberRepository.existsByNickname(any()) } returns true
+                every { memberRepository.findByEmail(any()) } returns null
                 every { authLinkService.sendAuthEmail(any()) } returns MessageResponse("이메일로 인증코드를 발송하였습니다.")
 
                 shouldThrow<DataIntegrityViolationException>{
