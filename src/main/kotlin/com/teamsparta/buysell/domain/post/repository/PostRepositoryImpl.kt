@@ -28,7 +28,6 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
         pageable: Pageable
     ) : Page<PostListResponse> {
 
-        // 삭제된 게시글은 조회가 되면 안됨
         // 카테고리가 선택되었다면 그 카테고리를 가진 게시글만 조회가 되어야 됨
         val booleanBuilder = initBooleanBuilder()
         booleanBuilder.andAnyOf( eqCategory(category) )
@@ -46,7 +45,6 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
         pageable: Pageable
     ): Page<PostListResponse> {
 
-        // 삭제된 게시글은 조회가 되면 안됨
         // 사용자가 입력한 검색어를 제목에 포함한 게시글만 조회되어야 함
         val booleanBuilder = initBooleanBuilder()
         booleanBuilder.andAnyOf( eqTitle(keyword) )
@@ -111,12 +109,8 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
 
     //BooleanBuilder 를 만들고, 초기 공통값을 세팅하는 메서드
     private fun initBooleanBuilder(): BooleanBuilder{
-        return BooleanBuilder().and(isDeleted())
-//        return BooleanBuilder()
+        return BooleanBuilder()
     }
-
-    //삭제되지 않은 게시글을 조회할 때 사용하는 BooleanExpression
-    private fun isDeleted() = post.isDeleted.isFalse
 
     //카테고리를 선택하였을 때, 그 카테고리 관련 게시글만 조회하도록 하는 BooleanExpression
     private fun eqCategory(category: Category?) = category?.let { post.category.eq(it) }

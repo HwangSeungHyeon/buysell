@@ -2,11 +2,12 @@ package com.teamsparta.buysell.domain.member.model
 
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
 @Entity
 @Table(name = "account")
 @SQLDelete(sql = "UPDATE account SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
-
+@SQLRestriction("is_deleted = false")
 class Account (
     @Column(name = "is_deleted")
     var isDeleted: Boolean = false,

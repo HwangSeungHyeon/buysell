@@ -7,8 +7,4 @@ import jakarta.persistence.MappedSuperclass
 abstract class SoftDeleteEntity : BaseEntity() {
     @Column(name = "is_deleted")
     var isDeleted: Boolean = false
-
-//    fun softDelete(){
-//        this.isDeleted = true
-//    }
 }

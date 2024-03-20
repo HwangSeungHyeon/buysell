@@ -13,11 +13,12 @@ import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
-
-@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
 @Entity
 @Table(name = "post")
+@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
+@SQLRestriction("is_deleted = false")
 class Post(
     @Column(name = "title")
     var title: String,
@@ -75,12 +76,6 @@ class Post(
         }
     }
 
-    //삭제된 게시글인지 확인하는 메서드
-    fun checkDelete() {
-        if (isDeleted) //삭제된 게시글로 판단될 경우
-            throw ModelNotFoundException("Post", id)
-    }
-
     fun postUpdate(
         request: UpdatePostRequest
     ){
@@ -112,7 +107,6 @@ class Post(
             createdAt = createdAt,
             view = view,
             comment = comment
-                .filter { !it.isDeleted }
                 .map { CommentResponse.toResponse(it) }
         )
     }
