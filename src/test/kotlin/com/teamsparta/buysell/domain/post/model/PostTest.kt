@@ -46,7 +46,7 @@ class PostTest: BehaviorSpec({
         `when`("로그인한 사람과 게시글을 작성한 사람이 다른 사람일 경우") {
             val principal = UserPrincipal(id = 2, email = "test2@gmail.com", role = setOf("MEMBER"), platform = "LOCAL")
 
-            then("ForbiddenException 에러를 발생시킨다.") {
+            then("ForbiddenException 에러가 발생해야 한다.") {
                 val exception = shouldThrow<ForbiddenException> {
                     ipadPost.checkPermission(principal)
                 }
@@ -81,6 +81,4 @@ class PostTest: BehaviorSpec({
             }
         }
     }
-
-
 })
