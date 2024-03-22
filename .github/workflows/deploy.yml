@@ -4,7 +4,7 @@ name: CD
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "feature/post" ]
 
 jobs:
   deploy:
