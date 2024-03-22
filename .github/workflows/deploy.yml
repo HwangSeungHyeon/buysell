@@ -77,8 +77,6 @@ jobs:
             export SMTP_NAME=${{ secrets.SMTP_NAME }}
             export SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
             export SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
-            export SPRING_DATASOURCE_NAME=${{ secrets.SPRING_DATASOURCE_NAME }}
-            export SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
             java -jar *.jar
 
       - name: 배포 결과를 Slack으로 알림
