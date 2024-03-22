@@ -19,7 +19,7 @@ jobs:
 
       - name: .env 파일 생성
         run: |
-          jq -r 'to_entries | map(select(.key != "EC2_HOST" or .key != "EC2_KEY") | "\(.key)=\(.value|tostring)") | .[]' <<< "$SECRETS_CONTEXT" > .env
+          jq -r 'to_entries | map(select(.key) | "\(.key)=\(.value|tostring)") | .[]' <<< "$SECRETS_CONTEXT" > .env
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
@@ -75,9 +75,9 @@ jobs:
           port: 22
           script_stop: true
           script: |
-            set -o allexport
-            source .env
-            set +o allexport
+            while IFS= read -r line; do
+            export "$line"
+            done < .env
             java -jar *.jar
 
       - name: 배포 결과를 Slack으로 알림
