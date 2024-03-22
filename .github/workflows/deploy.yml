@@ -78,7 +78,7 @@ jobs:
             export $(grep -v '^#' .env | xargs -d '\n')
             java -jar *.jar
 
-      - name: 배포 결과를 Slack으로 알림
+      - name: 배포 결과를 Slack 으로 알림
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
