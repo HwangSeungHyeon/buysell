@@ -58,19 +58,26 @@ jobs:
 
       - name: SSH Commands
         uses: appleboy/ssh-action@v0.1.6
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           port: 22
-          envs: JWT_SECRET
           script_stop: true
           script: |
-            echo "jwt token: ${{ secrets.JWT_SECRET }}"
-            echo "url: ${{ secrets.SPRING_DATASOURCE_URL }}"
-            
+            export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            export GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
+            export KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
+            export NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}
+            export NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}
+            export REDIS_HOST=${{ secrets.REDIS_HOST }}
+            export REDIS_PORT=${{ secrets.REDIS_PORT }}
+            export SMTP_NAME=${{ secrets.SMTP_NAME }}
+            export SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
+            export SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
+            java -jar *.jar
 
       - name: 배포 결과를 Slack으로 알림
         uses: 8398a7/action-slack@v3
