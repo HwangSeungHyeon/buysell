@@ -51,7 +51,7 @@ jobs:
           strip_components: 2
 
       - name: SSH Commands
-        uses: appleboy/ssh-action@v1.0.2
+        uses: appleboy/ssh-action@master
         env:
           SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
