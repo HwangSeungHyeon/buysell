@@ -19,7 +19,7 @@ jobs:
 
       - name: .env 파일 생성
         run: |
-          jq -r 'to_entries | map(select(.key != "EC2_HOST" and .key != "EC2_KEY" and .key != github_token) | "\(.key)=\(.value|tostring)") | .[]' <<< "$SECRETS_CONTEXT" > .env
+          jq -r 'to_entries | map(select(.key != "EC2_HOST" or .key != "EC2_KEY") | "\(.key)=\(.value|tostring)") | .[]' <<< "$SECRETS_CONTEXT" > .env
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
@@ -76,7 +76,7 @@ jobs:
           script_stop: true
           script: |
             set -a
-            source .env
+            source *.env
             set +a
             java -jar *.jar
 
