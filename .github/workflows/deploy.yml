@@ -68,7 +68,7 @@ jobs:
           envs: SPRING_DATASOURCE_URL,JWT_SECRET
           script_stop: true
           script: |
-            java -jar *.jar
+            echo: "jwt token: ${{ secrets.JWT_SECRET }}"
 
       - name: 배포 결과를 Slack으로 알림
         uses: 8398a7/action-slack@v3
