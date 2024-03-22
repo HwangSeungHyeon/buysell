@@ -4,11 +4,7 @@ name: CD
 on:
   workflow_dispatch:
   push:
-    branches: [ "feature/post" ]
-
-# GitHub Actions 에서 사용하는 VM이 읽을 수 있도록 허용
-#permissions:
-#  contents: read
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -85,27 +81,3 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
-
-#      - name: Docker Hub 로그인
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_TOKEN }}
-#
-#      - name: Docker 이미지 생성 (저장소 이름/이미지이름:태그)
-#        run: docker build --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
-#
-#      - name: Docker Hub로 이미지 Push
-#        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
-#
-#      - name: EC2에 배포
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.EC2_HOST }}
-#          username: ${{ secrets.EC2_USERNAME }}
-#          key: ${{ secrets.EC2_KEY }}
-#
-#          script: |
-#            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-#            sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest || true
-#            sudo docker-compose up -d
