@@ -76,9 +76,7 @@ jobs:
             export REDIS_PORT=${{ secrets.REDIS_PORT }}
             export SMTP_NAME=${{ secrets.SMTP_NAME }}
             export SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
-            export spring.datasource.url=${{ secrets.SPRING_DATASOURCE_URL }}
-            export spring.datasource.username=${{ secrets.SPRING_DATASOURCE_USERNAME }}
-            export spring.datasource.password=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+            export SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
             java -jar *.jar
 
       - name: 배포 결과를 Slack으로 알림

@@ -1,4 +1,7 @@
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${ SPRING_DATASOURCE_URL }
   jpa:
     hibernate:
       ddl-auto: update
