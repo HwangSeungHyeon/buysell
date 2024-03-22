@@ -75,7 +75,7 @@ jobs:
           port: 22
           script_stop: true
           script: |
-            export $(grep -v '^#' .env | xargs -d '\n')
+            env -S $(grep -v '^#' .env) env
             java -jar *.jar
 
       - name: 배포 결과를 Slack 으로 알림
