@@ -17,11 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-#      - name: .env 파일 생성
-#        run: |
-#          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
-#        env:
-#          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+      - name: .env 파일 생성
+        run: |
+          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
       - name: JDK 17 설치
         uses: actions/setup-java@v4
@@ -54,7 +54,6 @@ jobs:
           port: 22
           source: "./build/libs/*.jar"
           target: "~"
-          strip_components: 2
 
       - name: SSH Commands
         uses: appleboy/ssh-action@v0.1.6
@@ -65,19 +64,8 @@ jobs:
           port: 22
           script_stop: true
           script: |
-            export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-            export GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-            export JWT_SECRET=${{ secrets.JWT_SECRET }}
-            export KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
-            export KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
-            export NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}
-            export NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}
-            export REDIS_HOST=${{ secrets.REDIS_HOST }}
-            export REDIS_PORT=${{ secrets.REDIS_PORT }}
-            export SMTP_NAME=${{ secrets.SMTP_NAME }}
-            export SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
-            export SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
-            java -jar *.jar
+            export $(cat .env | xargs)
+            java -jar ~/$(ls ~/*.jar)
 
       - name: 배포 결과를 Slack으로 알림
         uses: 8398a7/action-slack@v3
