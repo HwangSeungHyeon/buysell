@@ -68,6 +68,9 @@ jobs:
           envs: JWT_SECRET
           script_stop: true
           script: |
+            echo "$host"
+            echo "$username"
+            echo "$key"
             echo "$JWT_SECRET"
 
       - name: 배포 결과를 Slack으로 알림
