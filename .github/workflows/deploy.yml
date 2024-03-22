@@ -75,9 +75,9 @@ jobs:
           port: 22
           script_stop: true
           script: |
-            set -a
-            source *.env
-            set +a
+            set -o allexport
+            source .env
+            set +o allexport
             java -jar *.jar
 
       - name: 배포 결과를 Slack으로 알림
