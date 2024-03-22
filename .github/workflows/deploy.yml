@@ -65,13 +65,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           port: 22
-          envs: JWT_SECRET
+          envs: SPRING_DATASOURCE_URL,JWT_SECRET
           script_stop: true
           script: |
-            echo "$host"
-            echo "$username"
-            echo "$key"
-            echo "$JWT_SECRET"
+            java -jar *.jar
 
       - name: 배포 결과를 Slack으로 알림
         uses: 8398a7/action-slack@v3
