@@ -1,12 +1,14 @@
 name: CD
 
-# main branch에 push 되었을 때
+# 명시된 branch에 push 되었을 때
 on:
-    push:
-      branches: [ "main" ]
+  workflow_dispatch:
+  push:
+    branches: [ "feature/post" ]
 
-permissions:
-  contents: read
+# GitHub Actions 에서 사용하는 VM이 읽을 수 있도록 허용
+#permissions:
+#  contents: read
 
 jobs:
   deploy:
@@ -14,6 +16,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: yml 파일 설정
+        uses: microsoft/variable-substitution@v1
 
       - name: JDK 17 설치
         uses: actions/setup-java@v4
@@ -34,8 +39,8 @@ jobs:
       - name: Gradle 명령 실행을 위한 권한을 부여
         run: chmod +x ./gradlew
 
-      - name: Gradle build를 수행
-        run: ./gradlew clean build -x test
+      - name: Gradle jar 파일만 만들기
+        run: ./gradlew clean bootJar
 
       - name: build 실패 시 Slack으로 알림
         uses: 8398a7/action-slack@v3
@@ -47,26 +52,65 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: failure()
 
-      - name: Docker Hub 로그인
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Docker Image Build
-        run: docker build --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
-
-      - name: Docker Image push
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
-
-      - name: EC2에 배포
-        uses: appleboy/ssh-action@master
+      - name: jar 파일을 서버로 복사
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
+          port: 22
+          source: "./build/libs/*.jar"
+          target: "~"
+          strip_components: 2
 
+      - name: SSH Commands
+        uses: appleboy/ssh-action@v0.1.6
+        env: # 실제 값은 Github Repository secrets 에서 가져옴
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          SMTP_NAME: ${{ secrets.SMTP_NAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port: 22
+          envs: SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, REDIS_HOST, REDIS_PORT, SMTP_NAME, SMTP_PASSWORD, JWT_SECRET
+          script_stop: true
           script: |
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-            sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest || true
-            sudo docker-compose up -d
+            kill -9 $(ps -ef | grep java | head -n 1 | awk '{print $2}')
+            nohup java -jar *.jar 1> /dev/null 2>&1 &
+
+#      - name: Docker Hub 로그인
+#        uses: docker/login-action@v3
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#
+#      - name: Docker 이미지 생성 (저장소 이름/이미지이름:태그)
+#        run: docker build --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
+#
+#      - name: Docker Hub로 이미지 Push
+#        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
+#
+#      - name: EC2에 배포
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.EC2_HOST }}
+#          username: ${{ secrets.EC2_USERNAME }}
+#          key: ${{ secrets.EC2_KEY }}
+#
+#          script: |
+#            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+#            sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest || true
+#            sudo docker-compose up -d
