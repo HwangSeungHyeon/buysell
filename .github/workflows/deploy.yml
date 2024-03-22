@@ -65,10 +65,12 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           port: 22
-          envs: SPRING_DATASOURCE_URL,JWT_SECRET
+          envs: JWT_SECRET
           script_stop: true
           script: |
-            echo: "jwt token: ${{ secrets.JWT_SECRET }}"
+            echo "jwt token: ${{ secrets.JWT_SECRET }}"
+            echo "url: ${{ secrets.SPRING_DATASOURCE_URL }}"
+            
 
       - name: 배포 결과를 Slack으로 알림
         uses: 8398a7/action-slack@v3
