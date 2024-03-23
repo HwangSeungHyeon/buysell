@@ -33,7 +33,7 @@ class AuthLinkService(
         return MessageResponse("이메일로 인증코드를 발송하였습니다.")
     }
 
-    private fun buildAuthUrl(baseUrl: String, email: String, token: String): String="$baseUrl/verify?email=$email&token=$token"
+    private fun buildAuthUrl(baseUrl: String, email: String, token: String): String="$baseUrl/members/verify?email=$email&token=$token"
 
     fun sendMessage(email: String, subject: String, url: String) {
         val message: MimeMessage = emailSender.createMimeMessage()
