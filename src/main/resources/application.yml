@@ -77,4 +77,4 @@ auth:
     secret: ${JWT_SECRET}
     accessTokenExpirationHour: 1
 app:
- baseUrl: http://localhost:8080/members
+ baseUrl: ${BASE_URL}
