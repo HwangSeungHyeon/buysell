@@ -1,12 +1,10 @@
 name: CD
 
-# main branch에 push 되었을 때
+# 명시된 branch에 push 되었을 때
 on:
-    push:
-      branches: [ "main" ]
-
-permissions:
-  contents: read
+  workflow_dispatch:
+  push:
+    branches: [ "main, dev" ]
 
 jobs:
   deploy:
@@ -34,39 +32,53 @@ jobs:
       - name: Gradle 명령 실행을 위한 권한을 부여
         run: chmod +x ./gradlew
 
-      - name: Gradle build를 수행
-        run: ./gradlew clean build -x test
+      - name: Gradle jar 파일만 만들기
+        run: ./gradlew clean bootJar
 
-      - name: build 실패 시 Slack으로 알림
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          author_name: 백엔드 빌드 실패 알림
-          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()
-
-      - name: Docker Hub 로그인
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Docker Image Build
-        run: docker build --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
-
-      - name: Docker Image push
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
-
-      - name: EC2에 배포
-        uses: appleboy/ssh-action@master
+      - name: jar 파일을 서버로 복사
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
+          port: 22
+          source: "./build/libs/*.jar"
+          target: "~"
+          strip_components: 2
 
+      - name: SSH Commands
+        uses: appleboy/ssh-action@master
+        env:
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          SMTP_NAME: ${{ secrets.SMTP_NAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          BASE_URL: ${{secrets.BASE_URL}}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port: 22
+          envs: SPRING_DATASOURCE_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,KAKAO_CLIENT_ID,KAKAO_CLIENT_SECRET,NAVER_CLIENT_ID,NAVER_CLIENT_SECRET,REDIS_HOST,REDIS_PORT,SMTP_NAME,SMTP_PASSWORD,BASE_URL
+          script_stop: true
           script: |
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-            sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest || true
-            sudo docker-compose up -d
+            kill -9 $(ps -ef | grep java | head -n 1 | awk '{print $2}')
+            nohup java -jar *.jar 1> /dev/null 2>&1 &
+
+      - name: 배포 결과를 Slack 으로 알림
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: 백엔드 배포 실패 알림
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
