@@ -5,7 +5,7 @@ import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 
-@Table(name = "post_likes")
+@Table(name = "WishList")
 @Entity
 class WishList private constructor(
     @ManyToOne(fetch = FetchType.LAZY)
