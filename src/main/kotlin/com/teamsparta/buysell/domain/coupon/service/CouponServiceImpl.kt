@@ -7,11 +7,12 @@ import com.teamsparta.buysell.domain.coupon.repository.AppliedUserRepository
 import com.teamsparta.buysell.domain.coupon.repository.CouponRepository
 import com.teamsparta.buysell.domain.coupon.repository.RedisCouponRepository
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
-import com.teamsparta.buysell.infra.security.UserPrincipal
 import com.teamsparta.buysell.infra.utility.CouponUtility
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 @Service
 class CouponServiceImpl(
@@ -25,17 +26,18 @@ class CouponServiceImpl(
     override fun createCoupon(request: CreateCouponRequest, memberId: Int): MessageResponse {
         val member = memberRepository.findByIdOrNull(memberId)
             ?: throw IllegalArgumentException("Invalid member")
-//        val apply = appliedUserRepository.add(memberId)
-//
-//        if (apply != 1L) {
-//            return MessageResponse("계정당 1회만 참여 가능합니다.")
-//        }
-        val count = couponRepository.count()
-//        val count = redisCouponRepository.increment()
+        val apply = appliedUserRepository.add(memberId)
+
+        if (apply != 1L) {
+            return MessageResponse("계정당 1회만 참여 가능합니다.")
+        }
+        val count = redisCouponRepository.increment()
 
         if (count > request.couponCount) {
             return MessageResponse("준비된 쿠폰이 모두 소진되었습니다.")
         }
+
+        val couponExp = LocalDateTime.now().plus(request.couponExp, ChronoUnit.DAYS)
 
         val couponNumber = couponUtility.createCouponNumber()
         val coupon = Coupon(
@@ -43,7 +45,8 @@ class CouponServiceImpl(
             couponNumber = couponNumber,
             couponCount = request.couponCount,
             memberId = member,
-            available = true
+            available = true,
+            couponExp = couponExp
         )
         couponRepository.save(coupon)
 

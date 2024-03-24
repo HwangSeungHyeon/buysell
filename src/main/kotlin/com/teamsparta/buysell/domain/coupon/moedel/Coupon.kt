@@ -9,6 +9,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "Coupon")
@@ -21,6 +22,9 @@ class Coupon(
 
     @Column(name = "coupon_count")
     val couponCount: Int,
+
+    @Column(name = "coupon_exp")
+    val couponExp: LocalDateTime? = null,
 
     @ManyToOne
     @JoinColumn(name = "member_id")
