@@ -7,6 +7,7 @@ import com.teamsparta.buysell.domain.member.model.Social
 import com.teamsparta.buysell.domain.member.repository.SocialRepository
 import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
 import com.teamsparta.buysell.infra.security.jwt.JwtDto
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -15,17 +16,17 @@ import java.util.UUID
 @Service
 class SocialService(
     private val socialRepository: SocialRepository,
-    private val jwtPlugin: JwtPlugin
-
+    private val jwtPlugin: JwtPlugin,
+    @Value("\${app.baseUrl}") private val baseUrl: String
 ) {
     fun getGoogleLoginPage(): String {
-        return "http://localhost:8080/oauth2/authorization/google"
+        return "$baseUrl/oauth2/authorization/google"
     }
     fun getKakaoLoginPage(): String{
-        return "http://localhost:8080/oauth2/authorization/kakao"
+        return "$baseUrl/oauth2/authorization/kakao"
     }
     fun getNaverLoginPage(): String{
-        return "http://localhost:8080/oauth2/authorization/naver"
+        return "$baseUrl/oauth2/authorization/naver"
     }
 
     fun googleLogin(oAuth2User: OAuth2User) : JwtDto {
