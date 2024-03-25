@@ -8,6 +8,7 @@ import com.teamsparta.buysell.domain.member.repository.SocialRepository
 import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
 import com.teamsparta.buysell.infra.security.jwt.JwtDto
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -31,6 +32,10 @@ class SocialService(
 
     fun googleLogin(oAuth2User: OAuth2User) : JwtDto {
         val email = oAuth2User.attributes.get("email").toString()
+
+        if(socialRepository.existsByEmailAndPlatform(email, Platform.GOOGLE)) {
+            throw DataIntegrityViolationException("이미 가입한 계정이 존재합니다.")
+        }
 
         var nickname = makeNickName()
 
@@ -56,6 +61,10 @@ class SocialService(
         val kakaoAccount = oAuth2User.attributes["kakao_account"] as Map<*, *>
         val email = kakaoAccount["email"].toString()
 
+        if(socialRepository.existsByEmailAndPlatform(email, Platform.KAKAO)) {
+            throw DataIntegrityViolationException("이미 가입한 계정이 존재합니다.")
+        }
+
         var nickname = makeNickName()
 
         while (socialRepository.existsByNickname(nickname)){
@@ -80,6 +89,11 @@ class SocialService(
         val role = Role.MEMBER
         val attributes = oAuth2User.attributes["response"] as Map<*, *>
         val email = attributes["email"].toString()
+
+        if(socialRepository.existsByEmailAndPlatform(email, Platform.NAVER)) {
+            throw DataIntegrityViolationException("이미 가입한 계정이 존재합니다.")
+        }
+
         var nickname = makeNickName()
 
         while (socialRepository.existsByNickname(nickname)){
