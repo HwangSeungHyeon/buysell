@@ -73,9 +73,20 @@ jobs:
           envs: SPRING_DATASOURCE_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,KAKAO_CLIENT_ID,KAKAO_CLIENT_SECRET,NAVER_CLIENT_ID,NAVER_CLIENT_SECRET,REDIS_HOST,REDIS_PORT,SMTP_NAME,SMTP_PASSWORD,BASE_URL,GOOGLE_REDIRECT_URI,KAKAO_REDIRECT_URI,NAVER_REDIRECT_URI
           script_stop: true
           script: |
-            java -jar *.jar
-#            kill -9 $(ps -ef | grep java | head -n 1 | awk '{print $2}')
-#            nohup java -jar *.jar 1> /dev/null 2>&1 &
+#            java -jar *.jar
+#            kill -9 $(ps -ef | grep .jar | head -n 1 | awk '{print $2}')
+            # 실행 중인 모든 Java JAR 프로세스 찾기
+            pids=$(ps -ef | grep java | grep -v grep | grep '.jar' | awk '{print $2}')
+
+            # 찾은 프로세스가 있으면 종료
+            if [ -n "$pids" ]; then
+              echo "종료할 프로세스 ID = $pids"
+              kill -9 $pids
+            else
+              echo "종료할 Java JAR 프로세스가 없습니다."
+            fi
+                    
+            nohup java -jar *.jar 1> /dev/null 2>&1 &
 
       - name: 배포 결과를 Slack 으로 알림
         uses: 8398a7/action-slack@v3
