@@ -78,7 +78,7 @@ jobs:
             # 실행 중인 모든 Java JAR 프로세스 찾기
             pids=$(ps -ef | grep java | grep -v grep | grep '.jar' | awk '{print $2}')
 
-            # 찾은 프로세스가 있으면 종료
+            # 찾은 프로세스가 있으면 종료하고 없으면 종료 안 함
             if [ -n "$pids" ]; then
               echo "종료할 프로세스 ID = $pids"
               kill -9 $pids
