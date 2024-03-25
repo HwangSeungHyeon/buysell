@@ -5,7 +5,6 @@ import com.teamsparta.buysell.domain.comment.dto.request.UpdateRequest
 import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.comment.repository.CommentRepository
 import com.teamsparta.buysell.domain.common.dto.MessageResponse
-import com.teamsparta.buysell.domain.exception.ForbiddenException
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import com.teamsparta.buysell.domain.post.repository.PostRepository
@@ -31,8 +30,6 @@ class CommentServiceImpl(
 
         val post = postRepository.findByIdOrNull(postId)
             ?:throw ModelNotFoundException("Post", postId)
-
-        post.checkDelete() //게시글이 soft delete로 삭제되었는지 확인
 
         Comment.makeEntity(
             request = request,
@@ -72,7 +69,6 @@ class CommentServiceImpl(
         comment.checkPermission(principal)
 
         commentRepository.delete(comment)
-//        comment.softDelete()
 
         return MessageResponse("댓글이 삭제되었습니다.")
     }

@@ -10,10 +10,12 @@ import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
 @Entity
 @Table(name = "review")
 @SQLDelete(sql = "UPDATE review SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 class Review private constructor(
 
     @Column(name = "content")

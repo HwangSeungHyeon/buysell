@@ -9,10 +9,12 @@ import com.teamsparta.buysell.infra.auditing.SoftDeleteEntity
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
-@Table(name = "comment")
 @Entity
+@Table(name = "comment")
 @SQLDelete(sql = "UPDATE comment SET is_deleted = true WHERE id = ?") // DELETE 쿼리 대신 실행
+@SQLRestriction("is_deleted = false")
 class Comment private constructor(
     @Column(name = "comment_content")
     var content: String,

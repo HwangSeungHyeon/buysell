@@ -83,8 +83,6 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
-
-    testRuntimeOnly("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {
