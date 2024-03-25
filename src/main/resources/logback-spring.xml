@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 60초마다 로그에 변경이 있는지 체크 후 갱신 -->
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
+
+    <!-- 로그파일 경로 -->
+    <property name="LOG_PATH" value="./logs"/>
+
+    <!-- 출력 패턴 -->
+    <property name="LOG_PATTERN"
+              value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %-5level [%thread] - %msg%n"/>
+
+    <include resource="console-appender.xml"/>
+    <include resource="file-info-appender.xml"/>
+    <include resource="file-error-appender.xml"/>
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE-INFO"/>
+        <appender-ref ref="FILE-ERROR"/>
+    </root>
+</configuration>
