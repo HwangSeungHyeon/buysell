@@ -20,8 +20,7 @@ class AuthLinkService(
     private val redisTemplate: RedisTemplate<String, String>,
     private val emailSender: JavaMailSender,
     @Value("\${app.baseUrl}") private val baseUrl: String,
-    private val memberRepository: MemberRepository
-
+    private val memberRepository: MemberRepository,
 ) {
     fun sendAuthEmail(email: String): MessageResponse{
         redisTemplate.delete(email)
