@@ -19,10 +19,10 @@ import java.util.concurrent.TimeUnit
 class AuthLinkService(
     private val redisTemplate: RedisTemplate<String, String>,
     private val emailSender: JavaMailSender,
-    @Value("\${app.baseUrl}") private val baseUrl: String,
     private val memberRepository: MemberRepository
 
 ) {
+    private val baseUrl="http://localhost:8080/members"
     fun sendAuthEmail(email: String): MessageResponse{
         redisTemplate.delete(email)
         val baseUrl = baseUrl
