@@ -76,9 +76,6 @@ auth:
     issuer: team.sparta.com
     secret: ${JWT_SECRET}
     accessTokenExpirationHour: 1
-app:
- baseUrl: ${BASE_URL}
-
 
 ---
 
@@ -88,7 +85,8 @@ spring:
       on-profile: local
 server:
   port: 8081
-
+app:
+  baseUrl: http://localhost:8080
 ---
 
 spring:
@@ -97,3 +95,5 @@ spring:
       on-profile: prod
 server:
   port: 8080
+app:
+  baseUrl: ${BASE_URL}
