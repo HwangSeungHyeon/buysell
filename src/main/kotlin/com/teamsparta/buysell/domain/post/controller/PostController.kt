@@ -6,6 +6,7 @@ import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
 import com.teamsparta.buysell.domain.post.model.Category
+import com.teamsparta.buysell.domain.post.model.WishList
 import com.teamsparta.buysell.domain.post.service.PostService
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import jakarta.validation.Valid

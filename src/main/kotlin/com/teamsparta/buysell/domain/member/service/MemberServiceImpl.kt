@@ -27,20 +27,12 @@ class MemberServiceImpl(
     private val authLinkService: AuthLinkService,
 ): MemberService{
     override fun signUp(request: SignUpRequest){
+        if(memberRepository.existsByEmailAndPlatform(request.email, Platform.LOCAL)){
+            throw DataIntegrityViolationException("이미 가입된 계정입니다.")
+        }
+
         if (memberRepository.existsByNickname(request.nickname))
             throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
-
-        memberRepository.findByEmail(request.email)?.let{
-            if(it.isVerified) {
-                throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
-            }
-        }
-
-        memberRepository.findByEmail(request.email)?.let {
-            if(it.platform == Platform.LOCAL){
-                throw DataIntegrityViolationException("이미 가입된 이메일이 존재합니다.")
-            }
-        }
 
         val member = Member(
             email = request.email,

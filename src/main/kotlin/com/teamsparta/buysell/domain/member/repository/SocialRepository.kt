@@ -8,4 +8,6 @@ interface SocialRepository: JpaRepository<Social, Int> {
     fun findByEmailAndPlatform(email: String, platform: Platform): Social?
 
     fun existsByNickname(nickName: String): Boolean
+
+    fun existsByEmailAndPlatform(email: String, platform: Platform): Boolean
 }
