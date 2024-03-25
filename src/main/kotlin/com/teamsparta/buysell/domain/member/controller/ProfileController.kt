@@ -42,15 +42,15 @@ class ProfileController(
     }
 
     @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
-    @GetMapping("/my/profile/likes")
-    @Operation(summary = "내가 찜한 게시글 조회", description = "내가 찜한 게시글을 조회합니다.")
+    @GetMapping("/my/profile/wishlist")
+    @Operation(summary = "내 위시리스트 조회", description = "내 위시리스트를 조회합니다.")
     fun getAllPostByLike(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
     ): ResponseEntity<List<PostListResponse>> {
-        val like = profileService.getAllPostByLike(userPrincipal)
+        val wishList = profileService.getAllPostByWishList(userPrincipal)
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(like)
+            .body(wishList)
     }
 
     @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')")
