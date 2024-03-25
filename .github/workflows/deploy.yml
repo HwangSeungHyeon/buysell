@@ -33,7 +33,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Gradle jar 파일만 만들기
-        run: ./gradlew clean bootJar
+        run: ./gradlew clean bootJar -Dspring.profiles.active=prod
 
       - name: jar 파일을 서버로 복사
         uses: appleboy/scp-action@master
@@ -70,9 +70,14 @@ jobs:
           envs: SPRING_DATASOURCE_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,KAKAO_CLIENT_ID,KAKAO_CLIENT_SECRET,NAVER_CLIENT_ID,NAVER_CLIENT_SECRET,REDIS_HOST,REDIS_PORT,SMTP_NAME,SMTP_PASSWORD,BASE_URL
           script_stop: true
           script: |
-            java -jar *.jar -Dspring.profiles.active=prod
-#            kill -9 $(ps -ef | grep java | head -n 1 | awk '{print $2}')
-#            nohup java -jar *.jar -Dspring.profiles.active=prod 1> /dev/null 2>&1 &
+            PID=$(ps aux | grep '[j]ava -jar' | grep buysell-0.0.1-SNAPSHOT.jar | awk '{print $2}')
+            if [ ! -z "$PID" ]; then
+              echo "Killing Java process ID $PID running buysell-0.0.1-SNAPSHOT.jar"
+              kill -9 $PID
+            else
+              echo "No Java process found running buysell-0.0.1-SNAPSHOT.jar"
+              fi
+            nohup java -jar *.jar 1> /dev/null 2>&1 &
 
       - name: 배포 결과를 Slack 으로 알림
         uses: 8398a7/action-slack@v3
