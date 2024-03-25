@@ -31,13 +31,7 @@ class MemberServiceImpl(
             throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
 
         memberRepository.findByEmail(request.email)?.let{
-            if(it.isVerified) {
-                throw DataIntegrityViolationException("이미 인증된 이메일이 존재합니다.")
-            }
-        }
-
-        memberRepository.findByEmail(request.email)?.let {
-            if(it.platform == Platform.LOCAL){
+            if(it.platform == Platform.LOCAL && it.isVerified) {
                 throw DataIntegrityViolationException("이미 가입된 이메일이 존재합니다.")
             }
         }
