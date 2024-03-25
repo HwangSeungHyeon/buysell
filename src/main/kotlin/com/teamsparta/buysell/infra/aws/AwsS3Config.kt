@@ -1,15 +1,14 @@
 package com.teamsparta.buysell.infra.aws
 
-import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.services.s3.AmazonS3Client
+import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
-import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Configuration
 
-@Component
+@Configuration
 class AwsS3Config {
     @Value("\${cloud.aws.credentials.access-key")
     val accessKey: String? = null
@@ -21,11 +20,16 @@ class AwsS3Config {
     val region: String? = null
 
     @Bean
-    fun AmazonS3Client(): AmazonS3Client {
-        val awsCred: AWSCredentials = BasicAWSCredentials(accessKey, secretKey)
+    fun awsCredentialProvider(): BasicAWSCredentials {
+        return BasicAWSCredentials(accessKey, secretKey)
+    }
+
+    @Bean
+    fun amazonS3(): AmazonS3 {
         return AmazonS3ClientBuilder.standard()
             .withRegion(region)
-            .withCredentials(AWSStaticCredentialsProvider(awsCred))
-            .build() as AmazonS3Client
+            .withCredentials(AWSStaticCredentialsProvider(awsCredentialProvider()))
+            .build()
+
     }
 }
