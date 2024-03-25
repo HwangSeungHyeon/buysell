@@ -14,10 +14,13 @@
 
     <include resource="console-appender.xml"/>
     <include resource="file-info-appender.xml"/>
+    <include resource="file-warn-appender.xml"/>
     <include resource="file-error-appender.xml"/>
+
     <root level="info">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE-INFO"/>
+        <appender-ref ref="FILE-WARN"/>
         <appender-ref ref="FILE-ERROR"/>
     </root>
 </configuration>
