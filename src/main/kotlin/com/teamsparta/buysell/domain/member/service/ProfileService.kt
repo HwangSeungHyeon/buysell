@@ -8,7 +8,7 @@ import com.teamsparta.buysell.domain.review.dto.response.ReviewResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
 
 interface ProfileService {
-    fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostListResponse>?
+    fun getAllPostByWishList(userPrincipal: UserPrincipal): List<PostListResponse>?
     fun getAllPostByMemberId(memberId:Int) : OtherProfileResponse
     fun getMyProfile(userPrincipal: UserPrincipal): MemberResponse?
     fun updateMyProfile(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse
