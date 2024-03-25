@@ -79,19 +79,7 @@ class MemberServiceUnitTest: BehaviorSpec({
         `when`("DB에 중복 닉네임이 있다면"){
             then("DataIntegrityViolationException 에러를 발생시킨다."){
                 every { memberRepository.existsByNickname(any()) } returns true
-                every { memberRepository.findByEmail(any()) } returns null
-                every { authLinkService.sendAuthEmail(any()) } returns MessageResponse("이메일로 인증코드를 발송하였습니다.")
-
-                shouldThrow<DataIntegrityViolationException>{
-                    memberService.signUp(request)
-                }
-            }
-        }
-
-        `when`("이미 인증된 이메일이 있다면"){
-            then("DataIntegrityViolationException 에러를 발생시킨다."){
-                every { memberRepository.existsByNickname(any()) } returns false
-                every { memberRepository.findByEmail(any()) } returns signedMember
+                every { memberRepository.existsByEmailAndPlatform(any(), any()) } returns false
                 every { authLinkService.sendAuthEmail(any()) } returns MessageResponse("이메일로 인증코드를 발송하였습니다.")
 
                 shouldThrow<DataIntegrityViolationException>{
@@ -103,7 +91,7 @@ class MemberServiceUnitTest: BehaviorSpec({
         `when`("이미 가입된 이메일이 있다면"){
             then("DataIntegrityViolationException 에러를 발생시킨다."){
                 every { memberRepository.existsByNickname(any()) } returns false
-                every { memberRepository.findByEmail(any()) } returns signedMember
+                every { memberRepository.existsByEmailAndPlatform(any(), any()) } returns true
                 every { authLinkService.sendAuthEmail(any()) } returns MessageResponse("이메일로 인증코드를 발송하였습니다.")
 
                 shouldThrow<DataIntegrityViolationException>{
