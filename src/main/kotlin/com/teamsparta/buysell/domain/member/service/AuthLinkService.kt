@@ -39,7 +39,7 @@ class AuthLinkService(
         val helper = MimeMessageHelper(message, true)
         helper.setTo(email)
         helper.setSubject(subject)
-        helper.setText("회원가입 인증 링크:$url", true)
+        helper.setText("회원가입 인증 링크: $url", true)
         emailSender.send(message)
     }
 
