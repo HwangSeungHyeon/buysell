@@ -38,12 +38,12 @@ class ProfileServiceImpl(
         )
     }
 
-    //내가 찜 한 글 전체 조회
-    override fun getAllPostByLike(userPrincipal: UserPrincipal): List<PostListResponse>? {
+    //내 위시리스트 전체 조회
+    override fun getAllPostByWishList(userPrincipal: UserPrincipal): List<PostListResponse>? {
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("member", userPrincipal.id)
-        val like = wishListRepository.findByMember(member)
-        val post = like.map { it.post }
+        val wishList = wishListRepository.findByMember(member)
+        val post = wishList.map { it.post }
         return post.map { it.toListResponse() }
     }
     // 현재 로그인 한 멤버 아이디 기준 정보 조회
