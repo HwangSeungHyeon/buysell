@@ -13,6 +13,7 @@ class CustomOAuth2ClientProperties {
         class Registration {
             lateinit var clientId: String
             var clientSecret: String = "default"
+            var redirectUri: String = "default"
         }
     }
 }

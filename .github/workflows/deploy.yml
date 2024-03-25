@@ -61,13 +61,16 @@ jobs:
           SMTP_NAME: ${{ secrets.SMTP_NAME }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          BASE_URL: ${{secrets.BASE_URL}}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+          KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
+          NAVER_REDIRECT_URI: ${{ secrets.NAVER_REDIRECT_URI }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           port: 22
-          envs: SPRING_DATASOURCE_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,KAKAO_CLIENT_ID,KAKAO_CLIENT_SECRET,NAVER_CLIENT_ID,NAVER_CLIENT_SECRET,REDIS_HOST,REDIS_PORT,SMTP_NAME,SMTP_PASSWORD,BASE_URL
+          envs: SPRING_DATASOURCE_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,KAKAO_CLIENT_ID,KAKAO_CLIENT_SECRET,NAVER_CLIENT_ID,NAVER_CLIENT_SECRET,REDIS_HOST,REDIS_PORT,SMTP_NAME,SMTP_PASSWORD,BASE_URL,GOOGLE_REDIRECT_URI,KAKAO_REDIRECT_URI,NAVER_REDIRECT_URI
           script_stop: true
           script: |
             kill -9 $(ps -ef | grep java | head -n 1 | awk '{print $2}')
