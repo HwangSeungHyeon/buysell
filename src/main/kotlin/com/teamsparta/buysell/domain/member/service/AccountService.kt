@@ -8,4 +8,5 @@ interface AccountService {
 
     fun chargeAccount(money: Long, memberId: Int): MessageResponse
 
+    fun withDraw(money: Long, memberId: Int): MessageResponse
 }

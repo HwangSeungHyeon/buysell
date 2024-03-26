@@ -30,8 +30,9 @@ class AccountController(
             .body(accountService.getMyAccount(userPrincipal.id))
     }
 
+    //계좌 충전
     @PreAuthorize("hasRole('MEMBER')")
-    @PatchMapping
+    @PatchMapping("/deposit")
     fun chargeAccount(
         @RequestParam money:Long,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
@@ -39,5 +40,17 @@ class AccountController(
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(accountService.chargeAccount(money, userPrincipal.id))
+    }
+
+    //계좌 출금
+    @PreAuthorize("hasRole('MEMBER')")
+    @PatchMapping("/withdraw")
+    fun withDraw(
+        @RequestParam money:Long,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ): ResponseEntity<MessageResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(accountService.withDraw(money, userPrincipal.id))
     }
 }
