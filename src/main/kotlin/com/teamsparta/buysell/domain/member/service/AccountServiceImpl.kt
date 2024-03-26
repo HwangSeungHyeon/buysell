@@ -32,4 +32,16 @@ class AccountServiceImpl(
 
         return MessageResponse("입금 되었습니다.")
     }
+
+    @Transactional
+    override fun withDraw(money: Long, memberId: Int): MessageResponse {
+        val member = memberRepository.findByIdOrNull(memberId)
+            ?: throw ModelNotFoundException("Member", memberId)
+
+        member.account.apply {
+            withDrawMoney(money)
+        }
+
+        return MessageResponse("${money}원이 출금되었습니다.")
+    }
 }

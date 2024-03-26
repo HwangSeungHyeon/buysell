@@ -23,6 +23,12 @@ class Account (
         accountBalance += money
     }
 
+    fun withDrawMoney(money: Long){
+        if (accountBalance < money)
+            throw IllegalStateException("계좌에 있는 돈보다 많이 출금할 수 없습니다.")
+        accountBalance -= money
+    }
+
     fun payment(price: Long){
         if(availableForPurchase(price)){ //결제 가능할 때
             accountBalance -= price
