@@ -1,12 +1,10 @@
-# Action 이름
-name: CI-Push
-
-# Event Trigger : 명시된 branch에 특정 액션(여기서는 Pull)이 발생했을 때
+name: CI
 on:
   push:
     branches: [ "dev", "feature/*" ]
+  pull_request:
+    branches: [ "dev", "main" ]
 
-# 실제 어떤 작업을 실행할지에 대한 명시
 jobs:
   build:
     runs-on: [ ubuntu-latest ]
@@ -36,7 +34,7 @@ jobs:
 
       - name: Gradle build를 수행
         run: ./gradlew clean build
-        
+
       - name: build 실패 시 Slack으로 알림
         uses: 8398a7/action-slack@v3
         with:
