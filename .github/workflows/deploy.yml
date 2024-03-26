@@ -1,11 +1,9 @@
 name: CD
 
-# 명시된 branch에 push 되었을 때
 on:
   workflow_dispatch:
   push:
-#    branches: [ "main" ]
-    branches: [ "main", "dev", "feature/logback" ]
+    branches: [ "main", "dev"]
 
 jobs:
   deploy:
