@@ -8,18 +8,22 @@
     <!-- 로그파일 경로 -->
     <property name="LOG_PATH" value="./logs"/>
 
-    <!-- 출력 패턴 -->
+    <!-- 콘솔에 출력할 때 사용하는 패턴 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %highlight(%-5level) %green([%thread]) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
+
+    <!-- 파일에 저장할 때 사용하는 패턴 -->
     <property name="LOG_PATTERN"
-              value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %-5level [%thread] - %msg%n"/>
+              value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %-5level [%thread] [%C.%M:%L] - %msg%n"/>
 
     <include resource="console-appender.xml"/>
-    <include resource="file-info-appender.xml"/>
+<!--    <include resource="file-info-appender.xml"/>-->
     <include resource="file-warn-appender.xml"/>
     <include resource="file-error-appender.xml"/>
 
     <root level="info">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE-INFO"/>
+<!--        <appender-ref ref="FILE-INFO"/>-->
         <appender-ref ref="FILE-WARN"/>
         <appender-ref ref="FILE-ERROR"/>
     </root>
