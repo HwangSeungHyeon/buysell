@@ -81,8 +81,7 @@ jobs:
             else
               echo "종료할 Java JAR 프로세스가 없습니다."
             fi
-                    
-            nohup java -jar *.jar > /home/ec2-user/log/stdout/stdout_$(date +%Y%m%d).log 2> /home/ec2-user/log/stderr/stderr_$(date +%Y%m%d).log &
+            nohup java -jar *.jar 1> /dev/null 2>&1 &
 
       - name: 배포 결과를 Slack 으로 알림
         uses: 8398a7/action-slack@v3
