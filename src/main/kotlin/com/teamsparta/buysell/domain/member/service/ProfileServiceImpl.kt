@@ -11,6 +11,7 @@ import com.teamsparta.buysell.domain.review.dto.response.ReviewResponse
 import com.teamsparta.buysell.domain.review.model.toResponse
 import com.teamsparta.buysell.domain.review.repository.ReviewRepository
 import com.teamsparta.buysell.infra.security.UserPrincipal
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -57,11 +58,14 @@ class ProfileServiceImpl(
     // 로그인 한 멤버 아이디 기준 정보 수정
     @Transactional
     override fun updateMyProfile(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse {
+        if(memberRepository.existsByNickname(request.nickname))
+            throw DataIntegrityViolationException("이미 사용 중인 닉네임입니다.")
+
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("Member", userPrincipal.id)
         member.nickname = request.nickname
         member.birthday = request.birthday
-        return memberRepository.save(member).toResponse()
+        return member.toResponse()
     }
 
 }
