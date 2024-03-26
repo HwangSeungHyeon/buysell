@@ -8,6 +8,7 @@ import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
+import com.teamsparta.buysell.domain.post.dto.response.WishResponse
 import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.model.Post
 import com.teamsparta.buysell.domain.post.model.WishList
@@ -97,6 +98,16 @@ class PostServiceImpl(
     ): Page<PostListResponse> {
         return postRepository
             .searchByKeyword(keyword, pageable)
+    }
+
+    override fun getMyWishByPostId(
+        postId: Int,
+        userPrincipal: UserPrincipal
+    ): WishResponse {
+        val myWish = wishListRepository.findByPostIdAndMemberId(postId, userPrincipal.id, WishResponse::class.java)
+            ?: WishResponse(-9)
+
+        return myWish
     }
 
     override fun addWishList(

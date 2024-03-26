@@ -5,8 +5,8 @@ import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
+import com.teamsparta.buysell.domain.post.dto.response.WishResponse
 import com.teamsparta.buysell.domain.post.model.Category
-import com.teamsparta.buysell.domain.post.model.WishList
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -26,6 +26,8 @@ interface PostService {
     fun getPostById(postId: Int): PostResponse
 
     fun deletePost(postId: Int, principal: UserPrincipal): MessageResponse
+
+    fun getMyWishByPostId(postId: Int, userPrincipal: UserPrincipal): WishResponse
 
     fun addWishList(postId: Int, userPrincipal: UserPrincipal): MessageResponse
 
