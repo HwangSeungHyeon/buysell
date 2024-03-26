@@ -1,5 +1,6 @@
 package com.teamsparta.buysell.domain.member.service
 
+import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Account
 import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.model.Role
@@ -32,57 +33,58 @@ class SocialService(
 
     fun googleLogin(oAuth2User: OAuth2User) : JwtDto {
         val email = oAuth2User.attributes.get("email").toString()
-
-        if(socialRepository.existsByEmailAndPlatform(email, Platform.GOOGLE)) {
-            throw DataIntegrityViolationException("이미 가입한 계정이 존재합니다.")
-        }
-
-        var nickname = makeNickName()
-
-        while (socialRepository.existsByNickname(nickname)){
-            nickname = makeNickName()
-        }
-
         val platform = Platform.GOOGLE
         val role = Role.MEMBER
-        socialRepository.findByEmailAndPlatform(email, platform)
-        val social =  Social(
-            email = email,
-            role = role,
-            nickname = nickname,
-            platform = platform,
-            account = Account()
-        )
-        socialRepository.save(social)
 
-        return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+        val social = socialRepository.findByEmailAndPlatform(email, platform)
+
+        if (social == null){
+            var nickname = makeNickName()
+            while (socialRepository.existsByNickname(nickname)){
+                nickname = makeNickName()
+            }
+
+            val socialEntity = Social(
+                email = email,
+                role = role,
+                nickname = nickname,
+                platform = platform,
+                account = Account()
+            )
+            socialRepository.save(socialEntity)
+            return jwtPlugin.generateJwtDto(oAuth2User, socialEntity.id.toString(), role.name, platform)
+        }
+        else{
+            return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+        }
     }
     fun kakaoLogin(oAuth2User: OAuth2User) : JwtDto {
         val kakaoAccount = oAuth2User.attributes["kakao_account"] as Map<*, *>
         val email = kakaoAccount["email"].toString()
-
-        if(socialRepository.existsByEmailAndPlatform(email, Platform.KAKAO)) {
-            throw DataIntegrityViolationException("이미 가입한 계정이 존재합니다.")
-        }
-
-        var nickname = makeNickName()
-
-        while (socialRepository.existsByNickname(nickname)){
-            nickname = makeNickName()
-        }
-
         val platform = Platform.KAKAO
         val role = Role.MEMBER
-        socialRepository.findByEmailAndPlatform(email, platform)
-        val social =  Social(
-            email = email,
-            role = role,
-            nickname = nickname,
-            platform = platform,
-            account = Account()
-        )
-        socialRepository.save(social)
-        return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+
+        val social = socialRepository.findByEmailAndPlatform(email, platform)
+
+        if (social == null){
+            var nickname = makeNickName()
+            while (socialRepository.existsByNickname(nickname)){
+                nickname = makeNickName()
+            }
+
+            val socialEntity = Social(
+                email = email,
+                role = role,
+                nickname = nickname,
+                platform = platform,
+                account = Account()
+            )
+            socialRepository.save(socialEntity)
+            return jwtPlugin.generateJwtDto(oAuth2User, socialEntity.id.toString(), role.name, platform)
+        }
+        else{
+            return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+        }
     }
     fun naverLogin(oAuth2User: OAuth2User): JwtDto {
         val platform = Platform.NAVER
@@ -90,26 +92,27 @@ class SocialService(
         val attributes = oAuth2User.attributes["response"] as Map<*, *>
         val email = attributes["email"].toString()
 
-        if(socialRepository.existsByEmailAndPlatform(email, Platform.NAVER)) {
-            throw DataIntegrityViolationException("이미 가입한 계정이 존재합니다.")
-        }
+        val social = socialRepository.findByEmailAndPlatform(email, platform)
 
-        var nickname = makeNickName()
+        if (social == null){
+            var nickname = makeNickName()
+            while (socialRepository.existsByNickname(nickname)){
+                nickname = makeNickName()
+            }
 
-        while (socialRepository.existsByNickname(nickname)){
-            nickname = makeNickName()
-        }
-        socialRepository.findByEmailAndPlatform(email, platform)
-            val social =  Social(
+            val socialEntity = Social(
                 email = email,
                 role = role,
                 nickname = nickname,
                 platform = platform,
                 account = Account()
-             )
-            socialRepository.save(social)
-
-        return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+            )
+            socialRepository.save(socialEntity)
+            return jwtPlugin.generateJwtDto(oAuth2User, socialEntity.id.toString(), role.name, platform)
+        }
+        else{
+            return jwtPlugin.generateJwtDto(oAuth2User, social.id.toString(), role.name, platform)
+        }
     }
 
     private fun makeNickName(): String{
