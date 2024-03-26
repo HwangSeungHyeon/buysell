@@ -1,10 +1,8 @@
 package com.teamsparta.buysell.domain.member.service
 
-import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
-import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.model.Account
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.member.model.Platform
@@ -24,14 +22,13 @@ class MemberServiceImpl(
     private val memberRepository: MemberRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin,
-    private val authLinkService: AuthLinkService,
 ): MemberService{
     override fun signUp(request: SignUpRequest){
         if(memberRepository.existsByEmailAndPlatform(request.email, Platform.LOCAL)){
             throw DataIntegrityViolationException("이미 가입된 계정입니다.")
         }
 
-        if (memberRepository.existsByNickname(request.nickname))
+        if (request.nickname.let { memberRepository.existsByNickname(it) })
             throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
 
         val member = Member(
@@ -46,7 +43,6 @@ class MemberServiceImpl(
             isVerified = false
         )
         memberRepository.save(member)
-        authLinkService.sendAuthEmail(member.email)
     }
 
     override fun login(request: LoginRequest): String {
