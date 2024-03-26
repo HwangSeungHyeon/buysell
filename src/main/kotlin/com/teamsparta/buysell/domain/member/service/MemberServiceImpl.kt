@@ -22,13 +22,14 @@ class MemberServiceImpl(
     private val memberRepository: MemberRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin,
+    private val authLinkService: AuthLinkService,
 ): MemberService{
     override fun signUp(request: SignUpRequest){
         if(memberRepository.existsByEmailAndPlatform(request.email, Platform.LOCAL)){
             throw DataIntegrityViolationException("이미 가입된 계정입니다.")
         }
 
-        if (request.nickname.let { memberRepository.existsByNickname(it) })
+        if (memberRepository.existsByNickname(request.nickname))
             throw DataIntegrityViolationException("이미 사용 중인 닉네임 입니다.")
 
         val member = Member(
@@ -43,6 +44,7 @@ class MemberServiceImpl(
             isVerified = false
         )
         memberRepository.save(member)
+        authLinkService.sendAuthEmail(member.email)
     }
 
     override fun login(request: LoginRequest): String {
