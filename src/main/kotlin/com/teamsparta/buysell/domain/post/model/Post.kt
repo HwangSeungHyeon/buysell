@@ -62,6 +62,8 @@ class Post(
             throw ForbiddenException("권한이 없습니다.")
     }
 
+    fun increaseView() = this.view++
+
 
     fun myPostCheckPermission(
         principal: UserPrincipal
