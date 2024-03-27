@@ -109,6 +109,7 @@ class Post(
             isSoldout = isSoldOut,
             createdAt = createdAt,
             view = view,
+            updatedAt = updatedAt,
             comment = comment
                 .map { CommentResponse.toResponse(it) }
         )
