@@ -48,7 +48,7 @@ class MemberServiceImpl(
     }
 
     override fun login(request: LoginRequest): String {
-        val member = memberRepository.findByEmail(request.email)
+        val member = memberRepository.findByEmailAndPlatform(request.email, Platform.LOCAL)
             ?: throw BadCredentialsException("이메일이나 비밀번호가 존재하지않거나 틀렸습니다.")
         if(!passwordEncoder.matches(request.password,member.password)){
             throw BadCredentialsException("이메일이나 비밀번호가 존재하지않거나 틀렸습니다.")
