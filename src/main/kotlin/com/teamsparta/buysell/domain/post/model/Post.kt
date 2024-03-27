@@ -99,6 +99,7 @@ class Post(
     fun toResponse(): PostResponse {
         return PostResponse(
             id = id!!,
+            memberId = member.id!!,
             title = title,
             content = content,
             createdName = member.nickname,
