@@ -5,6 +5,7 @@ import com.teamsparta.buysell.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostResponse
+import com.teamsparta.buysell.domain.post.dto.response.WishResponse
 import com.teamsparta.buysell.domain.post.model.Category
 import com.teamsparta.buysell.domain.post.model.WishList
 import com.teamsparta.buysell.domain.post.service.PostService
@@ -98,6 +99,16 @@ class PostController(
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(postService.deletePost(postId, principal))
+    }
+
+    @GetMapping("/{postId}/my/wishlist")
+    fun getMyWishByPostId(
+        @PathVariable postId: Int,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ): ResponseEntity<WishResponse>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.getMyWishByPostId(postId, userPrincipal))
     }
 
     @PreAuthorize("hasRole('ADMIN') OR hasRole('MEMBER')") //로그인한 사람만 사용 가능 (MEMBER, ADMIN)

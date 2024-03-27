@@ -1,10 +1,8 @@
 package com.teamsparta.buysell.domain.member.service
 
-import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
-import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.model.Account
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.member.model.Platform
