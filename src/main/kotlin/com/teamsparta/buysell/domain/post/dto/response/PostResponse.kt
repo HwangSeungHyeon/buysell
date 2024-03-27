@@ -15,7 +15,8 @@ data class PostResponse(
     val isSoldout: Boolean,
     val comment: List<CommentResponse>,
     val view: Int,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
 //    val imgUrl: List<blahbalh>
 //    val category: Category
 )
