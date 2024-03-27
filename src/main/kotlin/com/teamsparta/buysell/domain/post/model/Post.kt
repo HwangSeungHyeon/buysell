@@ -94,6 +94,7 @@ class Post(
             createdName = member.nickname,
             price = price,
             createdAt = createdAt,
+            updatedAt = updatedAt,
             view = view
         )
     }
