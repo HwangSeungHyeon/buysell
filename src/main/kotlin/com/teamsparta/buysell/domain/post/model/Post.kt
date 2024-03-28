@@ -95,7 +95,8 @@ class Post(
             price = price,
             createdAt = createdAt,
             updatedAt = updatedAt,
-            view = view
+            view = view,
+            isSoldOut = isSoldOut
         )
     }
 

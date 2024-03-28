@@ -97,7 +97,8 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
                     post.price,
                     post.createdAt,
                     post.updatedAt,
-                    post.view
+                    post.view,
+                    post.isSoldOut
                 )
             )
             .from(post)
