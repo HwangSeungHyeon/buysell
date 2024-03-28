@@ -13,5 +13,6 @@ data class PostListResponse(
     val createdName: String?,
     val price: Long,
     val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
     val view: Int
 )

@@ -8,7 +8,8 @@ interface WishListRepository: JpaRepository<WishList, Int> {
 
     fun existsByPostIdAndMemberId(postId: Int, memberId: Int): Boolean
 
-    fun findByPostIdAndMemberId(postId: Int, memberId: Int): WishList?
+   // fun findByPostIdAndMemberId(postId: Int, memberId: Int): WishList?
+    fun <T> findByPostIdAndMemberId(postId: Int, memberId: Int, type: Class<T>): T?
 
     fun deleteByPostIdAndMemberId(postId: Int, memberId: Int)
 

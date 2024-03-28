@@ -1,10 +1,8 @@
 package com.teamsparta.buysell.domain.member.service
 
-import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.dto.request.LoginRequest
 import com.teamsparta.buysell.domain.member.dto.request.SignUpRequest
-import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.model.Account
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.member.model.Platform
@@ -50,7 +48,7 @@ class MemberServiceImpl(
     }
 
     override fun login(request: LoginRequest): String {
-        val member = memberRepository.findByEmail(request.email)
+        val member = memberRepository.findByEmailAndPlatform(request.email, Platform.LOCAL)
             ?: throw BadCredentialsException("이메일이나 비밀번호가 존재하지않거나 틀렸습니다.")
         if(!passwordEncoder.matches(request.password,member.password)){
             throw BadCredentialsException("이메일이나 비밀번호가 존재하지않거나 틀렸습니다.")

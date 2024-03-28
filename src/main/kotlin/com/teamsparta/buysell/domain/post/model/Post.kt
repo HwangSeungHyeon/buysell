@@ -62,6 +62,8 @@ class Post(
             throw ForbiddenException("권한이 없습니다.")
     }
 
+    fun increaseView() = this.view++
+
 
     fun myPostCheckPermission(
         principal: UserPrincipal
@@ -92,6 +94,7 @@ class Post(
             createdName = member.nickname,
             price = price,
             createdAt = createdAt,
+            updatedAt = updatedAt,
             view = view
         )
     }
@@ -99,6 +102,7 @@ class Post(
     fun toResponse(): PostResponse {
         return PostResponse(
             id = id!!,
+            memberId = member.id!!,
             title = title,
             content = content,
             createdName = member.nickname,
@@ -106,6 +110,7 @@ class Post(
             isSoldout = isSoldOut,
             createdAt = createdAt,
             view = view,
+            updatedAt = updatedAt,
             comment = comment
                 .map { CommentResponse.toResponse(it) }
         )

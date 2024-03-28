@@ -32,7 +32,8 @@ class SecurityConfig(
 ) {
     private val allowedUrls = arrayOf(
         "/", "/swagger-ui/**", "/v3/**",
-        "/members/**", "/posts/**", "/accounts/**"
+        "/members/**", "/posts/**", "/accounts/**",
+        "/health-check"
     )
 
     private val anonymousUrls = arrayOf(
