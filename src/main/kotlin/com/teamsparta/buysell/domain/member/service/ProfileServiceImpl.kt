@@ -64,7 +64,6 @@ class ProfileServiceImpl(
         val member = memberRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("Member", userPrincipal.id)
         member.nickname = request.nickname
-        member.birthday = request.birthday
         return member.toResponse()
     }
 
