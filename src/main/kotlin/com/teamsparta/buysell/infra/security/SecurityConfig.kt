@@ -32,7 +32,8 @@ class SecurityConfig(
 ) {
     private val allowedUrls = arrayOf(
         "/", "/swagger-ui/**", "/v3/**",
-        "/members/**", "/posts/**", "/accounts/**", "/coupons/**", "/orders/**", "/images/**"
+        "/members/**", "/posts/**", "/accounts/**", "/coupons/**", "/orders/**", "/images/**",
+        "/health-check"
     )
 
     private val anonymousUrls = arrayOf(
@@ -89,11 +90,13 @@ class SecurityConfig(
                     CustomOAuth2Provider.KAKAO.getBuilder("kakao")
                         .clientId(customRegistration.value.clientId)
                         .clientSecret(customRegistration.value.clientSecret)
+                        .redirectUri(customRegistration.value.redirectUri)
                         .build())
                 "naver" -> registrations.add(
                     CustomOAuth2Provider.NAVER.getBuilder("naver")
                         .clientId(customRegistration.value.clientId)
                         .clientSecret(customRegistration.value.clientSecret)
+                        .redirectUri(customRegistration.value.redirectUri)
                         .build())
             }
         }
@@ -107,6 +110,7 @@ class SecurityConfig(
             "google" -> CommonOAuth2Provider.GOOGLE.getBuilder(client)
                 .clientId(registration?.clientId)
                 .clientSecret(registration?.clientSecret)
+                .redirectUri(registration?.redirectUri)
                 .scope(registration?.scope)
                 .build()
             else -> null
