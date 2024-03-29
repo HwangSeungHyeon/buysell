@@ -3,7 +3,6 @@ package com.teamsparta.buysell.domain.post.model
 import com.teamsparta.buysell.domain.comment.dto.response.CommentResponse
 import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.exception.ForbiddenException
-import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.order.model.Order
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
@@ -48,9 +47,12 @@ class Post(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    var category: Category
+    var category: Category,
 
-): SoftDeleteEntity() {
+    @Column(name = "img_url")
+    var imageUrl: String?,
+
+) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -80,14 +82,14 @@ class Post(
 
     fun postUpdate(
         request: UpdatePostRequest
-    ){
+    ) {
         this.title = request.title
         this.content = request.content
         this.price = request.price
         this.category = request.category
     }
 
-    fun toListResponse(): PostListResponse{
+    fun toListResponse(): PostListResponse {
         return PostListResponse(
             id = id,
             title = title,
@@ -96,6 +98,7 @@ class Post(
             createdAt = createdAt,
             updatedAt = updatedAt,
             view = view,
+            imageUrl = imageUrl,
             isSoldOut = isSoldOut
         )
     }
@@ -112,6 +115,7 @@ class Post(
             createdAt = createdAt,
             view = view,
             updatedAt = updatedAt,
+            imageUrl = imageUrl,
             comment = comment
                 .map { CommentResponse.toResponse(it) }
         )

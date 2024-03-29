@@ -41,7 +41,6 @@ repositories {
 val queryDslVersion = "5.0.0"
 val kotestVersion = "5.5.5"
 val mockkVersion = "1.13.8"
-
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -55,6 +54,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE") //s3
     implementation("org.springframework.boot:spring-boot-starter-aop") //aop
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("software.amazon.awssdk:s3")
+    implementation(platform("software.amazon.awssdk:bom:2.25.16"))
 
 //jwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")

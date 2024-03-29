@@ -39,6 +39,7 @@ class PostServiceImpl(
                 price = request.price,
                 member = member,
                 category = request.category,
+                imageUrl = request.imageUrl
             )
         )
 
