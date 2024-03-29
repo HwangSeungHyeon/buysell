@@ -51,7 +51,7 @@ class MemberController(
     @PreAuthorize("isAnonymous()")
     @Operation(summary = "인증 링크 메시지 전송", description = "이메일로 인증 링크를 전송합니다.")
     @PostMapping("/sendemail")
-    fun sendEmail(email: String): ResponseEntity<MessageResponse> {
+    fun sendEmail(@RequestParam ("email") email: String): ResponseEntity<MessageResponse> {
         val sendEmail = authLinkService.sendAuthEmail(email)
         return ResponseEntity
             .status(HttpStatus.OK)
