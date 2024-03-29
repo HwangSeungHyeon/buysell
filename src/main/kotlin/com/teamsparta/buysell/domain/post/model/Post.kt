@@ -52,7 +52,7 @@ class Post(
     @Column(name = "img_url")
     var imageUrl: String?,
 
-    ) : SoftDeleteEntity() {
+) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -98,7 +98,8 @@ class Post(
             createdAt = createdAt,
             updatedAt = updatedAt,
             view = view,
-            imageUrl = imageUrl
+            imageUrl = imageUrl,
+            isSoldOut = isSoldOut
         )
     }
 

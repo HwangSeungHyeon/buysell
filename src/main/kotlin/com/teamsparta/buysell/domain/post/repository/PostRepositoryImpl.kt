@@ -98,7 +98,8 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport() {
                     post.createdAt,
                     post.updatedAt,
                     post.view,
-                    post.imageUrl
+                    post.imageUrl,
+                    post.isSoldOut
                 )
             )
             .from(post)

@@ -17,5 +17,6 @@ data class PostListResponse(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val view: Int,
-    val imageUrl: String?
+    val imageUrl: String?,
+    val isSoldOut: Boolean
 )
