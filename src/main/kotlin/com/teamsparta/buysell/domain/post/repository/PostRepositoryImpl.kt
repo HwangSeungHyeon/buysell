@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 
 @Repository
-class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
+class PostRepositoryImpl : CustomPostRepository, QueryDslSupport() {
     private val post = QPost.post
 
     //게시글 목록을 가져올 때 Pagination 을 적용
@@ -26,11 +26,11 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
     override fun getPostsWithPagination(
         category: Category?,
         pageable: Pageable
-    ) : Page<PostListResponse> {
+    ): Page<PostListResponse> {
 
         // 카테고리가 선택되었다면 그 카테고리를 가진 게시글만 조회가 되어야 됨
         val booleanBuilder = initBooleanBuilder()
-        booleanBuilder.andAnyOf( eqCategory(category) )
+        booleanBuilder.andAnyOf(eqCategory(category))
 
         val totalCount = getTotalPageCount(booleanBuilder)
         val contents = getPostsContents(booleanBuilder, pageable)
@@ -47,7 +47,7 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
 
         // 사용자가 입력한 검색어를 제목에 포함한 게시글만 조회되어야 함
         val booleanBuilder = initBooleanBuilder()
-        booleanBuilder.andAnyOf( eqTitle(keyword) )
+        booleanBuilder.andAnyOf(eqTitle(keyword))
 
         val totalCount = getTotalPageCount(booleanBuilder)
         val contents = getPostsContents(booleanBuilder, pageable)
@@ -58,14 +58,14 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
     private fun getOrderSpecifier(
         pageable: Pageable,
         path: EntityPathBase<*>
-    ): Array<OrderSpecifier<*>>{
+    ): Array<OrderSpecifier<*>> {
         val pathBuilder = PathBuilder(path.type, path.metadata)
 
-        return pageable.sort.toList().map {
-                order -> OrderSpecifier(
-            if(order.isAscending) Order.ASC else Order.DESC,
-            pathBuilder.get(order.property) as Expression<Comparable<*>>
-        )
+        return pageable.sort.toList().map { order ->
+            OrderSpecifier(
+                if (order.isAscending) Order.ASC else Order.DESC,
+                pathBuilder.get(order.property) as Expression<Comparable<*>>
+            )
         }.toTypedArray()
     }
 
@@ -73,7 +73,7 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
     //시간이 오래 걸릴 것으로 예상됨
     private fun getTotalPageCount(
         booleanBuilder: BooleanBuilder
-    ): Long{
+    ): Long {
         return queryFactory
             .select(post.count())
             .from(post)
@@ -86,7 +86,7 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
     private fun getPostsContents(
         booleanBuilder: BooleanBuilder,
         pageable: Pageable
-    ): MutableList<PostListResponse>{
+    ): MutableList<PostListResponse> {
         return queryFactory
             .select(
                 Projections.constructor(
@@ -97,7 +97,8 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
                     post.price,
                     post.createdAt,
                     post.updatedAt,
-                    post.view
+                    post.view,
+                    post.imageUrl
                 )
             )
             .from(post)
@@ -109,7 +110,7 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
     }
 
     //BooleanBuilder 를 만들고, 초기 공통값을 세팅하는 메서드
-    private fun initBooleanBuilder(): BooleanBuilder{
+    private fun initBooleanBuilder(): BooleanBuilder {
         return BooleanBuilder()
     }
 
