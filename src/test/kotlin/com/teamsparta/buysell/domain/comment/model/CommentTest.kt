@@ -43,7 +43,8 @@ class CommentTest: BehaviorSpec({
         view = 0,
         price = 950000,
         member = postWriter,
-        category = Category.FOOD
+        category = Category.FOOD,
+        imageUrl = ""
     ).apply { id = 1 }
 
     val consumer = Member(

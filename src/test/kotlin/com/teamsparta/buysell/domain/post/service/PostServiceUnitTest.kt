@@ -45,7 +45,8 @@ class PostServiceUnitTest: BehaviorSpec({
         title = "소파 팝니다",
         content = "급처로 팜",
         price = 10000,
-        category = Category.INTERIOR
+        category = Category.INTERIOR,
+        imageUrl = ""
     )
 
     val updateRequest = UpdatePostRequest(
@@ -72,7 +73,8 @@ class PostServiceUnitTest: BehaviorSpec({
         view = 0,
         price = createRequest.price,
         member = member,
-        category = createRequest.category
+        category = createRequest.category,
+        imageUrl = ""
     )
 
     given("게시글 작성 요청이 왔을 때"){

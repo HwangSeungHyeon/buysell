@@ -69,7 +69,8 @@ class CommentServiceUnitTest: BehaviorSpec({
         view = 0,
         price = 950000,
         member = postWriter,
-        category = Category.FOOD
+        category = Category.FOOD,
+        imageUrl = ""
     ).apply { id = postId }
 
     val consumer = Member(
