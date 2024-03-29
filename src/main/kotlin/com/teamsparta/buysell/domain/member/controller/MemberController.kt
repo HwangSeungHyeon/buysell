@@ -105,11 +105,17 @@ class MemberController(
     //카카오 로그인 엑세스토큰 발급
     @GetMapping("/kakao/callback")
     @Operation(summary = "카카오 엑세스 토큰 발급", description = "카카오 엑세스 토큰을 발급 합니다.")
-    fun kakaoLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
+    fun kakaoLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<Map<String, String>> {
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
         }
-        return ResponseEntity.ok(socialService.kakaoLogin(oAuth2User))
+        val mainUrl = "http://localhost:3001"
+        val token = socialService.kakaoLogin(oAuth2User).accessToken
+        val message = "로그인 성공했습니다"
+        val responseMap = mapOf("message" to message, "mainUrl" to mainUrl)
+        return ResponseEntity.ok()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ${token}")
+            .body(responseMap)
     }
     @GetMapping("/naver/page")
     @Operation(summary = "네이버 로그인 페이지", description = "네이버 로그인 페이지를 불러옵니다.")
