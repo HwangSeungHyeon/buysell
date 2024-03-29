@@ -43,7 +43,7 @@ class ReviewServiceImpl(
         post.myPostCheckPermission(principal)
 
         val sellerReview = Review.makeEntity(
-            request = request.copy(sellerRating = request.rating),
+            request = request,
             post = post,
             member = member
         )
