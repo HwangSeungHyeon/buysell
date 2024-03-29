@@ -14,6 +14,5 @@ data class CreateReviewRequest(
 
     @field:Min(value = 1, message = "별점은 1에서 5까지만 입력할 수 있습니다.")
     @field:Max(value = 5, message = "message = 별점은 1에서 5까지만 입력할 수 있습니다.")
-    val rating: Int,
-    val sellerRating: Int = rating
+    val rating: Int
 )
