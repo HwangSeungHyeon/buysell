@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.io.IOException
 
-@CrossOrigin(origins = ["http://localhost:3000"])
 @RestController
 @RequestMapping("/images")
 class ImageController(

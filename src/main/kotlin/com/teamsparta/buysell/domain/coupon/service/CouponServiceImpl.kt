@@ -6,6 +6,7 @@ import com.teamsparta.buysell.domain.coupon.moedel.Coupon
 import com.teamsparta.buysell.domain.coupon.repository.AppliedUserRepository
 import com.teamsparta.buysell.domain.coupon.repository.CouponRepository
 import com.teamsparta.buysell.domain.coupon.repository.RedisCouponRepository
+import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import com.teamsparta.buysell.infra.utility.CouponUtility
 import jakarta.transaction.Transactional
@@ -25,7 +26,7 @@ class CouponServiceImpl(
     @Transactional
     override fun createCoupon(request: CreateCouponRequest, memberId: Int): MessageResponse {
         val member = memberRepository.findByIdOrNull(memberId)
-            ?: throw IllegalArgumentException("Invalid member")
+            ?: throw ModelNotFoundException("member", memberId)
         val apply = appliedUserRepository.add(memberId)
 
         if (apply != 1L) {
