@@ -70,8 +70,9 @@ class SecurityConfig(
 
 
     @Bean
-    fun clientRegistrationRepository(oAuth2ClientProperties: OAuth2ClientProperties,
-                                     customOAuth2ClientProperties: CustomOAuth2ClientProperties
+    fun clientRegistrationRepository(
+        oAuth2ClientProperties: OAuth2ClientProperties,
+        customOAuth2ClientProperties: CustomOAuth2ClientProperties
     ): InMemoryClientRegistrationRepository {
 
         // 소셜 설정 등록
@@ -91,13 +92,16 @@ class SecurityConfig(
                         .clientId(customRegistration.value.clientId)
                         .clientSecret(customRegistration.value.clientSecret)
                         .redirectUri(customRegistration.value.redirectUri)
-                        .build())
+                        .build()
+                )
+
                 "naver" -> registrations.add(
                     CustomOAuth2Provider.NAVER.getBuilder("naver")
                         .clientId(customRegistration.value.clientId)
                         .clientSecret(customRegistration.value.clientSecret)
                         .redirectUri(customRegistration.value.redirectUri)
-                        .build())
+                        .build()
+                )
             }
         }
         return InMemoryClientRegistrationRepository(registrations)
@@ -106,13 +110,14 @@ class SecurityConfig(
     // 공통 소셜 설정을 호출합니다.
     private fun getRegistration(clientProperties: OAuth2ClientProperties, client: String): ClientRegistration? {
         val registration = clientProperties.registration[client]
-        return when(client) {
+        return when (client) {
             "google" -> CommonOAuth2Provider.GOOGLE.getBuilder(client)
                 .clientId(registration?.clientId)
                 .clientSecret(registration?.clientSecret)
                 .redirectUri(registration?.redirectUri)
                 .scope(registration?.scope)
                 .build()
+
             else -> null
         }
     }

@@ -1,6 +1,5 @@
 package com.teamsparta.buysell.domain.image.service
 
-import com.teamsparta.buysell.domain.post.repository.PostRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.s3.S3Client
@@ -18,7 +17,6 @@ class AwsS3Service(
     private val presigner: S3Presigner,
     @Value("\${cloud.aws.s3.bucket}")
     private var bucketName: String,
-
 ) {
     fun putPreSignUrl(fileName: String?): String? {
         if (fileName.isNullOrBlank()) {

@@ -18,6 +18,7 @@ class ImageController(
         @RequestParam fileName: String
     ): ResponseEntity<String> {
         val url = awsS3Service.putPreSignUrl(fileName)
+
         return ResponseEntity(url, HttpStatus.OK)
     }
 
@@ -27,6 +28,7 @@ class ImageController(
         @RequestParam fileName: String
     ): ResponseEntity<String> {
         val url = awsS3Service.getPreSignedImageUrl(fileName)
+
         return if (url != null) {
             ResponseEntity(url, HttpStatus.OK)
         } else {

@@ -52,7 +52,7 @@ class Post(
     @Column(name = "img_url")
     var imageUrl: String?,
 
-): SoftDeleteEntity() {
+    ) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -82,14 +82,14 @@ class Post(
 
     fun postUpdate(
         request: UpdatePostRequest
-    ){
+    ) {
         this.title = request.title
         this.content = request.content
         this.price = request.price
         this.category = request.category
     }
 
-    fun toListResponse(): PostListResponse{
+    fun toListResponse(): PostListResponse {
         return PostListResponse(
             id = id,
             title = title,

@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 
 @Schema(description = "게시글을 단일 조회할 때, 페이지에 보여줄 정보를 전달하는 객체")
 data class PostResponse(
+
     val id: Int,
     val memberId: Int,
     val title: String,

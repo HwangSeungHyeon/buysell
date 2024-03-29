@@ -41,7 +41,6 @@ repositories {
 val queryDslVersion = "5.0.0"
 val kotestVersion = "5.5.5"
 val mockkVersion = "1.13.8"
-
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

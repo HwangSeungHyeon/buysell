@@ -9,7 +9,6 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner
 
 @Configuration
 class AwsS3Config {
-
     @Bean
     fun s3Client(): S3Client {
         return S3Client.builder()
