@@ -55,6 +55,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE") //s3
     implementation("org.springframework.boot:spring-boot-starter-aop") //aop
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("software.amazon.awssdk:s3")
+    implementation(platform("software.amazon.awssdk:bom:2.25.16"))
 
 //jwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")

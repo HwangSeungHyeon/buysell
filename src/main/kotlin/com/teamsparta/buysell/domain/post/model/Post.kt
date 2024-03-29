@@ -3,7 +3,6 @@ package com.teamsparta.buysell.domain.post.model
 import com.teamsparta.buysell.domain.comment.dto.response.CommentResponse
 import com.teamsparta.buysell.domain.comment.model.Comment
 import com.teamsparta.buysell.domain.exception.ForbiddenException
-import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Member
 import com.teamsparta.buysell.domain.order.model.Order
 import com.teamsparta.buysell.domain.post.dto.request.UpdatePostRequest
@@ -48,7 +47,10 @@ class Post(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    var category: Category
+    var category: Category,
+
+    @Column(name = "img_url")
+    var imageUrl: String?,
 
 ): SoftDeleteEntity() {
     @Id
@@ -92,7 +94,8 @@ class Post(
             createdName = member.nickname,
             price = price,
             createdAt = createdAt,
-            view = view
+            view = view,
+            imageUrl = imageUrl
         )
     }
 
@@ -106,11 +109,9 @@ class Post(
             isSoldout = isSoldOut,
             createdAt = createdAt,
             view = view,
+            imageUrl = imageUrl,
             comment = comment
                 .map { CommentResponse.toResponse(it) }
         )
     }
 }
-
-
-

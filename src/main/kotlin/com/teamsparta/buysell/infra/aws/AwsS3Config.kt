@@ -1,35 +1,28 @@
 package com.teamsparta.buysell.infra.aws
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.presigner.S3Presigner
 
 @Configuration
 class AwsS3Config {
-    @Value("\${cloud.aws.credentials.access-key")
-    val accessKey: String? = null
-
-    @Value("\${cloud.aws.credentials.secret-key")
-    val secretKey: String? = null
-
-    @Value("\${cloud.aws.region.static")
-    val region: String? = null
 
     @Bean
-    fun awsCredentialProvider(): BasicAWSCredentials {
-        return BasicAWSCredentials(accessKey, secretKey)
+    fun s3Client(): S3Client {
+        return S3Client.builder()
+            .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
+            .region(Region.AP_NORTHEAST_2)
+            .build()
     }
 
     @Bean
-    fun amazonS3(): AmazonS3 {
-        return AmazonS3ClientBuilder.standard()
-            .withRegion(region)
-            .withCredentials(AWSStaticCredentialsProvider(awsCredentialProvider()))
+    fun presigner(): S3Presigner {
+        return S3Presigner.builder()
+            .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
+            .region(Region.AP_NORTHEAST_2)
             .build()
-
     }
 }

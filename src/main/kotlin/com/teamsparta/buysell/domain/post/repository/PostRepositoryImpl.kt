@@ -96,7 +96,8 @@ class PostRepositoryImpl : CustomPostRepository, QueryDslSupport(){
                     post.member.nickname,
                     post.price,
                     post.createdAt,
-                    post.view
+                    post.view,
+                    post.imageUrl
                 )
             )
             .from(post)
