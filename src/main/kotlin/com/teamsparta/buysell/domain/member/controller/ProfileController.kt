@@ -3,6 +3,7 @@ package com.teamsparta.buysell.domain.member.controller
 import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.dto.response.OtherProfileResponse
+import com.teamsparta.buysell.domain.member.dto.response.ProfileResponse
 import com.teamsparta.buysell.domain.member.service.ProfileService
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.review.dto.response.ReviewResponse
@@ -21,10 +22,10 @@ class ProfileController(
     private val profileService: ProfileService
 ) {
     @GetMapping("/{memberId}/profile/reviews")
-    @Operation(summary = "판매자 게시글에 대한 리뷰 리스트 조회", description = "판매자의 게시글에 대한 리뷰를 조회합니다.")
+    @Operation(summary = "판매자 리뷰 조회하기", description = "판매자가 작성한 게시글에 달린 리뷰를 조회합니다.")
     fun getReviewsByMemberId(
         @PathVariable memberId: Int,
-    ): ResponseEntity<List<ReviewResponse>> {
+    ): ResponseEntity<ProfileResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(profileService.getReviewsByMemberId(memberId))

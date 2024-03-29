@@ -4,6 +4,7 @@ import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.dto.response.OtherProfileResponse
+import com.teamsparta.buysell.domain.member.dto.response.ProfileResponse
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.repository.WishListRepository
@@ -22,10 +23,12 @@ class ProfileServiceImpl(
     private val wishListRepository: WishListRepository,
     private val reviewRepository: ReviewRepository
 ) : ProfileService {
-    override fun getReviewsByMemberId(memberId: Int): List<ReviewResponse> {
+    override fun getReviewsByMemberId(memberId: Int): ProfileResponse {
+        val member = memberRepository.findByIdOrNull(memberId)
+            ?: throw ModelNotFoundException("Member", memberId)
         val review = reviewRepository.findByPostMemberId(memberId)
 
-        return review.map { it.toResponse() }
+        return ProfileResponse(member.nickname, review.map { it.toResponse() })
     }
 
     override fun getAllPostByMemberId(memberId: Int): OtherProfileResponse {
