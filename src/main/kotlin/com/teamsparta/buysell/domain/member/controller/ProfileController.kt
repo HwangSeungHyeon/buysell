@@ -3,6 +3,7 @@ package com.teamsparta.buysell.domain.member.controller
 import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateRequest
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.dto.response.OtherProfileResponse
+import com.teamsparta.buysell.domain.member.dto.response.ProfileResponse
 import com.teamsparta.buysell.domain.member.service.ProfileService
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.review.dto.response.ReviewResponse
@@ -24,7 +25,7 @@ class ProfileController(
     @Operation(summary = "판매자 게시글에 대한 리뷰 리스트 조회", description = "판매자의 게시글에 대한 리뷰를 조회합니다.")
     fun getReviewsByMemberId(
         @PathVariable memberId: Int,
-    ): ResponseEntity<List<ReviewResponse>> {
+    ): ResponseEntity<ProfileResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(profileService.getReviewsByMemberId(memberId))
