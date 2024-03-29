@@ -10,6 +10,8 @@ import com.teamsparta.buysell.infra.security.UserPrincipal
 import com.teamsparta.buysell.infra.security.jwt.JwtDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -63,7 +65,7 @@ class MemberController(
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<String>{
         val token = memberService.login(request)
         return ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ${token}")
+            .header(HttpHeaders.AUTHORIZATION, token)
             .body("로그인 성공했습니다.")
     }
 
@@ -102,21 +104,27 @@ class MemberController(
         return ResponseEntity<Any?>(socialService.getKakaoLoginPage(), HttpStatus.OK)
     }
 
-    //카카오 로그인 엑세스토큰 발급
     @GetMapping("/kakao/callback")
     @Operation(summary = "카카오 엑세스 토큰 발급", description = "카카오 엑세스 토큰을 발급 합니다.")
-    fun kakaoLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<Map<String, String>> {
+    fun kakaoLogin(httpServletResponse: HttpServletResponse, @AuthenticationPrincipal oAuth2User: OAuth2User?) {
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
         }
-        val mainUrl = "http://localhost:3001"
+
+        // 카카오 로그인을 통해 받은 토큰 가져오기
         val token = socialService.kakaoLogin(oAuth2User).accessToken
-        val message = "로그인 성공했습니다"
-        val responseMap = mapOf("message" to message, "mainUrl" to mainUrl)
-        return ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ${token}")
-            .body(responseMap)
+
+        // 쿠키 생성 및 설정
+        val cookie = Cookie("token", token)
+        cookie.maxAge = 3600 // 쿠키 만료 시간 (초 단위)
+        cookie.path = "/" // 모든 경로에서 쿠키 사용
+        httpServletResponse.addCookie(cookie)
+
+        // 메인 페이지 URL을 응답으로 전달
+        val mainUrl = "http://localhost:3000"
+        httpServletResponse.sendRedirect(mainUrl)
     }
+
     @GetMapping("/naver/page")
     @Operation(summary = "네이버 로그인 페이지", description = "네이버 로그인 페이지를 불러옵니다.")
     fun getNaverLoginPage(): ResponseEntity<Any?> {
