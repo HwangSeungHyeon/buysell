@@ -78,6 +78,7 @@ auth:
     secret: ${JWT_SECRET}
     accessTokenExpirationHour: 1
 app:
+  domain: ${DOMAIN}
   frontUrl: ${FRONT_URL}
   serverUrl: ${SERVER_URL}
 
