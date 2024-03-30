@@ -10,7 +10,7 @@ enum class CustomOAuth2Provider {
 
     KAKAO {
         override fun getBuilder(registrationId: String): ClientRegistration.Builder {
-            val builder = getBuilder(registrationId, ClientAuthenticationMethod.CLIENT_SECRET_POST, "{baseUrl}/{action}/oauth2/code/{registrationId}")
+            val builder = getBuilder(registrationId, ClientAuthenticationMethod.CLIENT_SECRET_POST, "{serverUrl}/{action}/oauth2/code/{registrationId}")
             builder.scope("account_email")
             builder.authorizationUri("https://kauth.kakao.com/oauth/authorize")
             builder.tokenUri("https://kauth.kakao.com/oauth/token")
@@ -22,7 +22,7 @@ enum class CustomOAuth2Provider {
     },
     NAVER {
         override fun getBuilder(registrationId: String): ClientRegistration.Builder {
-            val builder = getBuilder(registrationId, ClientAuthenticationMethod.CLIENT_SECRET_POST, "{baseUrl}/{action}/oauth2/code/{registrationId}")
+            val builder = getBuilder(registrationId, ClientAuthenticationMethod.CLIENT_SECRET_POST, "{serverUrl}/{action}/oauth2/code/{registrationId}")
             builder.scope("email")
             builder.authorizationUri("https://nid.naver.com/oauth2.0/authorize")
             builder.tokenUri("https://nid.naver.com/oauth2.0/token")

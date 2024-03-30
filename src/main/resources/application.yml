@@ -1,3 +1,4 @@
+
 spring:
   jpa:
     hibernate:
@@ -14,15 +15,15 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: ${GOOGLE_REDIRECT_URI}
+            redirect-uri: ${GOOGLE_REDIRECT_URI2}
           kakao:
             client-id: ${KAKAO_CLIENT_ID} # REST API Key
             client-secret: ${KAKAO_CLIENT_SECRET} # Client Secret Key
-            redirect-uri: ${KAKAO_REDIRECT_URI}
+            redirect-uri: ${KAKAO_REDIRECT_URI2}
           naver:
             client-id: ${NAVER_CLIENT_ID} # Client ID
             client-secret: ${NAVER_CLIENT_SECRET} # Client Secret
-            redirect-uri: ${NAVER_REDIRECT_URI}
+            redirect-uri: ${NAVER_REDIRECT_URI2}
     user:
       password: 1
 
@@ -77,4 +78,6 @@ auth:
     secret: ${JWT_SECRET}
     accessTokenExpirationHour: 1
 app:
-  baseUrl: ${BASE_URL}
+  frontUrl: ${FRONT_URL}
+  serverUrl: ${SERVER_URL}
+

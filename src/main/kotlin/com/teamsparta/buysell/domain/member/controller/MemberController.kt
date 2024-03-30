@@ -7,10 +7,12 @@ import com.teamsparta.buysell.domain.member.service.AuthLinkService
 import com.teamsparta.buysell.domain.member.service.MemberService
 import com.teamsparta.buysell.domain.member.service.SocialService
 import com.teamsparta.buysell.infra.security.UserPrincipal
-import com.teamsparta.buysell.infra.security.jwt.JwtDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -28,6 +30,7 @@ class MemberController(
     private val memberService: MemberService,
     private val socialService: SocialService,
     private val authLinkService: AuthLinkService,
+    @Value("\${app.frontUrl}") private val frontUrl: String
 ) {
     //로컬 회원가입
     @PreAuthorize("isAnonymous()")
@@ -49,7 +52,7 @@ class MemberController(
     @PreAuthorize("isAnonymous()")
     @Operation(summary = "인증 링크 메시지 전송", description = "이메일로 인증 링크를 전송합니다.")
     @PostMapping("/sendemail")
-    fun sendEmail(email: String): ResponseEntity<MessageResponse> {
+    fun sendEmail(@RequestParam ("email") email: String): ResponseEntity<MessageResponse> {
         val sendEmail = authLinkService.sendAuthEmail(email)
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -63,7 +66,7 @@ class MemberController(
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<String>{
         val token = memberService.login(request)
         return ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ${token}")
+            .header(HttpHeaders.AUTHORIZATION, token)
             .body("로그인 성공했습니다.")
     }
 
@@ -90,27 +93,52 @@ class MemberController(
     //구글 로그인 엑세스토큰 발급
     @GetMapping("/google/callback")
     @Operation(summary = "구글 엑세스 토큰 발급", description = "구글 엑세스 토큰을 발급 합니다.")
-    fun googleLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
+    fun googleLogin(httpServletResponse: HttpServletResponse, @AuthenticationPrincipal oAuth2User: OAuth2User?) {
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
         }
-        return ResponseEntity.ok(socialService.googleLogin(oAuth2User))
+
+        // 카카오 로그인을 통해 받은 토큰 가져오기
+        val token = socialService.googleLogin(oAuth2User).accessToken
+
+        // 쿠키 생성 및 설정
+        val cookie = Cookie("token", token)
+        cookie.maxAge = 3600 // 쿠키 만료 시간 (초 단위)
+        cookie.path = "/" // 모든 경로에서 쿠키 사용
+        httpServletResponse.addCookie(cookie)
+
+        // 메인 페이지 URL을 응답으로 전달
+        val mainUrl = frontUrl
+        httpServletResponse.sendRedirect(mainUrl)
     }
+
     @GetMapping("/kakao/page")
     @Operation(summary = "카카오 로그인 페이지", description = "카카오 로그인 페이지를 불러옵니다.")
     fun getKakaoLoginPage(): ResponseEntity<Any?> {
         return ResponseEntity<Any?>(socialService.getKakaoLoginPage(), HttpStatus.OK)
     }
 
-    //카카오 로그인 엑세스토큰 발급
     @GetMapping("/kakao/callback")
     @Operation(summary = "카카오 엑세스 토큰 발급", description = "카카오 엑세스 토큰을 발급 합니다.")
-    fun kakaoLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
+    fun kakaoLogin(httpServletResponse: HttpServletResponse, @AuthenticationPrincipal oAuth2User: OAuth2User?) {
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
         }
-        return ResponseEntity.ok(socialService.kakaoLogin(oAuth2User))
+
+        // 카카오 로그인을 통해 받은 토큰 가져오기
+        val token = socialService.kakaoLogin(oAuth2User).accessToken
+
+        // 쿠키 생성 및 설정
+        val cookie = Cookie("token", token)
+        cookie.maxAge = 3600 // 쿠키 만료 시간 (초 단위)
+        cookie.path = "/" // 모든 경로에서 쿠키 사용
+        httpServletResponse.addCookie(cookie)
+
+        // 메인 페이지 URL을 응답으로 전달
+        val mainUrl = frontUrl
+        httpServletResponse.sendRedirect(mainUrl)
     }
+
     @GetMapping("/naver/page")
     @Operation(summary = "네이버 로그인 페이지", description = "네이버 로그인 페이지를 불러옵니다.")
     fun getNaverLoginPage(): ResponseEntity<Any?> {
@@ -119,10 +147,22 @@ class MemberController(
     //네이버 로그인 엑세스토큰 발급
     @GetMapping("/naver/callback")
     @Operation(summary = "네이버 엑세스 토큰 발급", description = "네이버 엑세스 토큰을 발급 합니다.")
-    fun naverLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
+    fun naverLogin(httpServletResponse: HttpServletResponse, @AuthenticationPrincipal oAuth2User: OAuth2User?) {
         if (oAuth2User == null) {
             throw BadCredentialsException("인증된 사용자가 없습니다")
         }
-        return ResponseEntity.ok(socialService.naverLogin(oAuth2User))
+
+        // 카카오 로그인을 통해 받은 토큰 가져오기
+        val token = socialService.naverLogin(oAuth2User).accessToken
+
+        // 쿠키 생성 및 설정
+        val cookie = Cookie("token", token)
+        cookie.maxAge = 3600 // 쿠키 만료 시간 (초 단위)
+        cookie.path = "/" // 모든 경로에서 쿠키 사용
+        httpServletResponse.addCookie(cookie)
+
+        // 메인 페이지 URL을 응답으로 전달
+        val mainUrl = frontUrl
+        httpServletResponse.sendRedirect(mainUrl)
     }
 }
