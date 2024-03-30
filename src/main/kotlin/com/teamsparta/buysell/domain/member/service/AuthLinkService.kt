@@ -19,20 +19,20 @@ import java.util.concurrent.TimeUnit
 class AuthLinkService(
     private val redisTemplate: RedisTemplate<String, String>,
     private val emailSender: JavaMailSender,
-    @Value("\${app.baseUrl}") private val baseUrl: String,
+    @Value("\${app.serverUrl}") private val serverUrl: String,
     private val memberRepository: MemberRepository,
 ) {
     fun sendAuthEmail(email: String): MessageResponse{
         redisTemplate.delete(email)
-        val baseUrl = baseUrl
+        val serverUrl = serverUrl
         val newToken = UUID.randomUUID().toString()
-        val url = buildAuthUrl(baseUrl, email, newToken)
+        val url = buildAuthUrl(serverUrl, email, newToken)
         sendMessage(email, "회원가입 인증", url)
         redisTemplate.opsForValue().set(email, newToken, 1, TimeUnit.HOURS)
         return MessageResponse("이메일로 인증코드를 발송하였습니다.")
     }
 
-    private fun buildAuthUrl(baseUrl: String, email: String, token: String): String="$baseUrl/members/verify?email=$email&token=$token"
+    private fun buildAuthUrl(serverUrl: String, email: String, token: String): String="$serverUrl/members/verify?email=$email&token=$token"
 
     fun sendMessage(email: String, subject: String, url: String) {
         val message: MimeMessage = emailSender.createMimeMessage()

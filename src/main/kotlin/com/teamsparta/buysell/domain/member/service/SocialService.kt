@@ -1,6 +1,5 @@
 package com.teamsparta.buysell.domain.member.service
 
-import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.model.Account
 import com.teamsparta.buysell.domain.member.model.Platform
 import com.teamsparta.buysell.domain.member.model.Role
@@ -9,7 +8,6 @@ import com.teamsparta.buysell.domain.member.repository.SocialRepository
 import com.teamsparta.buysell.infra.security.jwt.JwtPlugin
 import com.teamsparta.buysell.infra.security.jwt.JwtDto
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -19,16 +17,16 @@ import java.util.UUID
 class SocialService(
     private val socialRepository: SocialRepository,
     private val jwtPlugin: JwtPlugin,
-    @Value("\${app.baseUrl}") private val baseUrl: String
+    @Value("\${app.serverUrl}") private val serverUrl: String
 ) {
     fun getGoogleLoginPage(): String {
-        return "$baseUrl/oauth2/authorization/google"
+        return "$serverUrl/oauth2/authorization/google"
     }
     fun getKakaoLoginPage(): String{
-        return "$baseUrl/oauth2/authorization/kakao"
+        return "$serverUrl/oauth2/authorization/kakao"
     }
     fun getNaverLoginPage(): String{
-        return "$baseUrl/oauth2/authorization/naver"
+        return "$serverUrl/oauth2/authorization/naver"
     }
 
     fun googleLogin(oAuth2User: OAuth2User) : JwtDto {

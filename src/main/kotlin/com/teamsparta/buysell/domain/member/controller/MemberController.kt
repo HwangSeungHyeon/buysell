@@ -30,7 +30,7 @@ class MemberController(
     private val memberService: MemberService,
     private val socialService: SocialService,
     private val authLinkService: AuthLinkService,
-    @Value("\${app.baseUrl}") private val baseUrl: String
+    @Value("\${app.frontUrl}") private val frontUrl: String
 ) {
     //로컬 회원가입
     @PreAuthorize("isAnonymous()")
@@ -108,7 +108,7 @@ class MemberController(
         httpServletResponse.addCookie(cookie)
 
         // 메인 페이지 URL을 응답으로 전달
-        val mainUrl = baseUrl
+        val mainUrl = frontUrl
         httpServletResponse.sendRedirect(mainUrl)
     }
 
@@ -135,7 +135,7 @@ class MemberController(
         httpServletResponse.addCookie(cookie)
 
         // 메인 페이지 URL을 응답으로 전달
-        val mainUrl = baseUrl
+        val mainUrl = frontUrl
         httpServletResponse.sendRedirect(mainUrl)
     }
 
@@ -162,7 +162,7 @@ class MemberController(
         httpServletResponse.addCookie(cookie)
 
         // 메인 페이지 URL을 응답으로 전달
-        val mainUrl = baseUrl
+        val mainUrl = frontUrl
         httpServletResponse.sendRedirect(mainUrl)
     }
 }
