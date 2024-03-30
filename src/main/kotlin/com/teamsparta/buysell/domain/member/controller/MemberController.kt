@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -29,6 +30,7 @@ class MemberController(
     private val memberService: MemberService,
     private val socialService: SocialService,
     private val authLinkService: AuthLinkService,
+    @Value("\${app.baseUrl}") private val baseUrl: String
 ) {
     //로컬 회원가입
     @PreAuthorize("isAnonymous()")
@@ -106,7 +108,7 @@ class MemberController(
         httpServletResponse.addCookie(cookie)
 
         // 메인 페이지 URL을 응답으로 전달
-        val mainUrl = "http://localhost:3000"
+        val mainUrl = baseUrl
         httpServletResponse.sendRedirect(mainUrl)
     }
 
@@ -133,7 +135,7 @@ class MemberController(
         httpServletResponse.addCookie(cookie)
 
         // 메인 페이지 URL을 응답으로 전달
-        val mainUrl = "http://localhost:3000"
+        val mainUrl = baseUrl
         httpServletResponse.sendRedirect(mainUrl)
     }
 
@@ -160,7 +162,7 @@ class MemberController(
         httpServletResponse.addCookie(cookie)
 
         // 메인 페이지 URL을 응답으로 전달
-        val mainUrl = "http://localhost:3000"
+        val mainUrl = baseUrl
         httpServletResponse.sendRedirect(mainUrl)
     }
 }
