@@ -9,10 +9,11 @@
 6. [기술스택](#기술스택)
 7. [서비스 구조](#서비스-구조)
 8. [와이어프레임](#와이어프레임)
-9. [API 명세서](#API-명세서)
-10. [ERD](#ERD)
+9. [API 명세서](#api-명세서)
+10. [ERD](#erd)
 11. [프로젝트 파일 구조](#프로젝트-파일-구조)
-12. [Trouble Shooting](#trouble-shooting)
+12. [기술적 의사결정](#기술적-의사결정)
+13. [Trouble Shooting](#trouble-shooting)
     
 ## 프로젝트 소개
 중고 거래 플랫폼으로 개인 간의 중고 거래를 더욱 쉽게 접근할 수 있게 매칭해주는 게시판 형태의 서비스입니다. 
@@ -76,8 +77,7 @@
 
 
 ## 서비스 구조
-![BuySell 시스템 아키텍처](https://github.com/HwangSeungHyeon/buysell/assets/57141923/9ab8db75-3796-44ad-877b-ca187abdb96b)
-
+![BuySell 시스템 아키텍처 (1)](https://github.com/HwangSeungHyeon/buysell/assets/57141923/4cc8fd5b-a6d7-4353-8ced-a85e98725e40)
 
 
 ## 와이어프레임
@@ -193,6 +193,57 @@ buysell
         └─swagger
 ```
 
+## 기술적 의사결정
+
+<details>
+<summary> EC2 </summary>
+<div markdown="1">
+    - [도입 이유]
+    - [문제상황]
+    - [해결방안]
+    - [의사 결정]
+</div>
+</details>
+
+<details>
+<summary> RDS </summary>
+<div markdown="1">
+    - [도입 이유]
+    - [문제상황]
+    - [해결방안]
+    - [의사 결정]
+</div>
+</details>
+
+<details>
+<summary> ElastiCache </summary>
+<div markdown="1">
+    - [도입 이유]
+    - [문제상황]
+    - [해결방안]
+    - [의사 결정]
+</div>
+</details>
+
+<details>
+<summary> Security</summary>
+<div markdown="1">
+    - [도입 이유]
+    - [문제상황]
+    - [해결방안]
+    - [의사 결정]
+</div>
+</details>
+
+<details>
+<summary> CI/CD </summary>
+<div markdown="1">
+    - [도입 이유]
+    - [문제상황]
+    - [해결방안]
+    - [의사 결정]
+</div>
+</details>
 
 ## Trouble Shooting
 
