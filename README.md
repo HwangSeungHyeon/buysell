@@ -131,7 +131,8 @@
 </details>
 
 ## ERD
-![최종프로젝트 ERD](https://github.com/HwangSeungHyeon/buysell/assets/57141923/6afb584e-80b9-4fd4-92ff-377bd109c086)
+![최종프로젝트 ERD](https://github.com/HwangSeungHyeon/buysell/assets/57141923/4ac752ce-e76c-4854-ac26-bd4b615bce69)
+
 
 ## 프로젝트 파일 구조
 
