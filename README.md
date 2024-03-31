@@ -1,6 +1,6 @@
 # BuySell
 
-## 📖 목차
+## 목차
 1. [프로젝트 소개](#프로젝트-소개)
 2. [팀소개](#팀소개)
 3. [프로젝트 계기](#프로젝트-계기)
@@ -14,7 +14,7 @@
 11. [프로젝트 파일 구조](#프로젝트-파일-구조)
 12. [Trouble Shooting](#trouble-shooting)
     
-## 👨‍🏫 프로젝트 소개
+## 프로젝트 소개
 중고 거래 플랫폼으로 개인 간의 중고 거래를 더욱 쉽게 접근할 수 있게 매칭해주는 게시판 형태의 서비스입니다. 
 
 중고 물품을 판매하는 글을 작성할 수 있고 구매자가 구매 요청을 하면 판매자와 구매자가 매칭 됩니다.
@@ -37,7 +37,7 @@
 
 이 서비스를 통해 개인 및 비즈니스적인 부분에서도 긍정적인 영향을 끼칠 것으로 생각되어 프로젝트를 선정하게 되었습니다.
 
-## 💜 주요기능
+## 주요기능
 
 - 기능 1
 
@@ -48,10 +48,10 @@
 - 기능 4
 
 
-## ⏲️ 개발기간
+## 개발기간
 - 2024.02.26(월) ~ 2024.04.04(목)
 
-## 📚️ 기술스택
+## 기술스택
 
 ### ✔️ Language
 <img src="https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white">
@@ -66,17 +66,18 @@
 <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
 
 ### ✔️ Deploy
-<img src="https://img.shields.io/badge/amazon ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"> <img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white">
+<img src="https://img.shields.io/badge/amazon ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">
 
 ### ✔️ Local DBMS
 <img src="https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white"> <img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white">
 
 ### ✔️ Cloud DBMS
-<img src="https://img.shields.io/badge/amazon rds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white"> <img src="https://img.shields.io/badge/amazon s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"> 
+<img src="https://img.shields.io/badge/amazon rds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white">
 
 
 ## 서비스 구조
-![시스템 아키텍처](https://github.com/HwangSeungHyeon/buysell/assets/57141923/84148fd8-bb45-44a5-a6eb-93efe39c5dc7)
+![BuySell 시스템 아키텍처](https://github.com/HwangSeungHyeon/buysell/assets/57141923/9ab8db75-3796-44ad-877b-ca187abdb96b)
+
 
 
 ## 와이어프레임
