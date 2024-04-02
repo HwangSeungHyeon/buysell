@@ -87,6 +87,7 @@ class Post(
         this.content = request.content
         this.price = request.price
         this.category = request.category
+        this.imageUrl = request.imageUrl
     }
 
     fun toListResponse(): PostListResponse {

@@ -15,5 +15,6 @@ data class UpdatePostRequest(
     @Schema(description = "작성한 본문 내용", example = "본문 내용")
     val content: String,
     val price: Long,
-    val category: Category
+    val category: Category,
+    val imageUrl: String?
 )
