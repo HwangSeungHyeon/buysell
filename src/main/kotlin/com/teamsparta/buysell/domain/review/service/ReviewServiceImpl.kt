@@ -3,6 +3,7 @@ package com.teamsparta.buysell.domain.review.service
 import com.teamsparta.buysell.domain.common.dto.MessageResponse
 import com.teamsparta.buysell.domain.exception.ModelNotFoundException
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
+import com.teamsparta.buysell.domain.order.repository.OrderRepository
 import com.teamsparta.buysell.domain.post.repository.PostRepository
 import com.teamsparta.buysell.domain.review.dto.request.CreateReviewRequest
 import com.teamsparta.buysell.domain.review.dto.request.UpdateReviewRequest
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Service
 class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
     private val postRepository: PostRepository,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val orderRepository: OrderRepository
 ) : ReviewService {
     override fun createReview(
         postId: Int,
@@ -31,14 +33,26 @@ class ReviewServiceImpl(
             ?: throw ModelNotFoundException("Post", postId)
         val member = memberRepository.findByIdOrNull(principal.id)
             ?: throw ModelNotFoundException("Member", principal.id)
+        val order = orderRepository.findByPostIdAndMemberId(postId, principal.id)
+            if (order == null || order.member.id == null) {
+                throw IllegalStateException("주문 정보를 찾을 수 없습니다.")
+            }
+
+        val existingReview = reviewRepository.findByPostIdAndMemberId(postId, principal.id)
+        if (existingReview != null) {
+            throw IllegalStateException("이미 리뷰를 작성했습니다.")
+        }
 
         val seller = post.member
 
         if (!post.isSoldOut) {
             throw IllegalStateException("판매되지 않은 물품에 리뷰를 작성할 수 없습니다.")
         }
-        // order.memberId == review.memberId 일 경우에 작성가능한 메서드 추가
-        // review 중복작성 불가한 예외 추가
+
+        if (order.member.id != member.id) {
+            throw IllegalStateException("주문자와 리뷰자가 다릅니다.")
+        }
+
 
         post.myPostCheckPermission(principal)
 

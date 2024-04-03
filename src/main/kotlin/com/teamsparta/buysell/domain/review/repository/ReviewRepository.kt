@@ -8,6 +8,8 @@ interface ReviewRepository: JpaRepository<Review, Int> {
 
     fun findByPostMemberId(memberId: Int): List<Review>
 
+    fun findByPostIdAndMemberId(postId: Int, memberId: Int): Review?
+
     @Query ("SELECT AVG(r.rating) FROM Review r WHERE r.post.member.id = :memberId")
     fun getAverageRatingByMember(memberId: Int): Double
 }
