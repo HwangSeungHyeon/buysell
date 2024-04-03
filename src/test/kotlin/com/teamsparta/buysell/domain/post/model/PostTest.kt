@@ -71,7 +71,8 @@ class PostTest: BehaviorSpec({
                 title = "수정된 게시글 테스트",
                 content = "수정된 게시글 내용",
                 price = 9999999,
-                category = Category.PET)
+                category = Category.PET,
+                imageUrl = "")
             then("객체가 수정되어야 한다.") {
                 ipadPost.postUpdate(updateRequest)
 

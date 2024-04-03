@@ -36,6 +36,7 @@ class Post(
     var order: Order? = null,
 
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderBy("createdAt ASC")
     val comment: MutableList<Comment> = mutableListOf(),
 
     @Column(name = "view")
@@ -87,6 +88,7 @@ class Post(
         this.content = request.content
         this.price = request.price
         this.category = request.category
+        this.imageUrl = request.imageUrl
     }
 
     fun toListResponse(): PostListResponse {
@@ -117,6 +119,7 @@ class Post(
             updatedAt = updatedAt,
             imageUrl = imageUrl,
             comment = comment
+                .sortedBy { it.createdAt }
                 .map { CommentResponse.toResponse(it) }
         )
     }
