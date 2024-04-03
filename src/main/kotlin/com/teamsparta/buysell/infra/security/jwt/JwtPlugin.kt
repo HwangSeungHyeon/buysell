@@ -38,7 +38,7 @@ class JwtPlugin(
             .build()
         val now = Instant.now()
         val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
-        val expirationPeriod = java.time.Duration.ofSeconds(1)
+        val expirationPeriod = java.time.Duration.ofHours(2)
 
         return Jwts.builder()
             .subject(subject)
@@ -53,7 +53,7 @@ class JwtPlugin(
     fun generateJwtDto(oAuth2User: OAuth2User, id: String, role:String, platform: Platform) : JwtDto {
         val accessTokenExpiresIn = Date(Date().time + accessTokenExpirationHour)
         val now = Instant.now()
-        val expirationPeriod = java.time.Duration.ofSeconds(1)
+        val expirationPeriod = java.time.Duration.ofHours(2)
         val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
         val email: String? = when (platform.name) {
             "GOOGLE" -> oAuth2User.attributes["email"] as String
