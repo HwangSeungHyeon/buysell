@@ -53,7 +53,8 @@ class PostServiceUnitTest: BehaviorSpec({
         title = "의자 팝니다",
         content = "네고 없습니다",
         price = 100000,
-        category = Category.INTERIOR
+        category = Category.INTERIOR,
+        imageUrl = ""
     )
 
     val member = Member(
