@@ -5,8 +5,8 @@ import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.dto.response.OtherProfileResponse
 import com.teamsparta.buysell.domain.member.dto.response.ProfileResponse
 import com.teamsparta.buysell.domain.member.service.ProfileService
+import com.teamsparta.buysell.domain.order.dto.response.OrderHistoriesResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
-import com.teamsparta.buysell.domain.review.dto.response.ReviewResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
 import io.swagger.v3.oas.annotations.Operation
 import jakarta.validation.Valid
@@ -29,6 +29,16 @@ class ProfileController(
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(profileService.getReviewsByMemberId(memberId))
+    }
+
+    @GetMapping("/{memberId}/profile/orderHistories")
+    @Operation(summary = "구매내역 조회하기", description = "구매한 내역을 조회합니다.")
+    fun getOrderHistories(
+        @PathVariable memberId: Int
+    ): ResponseEntity<List<OrderHistoriesResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(profileService.getOrderHistories(memberId))
     }
 
     @GetMapping("/{memberId}/profile/posts")

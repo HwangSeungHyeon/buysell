@@ -4,8 +4,8 @@ import com.teamsparta.buysell.domain.member.dto.request.MemberProfileUpdateReque
 import com.teamsparta.buysell.domain.member.dto.response.MemberResponse
 import com.teamsparta.buysell.domain.member.dto.response.OtherProfileResponse
 import com.teamsparta.buysell.domain.member.dto.response.ProfileResponse
+import com.teamsparta.buysell.domain.order.dto.response.OrderHistoriesResponse
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
-import com.teamsparta.buysell.domain.review.dto.response.ReviewResponse
 import com.teamsparta.buysell.infra.security.UserPrincipal
 
 interface ProfileService {
@@ -14,4 +14,6 @@ interface ProfileService {
     fun getMyProfile(userPrincipal: UserPrincipal): MemberResponse?
     fun updateMyProfile(userPrincipal: UserPrincipal, request: MemberProfileUpdateRequest): MemberResponse
     fun getReviewsByMemberId(memberId: Int): ProfileResponse
+    fun getOrderHistories(memberId: Int): List<OrderHistoriesResponse>?
+
 }
