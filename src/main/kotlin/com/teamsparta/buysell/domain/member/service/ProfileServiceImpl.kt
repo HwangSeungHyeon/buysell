@@ -7,11 +7,9 @@ import com.teamsparta.buysell.domain.member.dto.response.OtherProfileResponse
 import com.teamsparta.buysell.domain.member.dto.response.ProfileResponse
 import com.teamsparta.buysell.domain.member.repository.MemberRepository
 import com.teamsparta.buysell.domain.order.dto.response.OrderHistoriesResponse
-import com.teamsparta.buysell.domain.order.repository.CustomOrderRepository
 import com.teamsparta.buysell.domain.order.repository.OrderRepository
 import com.teamsparta.buysell.domain.post.dto.response.PostListResponse
 import com.teamsparta.buysell.domain.post.repository.PostRepository
-import com.teamsparta.buysell.domain.post.repository.PostRepositoryByJPQL
 import com.teamsparta.buysell.domain.post.repository.WishListRepository
 import com.teamsparta.buysell.domain.review.model.toResponse
 import com.teamsparta.buysell.domain.review.repository.ReviewRepository
@@ -27,9 +25,7 @@ class ProfileServiceImpl(
     private val wishListRepository: WishListRepository,
     private val reviewRepository: ReviewRepository,
     private val postRepository: PostRepository,
-    private val customOrderRepository: CustomOrderRepository,
     private val orderRepository: OrderRepository,
-    private val postRepositoryByJPQL: PostRepositoryByJPQL
 ) : ProfileService {
     override fun getReviewsByMemberId(memberId: Int): ProfileResponse {
         val member = memberRepository.findByIdOrNull(memberId)
@@ -41,22 +37,27 @@ class ProfileServiceImpl(
 
     override fun getOrderHistories(memberId: Int): List<OrderHistoriesResponse> {
         val orders = orderRepository.findByMemberId(memberId)
+        val member = memberRepository.findByIdOrNull(memberId)
+            ?: throw ModelNotFoundException("Member", memberId)
+
         val histories = mutableListOf<OrderHistoriesResponse>()
 
         orders.forEach { order ->
-            val posts = postRepositoryByJPQL.findAllPostsByOrderId(order.id)
+            val posts = postRepository.findByOrderId(order.id)
             posts.forEach { post ->
                 histories.add(
                     OrderHistoriesResponse(
                         imageUrl = post.imageUrl,
                         postTitle = post.title,
-                        price = post.price
+                        price = post.price,
+                        postId = post.id
                     )
                 )
             }
         }
         return histories
     }
+
 
     override fun getAllPostByMemberId(memberId: Int): OtherProfileResponse {
         val member = memberRepository.findByIdOrNull(memberId)
@@ -77,6 +78,7 @@ class ProfileServiceImpl(
         val post = wishList.map { it.post }
         return post.map { it.toListResponse() }
     }
+
     // 현재 로그인 한 멤버 아이디 기준 정보 조회
     @Transactional
     override fun getMyProfile(userPrincipal: UserPrincipal): MemberResponse? {

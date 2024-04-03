@@ -53,7 +53,7 @@ class Post(
     @Column(name = "img_url")
     var imageUrl: String?,
 
-) : SoftDeleteEntity() {
+    ) : SoftDeleteEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
