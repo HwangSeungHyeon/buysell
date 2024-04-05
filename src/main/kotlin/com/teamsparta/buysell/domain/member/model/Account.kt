@@ -38,7 +38,7 @@ class Account (
     }
 
     fun availableForPurchase(price: Long): Boolean{
-        return accountBalance > price
+        return accountBalance >= price
     }
     fun refundToAccount(money: Long) {
         accountBalance += money
